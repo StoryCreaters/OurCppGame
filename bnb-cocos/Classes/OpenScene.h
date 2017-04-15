@@ -3,6 +3,8 @@
 
 #include "cocos2d.h"
 #include "SimpleAudioEngine.h"
+#include "ui/CocosGUI.h"
+#include "HelloWorldScene.h"
 
 using namespace cocos2d;
 
@@ -21,6 +23,8 @@ public:
     cocos2d::Menu* setMusicLine(const std::string &music_name);
     // implement the "static create()" method manually
     void musicOnAndOff(cocos2d::Ref* pSender);
+//    void absolutelyLayoutScrollView();
+//    cocos2d::ui::ListView* absolutelyLayoutListView();
     // implement the "static create()" method manually
     CREATE_FUNC(OpenScene);
 };

@@ -317,10 +317,10 @@
 				82F3DBF41EA26A2700C6DBDA /* BackGround */,
 				521A8EA819F11F5000D177D7 /* fonts */,
 				3EACC98E19EE6D4300EB3C5E /* res */,
-				46880B7619C43A67006E1F66 /* CloseNormal.png */,
 				82F3DBF11EA267EB00C6DBDA /* music */,
 				46880B7719C43A67006E1F66 /* CloseSelected.png */,
 				46880B7A19C43A67006E1F66 /* HelloWorld.png */,
+				46880B7619C43A67006E1F66 /* CloseNormal.png */,
 			);
 			name = Resources;
 			path = ../Resources;
