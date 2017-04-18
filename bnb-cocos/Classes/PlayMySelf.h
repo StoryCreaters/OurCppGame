@@ -9,6 +9,6 @@
 #ifndef PlayMySelf_hpp
 #define PlayMySelf_hpp
 
-#include <stdio.h>
+#include "cocos2d.h"
 
 #endif /* PlayMySelf_hpp */

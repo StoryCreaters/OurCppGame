@@ -24,9 +24,11 @@ public:
     // implement the "static create()" method manually
     void musicOnAndOff(cocos2d::Ref* pSender);
 //    void absolutelyLayoutScrollView();
-//    cocos2d::ui::ListView* absolutelyLayoutListView();
+    cocos2d::ui::ListView* absolutelyLayoutListView();
     // implement the "static create()" method manually
     CREATE_FUNC(OpenScene);
+    
+    cocos2d::ui::ListView* list_view = nullptr;
 };
 
 
