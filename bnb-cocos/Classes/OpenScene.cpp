@@ -1,4 +1,5 @@
 #include "OpenScene.h"
+#include "PauseWithLabelLayer.h"
 
 Scene* OpenScene::createScene()
 {
@@ -65,7 +66,7 @@ cocos2d::Menu* OpenScene::setLayOutL1() {
     cocos2d::Vector<cocos2d::MenuItem*> vecs;
     
     std::string UiNames[] = {"GameUI/ProjectName", "GameUI/PlayMyself", "GameUI/PlayOnInternet", "GameUI/Help","GameUI/Quit"};
-    ccMenuCallback Uifuncs[] = {nullptr,nullptr,nullptr,nullptr,CC_CALLBACK_1(OpenScene::menuCloseCallback, this)};
+    ccMenuCallback Uifuncs[] = {nullptr,nullptr,nullptr,CC_CALLBACK_1(OpenScene::OnTouchPause, this),CC_CALLBACK_1(OpenScene::menuCloseCallback, this)};
     for (int i = 0; i < 5; ++i) {
         auto menuI = cocos2d::MenuItemImage::create(UiNames[i] + ".png", UiNames[i]+ "Selected.png",Uifuncs[i]);
         if (i != 0)
@@ -73,10 +74,10 @@ cocos2d::Menu* OpenScene::setLayOutL1() {
         vecs.pushBack(menuI);
     }
     
-    auto menu_list = cocos2d::Menu::createWithArray(vecs);
-    menu_list->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
-    menu_list->alignItemsVertically();
-    return menu_list;
+    UImenus = cocos2d::Menu::createWithArray(vecs);
+    UImenus->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+    UImenus->alignItemsVertically();
+    return UImenus;
 }
 
 
@@ -158,3 +159,34 @@ cocos2d::ui::ListView* OpenScene::absolutelyLayoutListView() {
     this->addChild(list_view);
     return list_view;
 }
+
+void OpenScene::OnTouchPause(cocos2d::Ref* pSender) {
+    auto layer = PauseWithLabelLayer::create();
+    
+    static std::string helps[] = {"Hi, this is a bnb game", "made by maplewind, Chris and shadowfox",
+        "use up\\down\\left\\right to control your charactor",
+        "and you can press \"help\" to get some information",
+        "have fun~"};
+    
+    for (int i = 0; i < 5; ++i) {
+        auto label = MenuItemLabel::create(Label::create(helps[i], "fonts/GloriaHallelujah.ttf", 35));
+        label->setColor(Color3B::BLACK);
+        layer->_menuitems.pushBack(label);
+    }
+    auto show_menus = Menu::createWithArray(layer->_menuitems);
+    show_menus->alignItemsVertically();
+    layer->addChild(show_menus);
+    layer->_parent = this;
+    
+//    this->UImenus->setEnabled(false);
+    
+//    layer->create_func = create;    //  保存函数
+    
+    addChild(layer, 100);
+}
+
+void OpenScene::OnTouchResume() {
+    UImenus->setEnabled(true);
+}
+
+

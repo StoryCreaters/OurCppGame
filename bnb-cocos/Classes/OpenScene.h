@@ -29,6 +29,11 @@ public:
     CREATE_FUNC(OpenScene);
     
     cocos2d::ui::ListView* list_view = nullptr;
+    
+    void OnTouchPause(cocos2d::Ref* pSender);
+    void OnTouchResume();
+private:
+    Menu* UImenus = nullptr;
 };
 
 

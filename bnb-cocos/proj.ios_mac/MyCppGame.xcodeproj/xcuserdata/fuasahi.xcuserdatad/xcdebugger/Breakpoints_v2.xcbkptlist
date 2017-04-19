@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Classes/OpenScene.cpp"
-            timestampString = "514214914.435593"
+            timestampString = "514293906.170106"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "137"
-            endingLineNumber = "137">
+            startingLineNumber = "138"
+            endingLineNumber = "138">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -24,13 +24,27 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Classes/OpenScene.cpp"
-            timestampString = "514214914.435593"
+            timestampString = "514293906.170106"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "148"
-            endingLineNumber = "148"
+            startingLineNumber = "149"
+            endingLineNumber = "149"
             landmarkName = "OpenScene::absolutelyLayoutListView()"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Classes/PauseWithLabelLayer.h"
+            timestampString = "514292408.120326"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "13"
+            endingLineNumber = "13">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
