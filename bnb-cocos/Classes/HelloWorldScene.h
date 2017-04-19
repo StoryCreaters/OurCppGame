@@ -2,7 +2,7 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
-
+// 这里这个类没有什么用，但是保存它做一个demo
 class HelloWorld : public cocos2d::Layer
 {
 public:
