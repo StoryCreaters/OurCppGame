@@ -30,10 +30,14 @@ public:
     void mySpriteMove();
     
     void update(float dt) override;
+    bool accessAble(cocos2d::Vec2);
+    cocos2d::Vec2 tileCoordForPosition(cocos2d::Vec2 pos);
 private:
+    float _deltaRate;
     cocos2d::TMXTiledMap *_tileMap;
     cocos2d::TMXLayer *_background;
     cocos2d::TMXObjectGroup *objects;
+    cocos2d::TMXLayer *_meta;
     
     character* _myplayer;
     cocos2d::Vector<character*> _players;        //保存玩家的容器

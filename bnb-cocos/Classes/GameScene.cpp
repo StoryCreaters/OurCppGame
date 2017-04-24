@@ -44,7 +44,10 @@ bool GameScene::init()
     
     _tileMap->setAnchorPoint(Vec2(0.5f, 0.5f));
     _tileMap->setPosition(Point(visibleSize.width / 2 , visibleSize.height / 2));
+    _deltaRate = 1.15f;
     _tileMap->setScale(1.15f);
+    _meta = _tileMap->getLayer("Unbroken");
+    
     
     // 注意坐标位置差
     auto offx = (visibleSize.width - _tileMap->getContentSize().width)/ 2;
@@ -157,29 +160,28 @@ void GameScene::mySpriteMove() {
     auto lowery = offy, uppery = visibleSize.height - offy;
     
     const static int BORDER = 2;        //边界长
-    
     if (_my_sprite_move[GO_RIGHT]) {
-//        moves.pushBack(MoveBy::create(dur, Vec2(step, 0)));
         if (upperx >= _myplayer->getPosition().x + BORDER)
-            moves.pushBack(MoveBy::create(dur, Vec2(step, 0)));
+            if (accessAble(Vec2(_myplayer->getPosition().x + step + _myplayer->getContentSize().width / 3, _myplayer->getPosition().y)))
+                moves.pushBack(MoveBy::create(dur, Vec2(step, 0)));
     }
     
     if (_my_sprite_move[GO_LEFT]) {
-//        moves.pushBack(MoveBy::create(dur, Vec2(-step, 0)));
         if (lowerx <= _myplayer->getPosition().x - BORDER)
-            moves.pushBack(MoveBy::create(dur, Vec2(-step, 0)));
+            if (accessAble(Vec2(_myplayer->getPosition().x - step - _myplayer->getContentSize().width / 3, _myplayer->getPosition().y)))
+                moves.pushBack(MoveBy::create(dur, Vec2(-step, 0)));
     }
     
     if (_my_sprite_move[GO_UP]) {
-//        moves.pushBack(MoveBy::create(dur, Vec2(0, step)));
         if (uppery >= _myplayer->getPosition().y + BORDER)
-            moves.pushBack(MoveBy::create(dur, Vec2(0, step)));
+            if (accessAble(Vec2(_myplayer->getPosition().x, _myplayer->getPosition().y + step + _myplayer->getContentSize().height / 3)))
+                moves.pushBack(MoveBy::create(dur, Vec2(0, step)));
     }
     
     if (_my_sprite_move[GO_DOWN]) {
-//        moves.pushBack(MoveBy::create(dur, Vec2(0, -step)));
         if (lowery <= _myplayer->getPosition().y - BORDER)
-            moves.pushBack(MoveBy::create(dur, Vec2(0, -step)));
+            if (accessAble(Vec2(_myplayer->getPosition().x, _myplayer->getPosition().y - step - _myplayer->getContentSize().height / 3)))
+                moves.pushBack(MoveBy::create(dur, Vec2(0, -step)));
     }
     
     // 有可能啥都没有2333
@@ -212,4 +214,33 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 
 void GameScene::update(float dt) {
     mySpriteMove();
+}
+
+cocos2d::Vec2 GameScene::tileCoordForPosition(cocos2d::Vec2 pos) {
+    auto visibleSize = Director::getInstance()->getWinSize();
+    auto offx = (visibleSize.width - _tileMap->getContentSize().width)/ 2;
+    auto offy = (visibleSize.height - _tileMap->getContentSize().height) / 2;
+    float x = (pos.x - offx) / (_tileMap->getTileSize().width * _deltaRate);
+    float y = (pos.y - offy) / (_tileMap->getTileSize().height * _deltaRate);
+    return Vec2(x + 1, 14 - y);
+}
+
+bool GameScene::accessAble(cocos2d::Vec2 pos) {
+    Vec2 tileCoord = tileCoordForPosition(pos);
+    log("%f %f", tileCoord.x, tileCoord.y);
+//    tileCoord.x = int(tileCoord.x), tileCoord.y = int(tileCoord.y);
+    int tileGid = _meta->getTileGIDAt(tileCoord);
+    if (tileGid) {
+        auto propertiy = _tileMap->getPropertiesForGID(tileGid);
+        if (propertiy.isNull()) //
+            return false;
+        auto properties = propertiy.asValueMap();
+        if (!properties.empty()) {
+            auto collision = properties["Collidable"].asString();
+            if ("True" == collision) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
