@@ -1,6 +1,6 @@
 // 理想状况这里应该用继承的... 但是这里先写一个试试看咯～
 #include "GameScene.h"
-
+#include "Bubbles.h"
 
 USING_NS_CC;
 
@@ -47,7 +47,8 @@ bool GameScene::init()
     _deltaRate = 1.15f;
     _tileMap->setScale(1.15f);
     _meta = _tileMap->getLayer("Unbroken");
-    
+    if (_meta == nullptr)
+        log("xxxd");
     
     // 注意坐标位置差
     auto offx = (visibleSize.width - _tileMap->getContentSize().width)/ 2;
@@ -125,7 +126,7 @@ void GameScene::addCloseMenu() {
 }
 
 void GameScene::myKeyboardOnL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
-    GameScene::_optionCode code;
+    GameScene::_optionCode code = DEFAULT;
     switch (keyCode) {
         case cocos2d::EventKeyboard::KeyCode::KEY_UP_ARROW:
             code = _optionCode::GO_UP;
@@ -143,7 +144,8 @@ void GameScene::myKeyboardOnL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
             break;
     }
     // DEBUG
-//    log("hei jilao");
+    if (code != DEFAULT)
+        for (auto &b : _my_sprite_move)     b = false;
     _my_sprite_move[code] = true;       //有移动的趋势
 }
 
@@ -162,25 +164,25 @@ void GameScene::mySpriteMove() {
     const static int BORDER = 2;        //边界长
     if (_my_sprite_move[GO_RIGHT]) {
         if (upperx >= _myplayer->getPosition().x + BORDER)
-            if (accessAble(Vec2(_myplayer->getPosition().x + step + _myplayer->getContentSize().width / 3, _myplayer->getPosition().y)))
+            if (accessAble(Vec2(_myplayer->getPosition().x + step + _myplayer->getContentSize().width / 2, _myplayer->getPosition().y)))
                 moves.pushBack(MoveBy::create(dur, Vec2(step, 0)));
     }
     
     if (_my_sprite_move[GO_LEFT]) {
         if (lowerx <= _myplayer->getPosition().x - BORDER)
-            if (accessAble(Vec2(_myplayer->getPosition().x - step - _myplayer->getContentSize().width / 3, _myplayer->getPosition().y)))
+            if (accessAble(Vec2(_myplayer->getPosition().x - step - _myplayer->getContentSize().width / 2, _myplayer->getPosition().y)))
                 moves.pushBack(MoveBy::create(dur, Vec2(-step, 0)));
     }
     
     if (_my_sprite_move[GO_UP]) {
         if (uppery >= _myplayer->getPosition().y + BORDER)
-            if (accessAble(Vec2(_myplayer->getPosition().x, _myplayer->getPosition().y + step + _myplayer->getContentSize().height / 3)))
+            if (accessAble(Vec2(_myplayer->getPosition().x, _myplayer->getPosition().y + step + _myplayer->getContentSize().height / 2)))
                 moves.pushBack(MoveBy::create(dur, Vec2(0, step)));
     }
     
     if (_my_sprite_move[GO_DOWN]) {
         if (lowery <= _myplayer->getPosition().y - BORDER)
-            if (accessAble(Vec2(_myplayer->getPosition().x, _myplayer->getPosition().y - step - _myplayer->getContentSize().height / 3)))
+            if (accessAble(Vec2(_myplayer->getPosition().x, _myplayer->getPosition().y - step - _myplayer->getContentSize().height / 2)))
                 moves.pushBack(MoveBy::create(dur, Vec2(0, -step)));
     }
     
@@ -190,26 +192,64 @@ void GameScene::mySpriteMove() {
 }
 
 void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
-    GameScene::_optionCode code;
+    GameScene::_optionCode key;
+    enum T {
+        GO_CODE, BUBBLE_CODE
+    } code;
+    code = GO_CODE;     //默认为go_code
+    
     switch (keyCode) {
         case cocos2d::EventKeyboard::KeyCode::KEY_UP_ARROW:
-            code = _optionCode::GO_UP;
+            key = _optionCode::GO_UP;
             break;
         case cocos2d::EventKeyboard::KeyCode::KEY_DOWN_ARROW:
-            code = _optionCode::GO_DOWN;
+            key = _optionCode::GO_DOWN;
             break;
         case cocos2d::EventKeyboard::KeyCode::KEY_LEFT_ARROW:
-            code = _optionCode::GO_LEFT;
+            key = _optionCode::GO_LEFT;
             break;
         case cocos2d::EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
-            code = _optionCode::GO_RIGHT;
+            key = _optionCode::GO_RIGHT;
+            break;
+        case cocos2d::EventKeyboard::KeyCode::KEY_SPACE:
+            code = BUBBLE_CODE;
             break;
         default:
             break;
     }
+    
     // DEBUG
-    //    log("hei jilao");
-    _my_sprite_move[code] = false;       //有移动的趋势
+    if (code == GO_CODE)
+        _my_sprite_move[key] = false;       //有移动的趋势
+    else if (code == BUBBLE_CODE) {
+        setBubble();
+    }
+}
+
+// 防止bubble
+// TODO: 处理泡泡数量的问题
+void GameScene::setBubble() {
+//    log("%d %d", _my_bubbles, _myplayer->_startBubbles);
+//    if (_my_bubbles > _myplayer->_startBubbles) {
+//        return;
+//    }
+    auto mySpritePos = _myplayer->getPosition();
+    if (accessAble(mySpritePos)) {
+        // TODO: 调整精灵位置
+        auto newBubble = Bubbles::create(_myplayer->_startPower);
+        newBubble->setPosition(mySpritePos);
+        auto timeBoom = CallFuncN::create(CC_CALLBACK_1(GameScene::BubbleBoom, this));
+        addChild(newBubble);
+        ++_my_bubbles;
+        log("%d", _my_bubbles);
+        newBubble->runAction(Sequence::create(DelayTime::create(3), timeBoom, NULL));
+    }
+}
+
+void GameScene::BubbleBoom(Ref* sender) {
+    Sprite *sprite = (Sprite *)sender;
+//    --_my_bubbles;
+    this->removeChild(sprite);
 }
 
 void GameScene::update(float dt) {
@@ -221,14 +261,15 @@ cocos2d::Vec2 GameScene::tileCoordForPosition(cocos2d::Vec2 pos) {
     auto offx = (visibleSize.width - _tileMap->getContentSize().width)/ 2;
     auto offy = (visibleSize.height - _tileMap->getContentSize().height) / 2;
     float x = (pos.x - offx) / (_tileMap->getTileSize().width * _deltaRate);
-    float y = (pos.y - offy) / (_tileMap->getTileSize().height * _deltaRate);
+    float y = (pos.y - offy) / (_tileMap->getTileSize().height * _deltaRate) - 0.3;
+    if (14 - y > 14)
+        y = 0;
     return Vec2(x + 1, 14 - y);
 }
 
 bool GameScene::accessAble(cocos2d::Vec2 pos) {
     Vec2 tileCoord = tileCoordForPosition(pos);
-    log("%f %f", tileCoord.x, tileCoord.y);
-//    tileCoord.x = int(tileCoord.x), tileCoord.y = int(tileCoord.y);
+//    log("x, y: %f %f", tileCoord.x, tileCoord.y);
     int tileGid = _meta->getTileGIDAt(tileCoord);
     if (tileGid) {
         auto propertiy = _tileMap->getPropertiesForGID(tileGid);
@@ -244,3 +285,4 @@ bool GameScene::accessAble(cocos2d::Vec2 pos) {
     }
     return true;
 }
+

@@ -16,12 +16,20 @@ public:
     bool initWithPlayerType(characterType type);
     
     static character* create(characterType type);
+
+    int _startVelocity;      // 人物速度
+    int _maxVelocity;
+    int _currentVelocity;
     
+    int _startPower;         // 人物火力
+    int _maxPower;
+    int _currentPower;
+    
+    int _startBubbles;       // 水泡数量
+    int _maxBubbles;
+    int _currentBubbles;
 private:
     std::string _spriteName;
-//    int _velocity;      // 人物速度
-//    int _power;         // 人物火力
-//    int _bubbles;       // 水泡数量
 };
 
 

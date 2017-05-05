@@ -3,7 +3,6 @@
 
 character* character::create(characterType type)
 {
-//    Player* player = new Player();
     character* player = new character();
     if(player && player->initWithPlayerType(type))
     {
@@ -22,10 +21,12 @@ bool character::initWithPlayerType(characterType type)
 {
     // 给不同的角色初始化不同属性
     // 这里只做了一个人物真是抱歉了
+    // TODO: 更新人物和属性
     switch(type)
     {
         case MAPLE_WISH:
             _spriteName = "GamePlayer/player1.png";
+            _startPower = _startBubbles = _startVelocity = 1;
             break;
         case CHRIS:
             _spriteName = "GamePlayer/player2.png";

@@ -3,16 +3,11 @@
  <tileset firstgid="1" name="TownGround" tilewidth="40" tileheight="40" tilecount="7" columns="7">
   <image source="Pic/TownGround.png" width="280" height="40"/>
  </tileset>
- <tileset firstgid="8" name="TownItem" tilewidth="42" tileheight="40" tilecount="11" columns="1">
-  <image source="Pic/TownItem.png" width="42" height="443"/>
-  <tile id="10">
-   <properties>
-    <property name="Collidable" value="true"/>
-   </properties>
-  </tile>
+ <tileset firstgid="8" name="Blocks" tilewidth="42" tileheight="43" tilecount="3" columns="3">
+  <image source="Pic/Blocks.png" width="126" height="46"/>
  </tileset>
  <objectgroup name="player">
-  <object id="15" name="SpawnPoint1" x="138.995" y="365.007" width="18.0466" height="17.9493" rotation="0.116036"/>
+  <object id="15" name="SpawnPoint1" x="128.995" y="371.007" width="18.0466" height="17.9493" rotation="0.116036"/>
   <object id="17" name="SpawnPoint2" x="366" y="47" width="28" height="27"/>
  </objectgroup>
  <layer name="Background" width="15" height="15">
@@ -35,17 +30,20 @@
 </data>
  </layer>
  <layer name="Unbroken" width="15" height="15">
+  <properties>
+   <property name="Collidable" value="true"/>
+  </properties>
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-10,10,10,10,10,10,10,0,10,10,10,10,10,10,10,
-0,10,10,0,0,0,0,0,0,0,0,0,0,0,0,
-13,13,13,13,13,13,13,0,13,13,13,13,13,13,13,
-0,0,0,0,0,0,18,0,18,18,18,18,18,0,0,
-18,18,18,18,18,18,18,0,18,18,18,18,18,18,18,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,9,0,0,9,0,9,0,0,9,0,0,0,
+0,0,0,9,0,0,9,0,9,0,0,9,0,0,0,
+9,9,9,9,9,0,10,0,10,0,9,9,9,9,9,
+0,0,0,0,0,0,10,0,10,0,0,0,0,0,0,
+8,8,8,8,8,0,10,0,10,0,8,8,8,8,8,
+0,0,0,0,0,0,9,0,9,0,0,0,0,0,0,
+0,0,0,0,9,9,9,0,9,9,9,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

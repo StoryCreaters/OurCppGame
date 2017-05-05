@@ -32,6 +32,9 @@ public:
     void update(float dt) override;
     bool accessAble(cocos2d::Vec2);
     cocos2d::Vec2 tileCoordForPosition(cocos2d::Vec2 pos);
+    
+    void setBubble();
+    void BubbleBoom(Ref* sender);
 private:
     float _deltaRate;
     cocos2d::TMXTiledMap *_tileMap;
@@ -40,14 +43,17 @@ private:
     cocos2d::TMXLayer *_meta;
     
     character* _myplayer;
-    cocos2d::Vector<character*> _players;        //保存玩家的容器
+//    cocos2d::Vector<character*> _players;        //保存玩家的容器
     
+//    std::vector<cocos2d::Vec2> _bubbles;        // 保存玩家释放的bubble
+    
+//    const static int _round = 0.3;       // 人物半径
     // 表示自己运动状况的量, true就开始运动
     enum _optionCode {
-        GO_UP, GO_DOWN, GO_LEFT, GO_RIGHT
+        GO_UP, GO_DOWN, GO_LEFT, GO_RIGHT, DEFAULT
     };
     std::array<bool, 4> _my_sprite_move;
-    
+    int _my_bubbles = 0;
 };
 
 #endif /* GameTheme_hpp */
