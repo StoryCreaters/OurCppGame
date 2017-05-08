@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 
+
 class character: public cocos2d::Sprite {
 public:
     // 显示怪物类型的枚举变量
@@ -17,19 +18,21 @@ public:
     
     static character* create(characterType type);
 
-    int _startVelocity;      // 人物速度
+    /*************人物属性，基本属性可以尽量写在配置类里面***************/
     int _maxVelocity;
     int _currentVelocity;
     
-    int _startPower;         // 人物火力
     int _maxPower;
     int _currentPower;
     
-    int _startBubbles;       // 水泡数量
     int _maxBubbles;
     int _currentBubbles;
+    
 private:
+    // 每个精灵对应的_spriteName
     std::string _spriteName;
+    
+    
 };
 
 

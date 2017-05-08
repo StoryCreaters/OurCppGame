@@ -117,50 +117,6 @@ void OpenScene::SwitchToOpen(cocos2d::Ref *pSender) {
     dir->replaceScene(HelloWorld::createScene());
 }
 
-//void OpenScene::absolutelyLayoutScrollView() {
-//    Size visibleSize = Director::getInstance()->getVisibleSize();
-//    
-//    Size scollFrameSize = Size(visibleSize.width - 30.f, visibleSize.height - 10.f);
-//    auto scrollView = cocos2d::ui::ScrollView::create();
-//    scrollView->setBackGroundColorType(cocos2d::ui::LAYOUT_COLOR_SOLID);
-//    scrollView->setBackGroundColor(Color3B(200, 200, 200));
-//    scrollView->setSize(scollFrameSize);
-//    scrollView->setPosition(Point(15, 5));
-//    scrollView->setDirection(cocos2d::ui::SCROLLVIEW_DIR_VERTICAL);
-//    auto containerSize = Size(scollFrameSize.width, scollFrameSize.height * 2);
-//    scrollView->setInnerContainerSize(containerSize);
-//    
-//    auto textWidget = Label::create("xxd", "fonts/Marker Felt.ttf", 30);;
-//    textWidget->setPosition(Point(containerSize.width / 2, containerSize.height / 2));
-//    scrollView->addChild(textWidget);
-//    
-//    auto buttonWidget = cocos2d::ui::Button::create("CloseSelected.png", "CloseNormal.png");
-//    buttonWidget->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
-//        
-//    });
-//    buttonWidget->setPosition(Point(containerSize.width / 2, containerSize.height / 2 - 100));
-//    scrollView->addChild(buttonWidget);
-//    
-//    addChild(scrollView);
-//}
-//
-
-cocos2d::ui::ListView* OpenScene::absolutelyLayoutListView() {
-    using namespace cocos2d;
-    auto vis = Director::getInstance()->getVisibleSize();
-    list_view = cocos2d::ui::ListView::create();
-    list_view->setDirection(cocos2d::ui::SCROLLVIEW_DIR_VERTICAL);
-    list_view->setTouchEnabled(true);
-    list_view->setBounceEnabled(true);
-    list_view->setBackGroundColor(Color3B::BLACK);
-    list_view->setContentSize(Size(vis.width, vis.height));
-    list_view->setPosition(vis / 2);
-    list_view->setBackGroundImageScale9Enabled(true);
-    list_view->addChild(Label::create("Oh my", "fonts/Marker Felt.ttf", 30));
-    list_view->setPosition(Vec2(vis.width / 2, vis.height / 2));
-    this->addChild(list_view);
-    return list_view;
-}
 
 void OpenScene::OnTouchPause(cocos2d::Ref* pSender) {
     auto layer = PauseWithLabelLayer::create();

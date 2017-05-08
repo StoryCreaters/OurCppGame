@@ -30,30 +30,35 @@ public:
     void mySpriteMove();
     
     void update(float dt) override;
+    // 检测人物移动是否可以进行，碰撞检测
     bool accessAble(cocos2d::Vec2);
+    // 把坐标变更为tilemap的坐标
     cocos2d::Vec2 tileCoordForPosition(cocos2d::Vec2 pos);
     
     void setBubble();
     void BubbleBoom(Ref* sender);
 private:
-    float _deltaRate;
+    // tilemap的大小变化率 TODO:可以放到配置文件
     cocos2d::TMXTiledMap *_tileMap;
     cocos2d::TMXLayer *_background;
     cocos2d::TMXObjectGroup *objects;
     cocos2d::TMXLayer *_meta;
     
+    // 保存自己玩家的指针
     character* _myplayer;
 //    cocos2d::Vector<character*> _players;        //保存玩家的容器
-    
 //    std::vector<cocos2d::Vec2> _bubbles;        // 保存玩家释放的bubble
+    int _my_bubbles;
     
 //    const static int _round = 0.3;       // 人物半径
-    // 表示自己运动状况的量, true就开始运动
+    
+    
+    // 表示自己运动状况的量, true就开始运动, 共有四个方向
     enum _optionCode {
         GO_UP, GO_DOWN, GO_LEFT, GO_RIGHT, DEFAULT
     };
     std::array<bool, 4> _my_sprite_move;
-    int _my_bubbles = 0;
+    
 };
 
 #endif /* GameTheme_hpp */

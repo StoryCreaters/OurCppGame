@@ -1,8 +1,10 @@
 // 理想状况这里应该用继承的... 但是这里先写一个试试看咯～
 #include "GameScene.h"
 #include "Bubbles.h"
+#include "Settings.h"
 
 USING_NS_CC;
+using namespace settings::GameScene_settings;
 
 Scene* GameScene::createScene()
 {
@@ -44,8 +46,7 @@ bool GameScene::init()
     
     _tileMap->setAnchorPoint(Vec2(0.5f, 0.5f));
     _tileMap->setPosition(Point(visibleSize.width / 2 , visibleSize.height / 2));
-    _deltaRate = 1.15f;
-    _tileMap->setScale(1.15f);
+    _tileMap->setScale(settings::GameScene_settings::_tile_delta_rate);
     _meta = _tileMap->getLayer("Unbroken");
     if (_meta == nullptr)
         log("xxxd");
@@ -66,7 +67,10 @@ bool GameScene::init()
     
     addChild(_myplayer);
     addChild(_tileMap, -1);
-
+    
+    // basic bubbles
+    _my_bubbles = 0;
+    
     // 键盘监听
     auto listener = EventListenerKeyboard::create();
     listener->onKeyPressed = CC_CALLBACK_2(GameScene::myKeyboardOnL, this);
@@ -226,29 +230,27 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
     }
 }
 
-// 防止bubble
-// TODO: 处理泡泡数量的问题
+// bubble应该设置在tilemap的grid上
+// bubble渲染问题
 void GameScene::setBubble() {
-//    log("%d %d", _my_bubbles, _myplayer->_startBubbles);
-//    if (_my_bubbles > _myplayer->_startBubbles) {
-//        return;
-//    }
+    if (_my_bubbles >= _myplayer->_currentBubbles) {
+        return;
+    }
     auto mySpritePos = _myplayer->getPosition();
     if (accessAble(mySpritePos)) {
         // TODO: 调整精灵位置
-        auto newBubble = Bubbles::create(_myplayer->_startPower);
+        auto newBubble = Bubbles::create(_myplayer->_currentPower);
         newBubble->setPosition(mySpritePos);
         auto timeBoom = CallFuncN::create(CC_CALLBACK_1(GameScene::BubbleBoom, this));
         addChild(newBubble);
         ++_my_bubbles;
-        log("%d", _my_bubbles);
         newBubble->runAction(Sequence::create(DelayTime::create(3), timeBoom, NULL));
     }
 }
 
 void GameScene::BubbleBoom(Ref* sender) {
     Sprite *sprite = (Sprite *)sender;
-//    --_my_bubbles;
+    --_my_bubbles;
     this->removeChild(sprite);
 }
 
@@ -260,8 +262,9 @@ cocos2d::Vec2 GameScene::tileCoordForPosition(cocos2d::Vec2 pos) {
     auto visibleSize = Director::getInstance()->getWinSize();
     auto offx = (visibleSize.width - _tileMap->getContentSize().width)/ 2;
     auto offy = (visibleSize.height - _tileMap->getContentSize().height) / 2;
-    float x = (pos.x - offx) / (_tileMap->getTileSize().width * _deltaRate);
-    float y = (pos.y - offy) / (_tileMap->getTileSize().height * _deltaRate) - 0.3;
+    float x = (pos.x - offx) / (_tileMap->getTileSize().width * _tile_delta_rate);
+    // TODO: find what was fucking wrong with this bullshit position
+    float y = (pos.y - offy) / (_tileMap->getTileSize().height * _tile_delta_rate) - 0.3;
     if (14 - y > 14)
         y = 0;
     return Vec2(x + 1, 14 - y);

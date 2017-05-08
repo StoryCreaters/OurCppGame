@@ -20,3 +20,16 @@
 
 * mapscene: 地图scene
 * GameScene: 游戏进行的场所
+
+## 命名规则
+
+class以大写开头，大写分割单词，比如**Bubbles, OpenScene**
+
+private变量小写，以_分割，例如**\_my_private_var**
+
+public小写 以\_分割，例如**my_public**
+
+
+
+
+

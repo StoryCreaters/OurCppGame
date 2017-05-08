@@ -21,14 +21,9 @@ public:
 
     cocos2d::Menu* setLayOutL1();
     cocos2d::Menu* setMusicLine(const std::string &music_name);
-    // implement the "static create()" method manually
     void musicOnAndOff(cocos2d::Ref* pSender);
-//    void absolutelyLayoutScrollView();
-    cocos2d::ui::ListView* absolutelyLayoutListView();
-    // implement the "static create()" method manually
+
     CREATE_FUNC(OpenScene);
-    
-    cocos2d::ui::ListView* list_view = nullptr;
     
     void OnTouchPause(cocos2d::Ref* pSender);
     void OnTouchResume();
