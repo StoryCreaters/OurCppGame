@@ -22,10 +22,10 @@ bool character::initWithPlayerType(characterType type)
     // 给不同的角色初始化不同属性
     // 这里只做了一个人物真是抱歉了
     // TODO: 更新人物和属性
-    using namespace settings::Character_settings;
+    using namespace settings::Character;
     
     // 属性设置
-    _spriteName = sprite_paths[type];
+    _spriteName = sprite_names[type];
     
     _maxBubbles = max_bubbles[type];
     _currentBubbles = start_bubbles[type];
@@ -46,7 +46,7 @@ bool character::initWithPlayerType(characterType type)
 //            _spriteName = "GamePlayer/player3.png";
 //            break;
 //    }
-    this->initWithFile(_spriteName);
+    this->initWithFile(sprite_paths[type]);
     return true;
 }
 

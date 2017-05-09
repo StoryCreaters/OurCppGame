@@ -38,6 +38,8 @@ public:
     void setBubble();
     void BubbleBoom(Ref* sender);
 private:
+    // 获取动画
+    cocos2d::Animation* getAnimationByName(std::string animName,float delay,int animNum);
     // tilemap的大小变化率 TODO:可以放到配置文件
     cocos2d::TMXTiledMap *_tileMap;
     cocos2d::TMXLayer *_background;

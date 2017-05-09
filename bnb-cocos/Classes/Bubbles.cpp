@@ -1,8 +1,10 @@
 #include "Bubbles.h"
+#include "Settings.h"
 
 bool Bubbles::initWithPower(int power) {
+    using namespace settings::Bubbles;
     this->_power = power;
-    this->initWithFile("GamePlayer/bubble0.png");
+    this->initWithFile(bubbles_file);
     return true;
 }
 

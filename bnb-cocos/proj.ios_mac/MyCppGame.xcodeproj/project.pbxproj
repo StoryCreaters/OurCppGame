@@ -13,8 +13,6 @@
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765A40DF7441C002DB57D /* CoreGraphics.framework */; };
 		294D0D641D0D56D500F7F5D4 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 294D0D631D0D56D500F7F5D4 /* CoreText.framework */; };
-		3EACC98F19EE6D4300EB3C5E /* res in Resources */ = {isa = PBXBuildFile; fileRef = 3EACC98E19EE6D4300EB3C5E /* res */; };
-		3EACC99019EE6D4300EB3C5E /* res in Resources */ = {isa = PBXBuildFile; fileRef = 3EACC98E19EE6D4300EB3C5E /* res */; };
 		46880B7B19C43A67006E1F66 /* CloseNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 46880B7619C43A67006E1F66 /* CloseNormal.png */; };
 		46880B7C19C43A67006E1F66 /* CloseNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 46880B7619C43A67006E1F66 /* CloseNormal.png */; };
 		46880B7D19C43A67006E1F66 /* CloseSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = 46880B7719C43A67006E1F66 /* CloseSelected.png */; };
@@ -83,6 +81,12 @@
 		827A69BF1EA8FE750073F534 /* gameStart in Resources */ = {isa = PBXBuildFile; fileRef = 827A69BD1EA8FE750073F534 /* gameStart */; };
 		827A69C21EA8FE9B0073F534 /* GameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 827A69C01EA8FE9B0073F534 /* GameScene.cpp */; };
 		827A69C31EA8FE9B0073F534 /* GameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 827A69C01EA8FE9B0073F534 /* GameScene.cpp */; };
+		82A8788D1EC1BD76006385CC /* PropResource in Resources */ = {isa = PBXBuildFile; fileRef = 82A8788C1EC1BD75006385CC /* PropResource */; };
+		82A8788E1EC1BD76006385CC /* PropResource in Resources */ = {isa = PBXBuildFile; fileRef = 82A8788C1EC1BD75006385CC /* PropResource */; };
+		82A878911EC1BD7F006385CC /* GameProp in Resources */ = {isa = PBXBuildFile; fileRef = 82A878901EC1BD7F006385CC /* GameProp */; };
+		82A878921EC1BD7F006385CC /* GameProp in Resources */ = {isa = PBXBuildFile; fileRef = 82A878901EC1BD7F006385CC /* GameProp */; };
+		82A878941EC1C1D2006385CC /* BubbleImages in Resources */ = {isa = PBXBuildFile; fileRef = 82A878931EC1C1D2006385CC /* BubbleImages */; };
+		82A878951EC1C1D2006385CC /* BubbleImages in Resources */ = {isa = PBXBuildFile; fileRef = 82A878931EC1C1D2006385CC /* BubbleImages */; };
 		82F3DBDA1EA262B900C6DBDA /* OpenScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F3DBD81EA262B900C6DBDA /* OpenScene.cpp */; };
 		82F3DBDB1EA262B900C6DBDA /* OpenScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F3DBD81EA262B900C6DBDA /* OpenScene.cpp */; };
 		82F3DBE11EA262DF00C6DBDA /* Character.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F3DBDF1EA262DF00C6DBDA /* Character.cpp */; };
@@ -95,8 +99,6 @@
 		82F3DBF61EA26A2700C6DBDA /* BackGround in Resources */ = {isa = PBXBuildFile; fileRef = 82F3DBF41EA26A2700C6DBDA /* BackGround */; };
 		82FFA9671EA9FA7C0061D94D /* GameBubble in Resources */ = {isa = PBXBuildFile; fileRef = 82FFA9641EA9FA7C0061D94D /* GameBubble */; };
 		82FFA9681EA9FA7C0061D94D /* GameBubble in Resources */ = {isa = PBXBuildFile; fileRef = 82FFA9641EA9FA7C0061D94D /* GameBubble */; };
-		82FFA9691EA9FA7C0061D94D /* GameItem in Resources */ = {isa = PBXBuildFile; fileRef = 82FFA9651EA9FA7C0061D94D /* GameItem */; };
-		82FFA96A1EA9FA7C0061D94D /* GameItem in Resources */ = {isa = PBXBuildFile; fileRef = 82FFA9651EA9FA7C0061D94D /* GameItem */; };
 		82FFA96B1EA9FA7C0061D94D /* GamePlayer in Resources */ = {isa = PBXBuildFile; fileRef = 82FFA9661EA9FA7C0061D94D /* GamePlayer */; };
 		82FFA96C1EA9FA7C0061D94D /* GamePlayer in Resources */ = {isa = PBXBuildFile; fileRef = 82FFA9661EA9FA7C0061D94D /* GamePlayer */; };
 		BF171245129291EC00B8313A /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB012928DE900B8313A /* OpenGLES.framework */; };
@@ -156,7 +158,6 @@
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		288765A40DF7441C002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		294D0D631D0D56D500F7F5D4 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/CoreText.framework; sourceTree = DEVELOPER_DIR; };
-		3EACC98E19EE6D4300EB3C5E /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; path = res; sourceTree = "<group>"; };
 		46880B7619C43A67006E1F66 /* CloseNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CloseNormal.png; sourceTree = "<group>"; };
 		46880B7719C43A67006E1F66 /* CloseSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CloseSelected.png; sourceTree = "<group>"; };
 		46880B7A19C43A67006E1F66 /* HelloWorld.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = HelloWorld.png; sourceTree = "<group>"; };
@@ -220,6 +221,9 @@
 		827A69BD1EA8FE750073F534 /* gameStart */ = {isa = PBXFileReference; lastKnownFileType = folder; path = gameStart; sourceTree = "<group>"; };
 		827A69C01EA8FE9B0073F534 /* GameScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameScene.cpp; sourceTree = "<group>"; };
 		827A69C11EA8FE9B0073F534 /* GameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameScene.h; sourceTree = "<group>"; };
+		82A8788C1EC1BD75006385CC /* PropResource */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PropResource; sourceTree = "<group>"; };
+		82A878901EC1BD7F006385CC /* GameProp */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GameProp; sourceTree = "<group>"; };
+		82A878931EC1C1D2006385CC /* BubbleImages */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BubbleImages; sourceTree = "<group>"; };
 		82C45F691EC09B6C001BD822 /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
 		82F3DBD81EA262B900C6DBDA /* OpenScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OpenScene.cpp; sourceTree = "<group>"; };
 		82F3DBD91EA262B900C6DBDA /* OpenScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenScene.h; sourceTree = "<group>"; };
@@ -230,7 +234,6 @@
 		82F3DBF11EA267EB00C6DBDA /* music */ = {isa = PBXFileReference; lastKnownFileType = folder; path = music; sourceTree = "<group>"; };
 		82F3DBF41EA26A2700C6DBDA /* BackGround */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BackGround; sourceTree = "<group>"; };
 		82FFA9641EA9FA7C0061D94D /* GameBubble */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GameBubble; sourceTree = "<group>"; };
-		82FFA9651EA9FA7C0061D94D /* GameItem */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GameItem; sourceTree = "<group>"; };
 		82FFA9661EA9FA7C0061D94D /* GamePlayer */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GamePlayer; sourceTree = "<group>"; };
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		BF170DB412928DE900B8313A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -365,15 +368,16 @@
 		46880B7519C43A67006E1F66 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				82A878931EC1C1D2006385CC /* BubbleImages */,
+				82A878901EC1BD7F006385CC /* GameProp */,
+				82A8788C1EC1BD75006385CC /* PropResource */,
 				82FFA9641EA9FA7C0061D94D /* GameBubble */,
-				82FFA9651EA9FA7C0061D94D /* GameItem */,
 				82FFA9661EA9FA7C0061D94D /* GamePlayer */,
 				826873201EA930AB00F7EB27 /* TileGameResources */,
 				827A69BD1EA8FE750073F534 /* gameStart */,
 				8222CA451EA6426D00092E33 /* GameUI */,
 				82F3DBF41EA26A2700C6DBDA /* BackGround */,
 				521A8EA819F11F5000D177D7 /* fonts */,
-				3EACC98E19EE6D4300EB3C5E /* res */,
 				82F3DBF11EA267EB00C6DBDA /* music */,
 				46880B7719C43A67006E1F66 /* CloseSelected.png */,
 				46880B7A19C43A67006E1F66 /* HelloWorld.png */,
@@ -575,6 +579,7 @@
 				5087E78317EB970100C73F5D /* Icon-152.png in Resources */,
 				46880B8119C43A67006E1F66 /* HelloWorld.png in Resources */,
 				82F3DBF21EA267EB00C6DBDA /* music in Resources */,
+				82A878941EC1C1D2006385CC /* BubbleImages in Resources */,
 				46880B7D19C43A67006E1F66 /* CloseSelected.png in Resources */,
 				5087E77D17EB970100C73F5D /* Default-568h@2x.png in Resources */,
 				827A69BE1EA8FE750073F534 /* gameStart in Resources */,
@@ -584,11 +589,10 @@
 				521A8EA919F11F5000D177D7 /* fonts in Resources */,
 				50EF62A317ECD613001EB2F8 /* Icon-50.png in Resources */,
 				5087E78017EB970100C73F5D /* Icon-114.png in Resources */,
-				82FFA9691EA9FA7C0061D94D /* GameItem in Resources */,
 				50EF62A217ECD613001EB2F8 /* Icon-29.png in Resources */,
 				50EF629617ECD46A001EB2F8 /* Icon-40.png in Resources */,
 				5087E78217EB970100C73F5D /* Icon-144.png in Resources */,
-				3EACC98F19EE6D4300EB3C5E /* res in Resources */,
+				82A8788D1EC1BD76006385CC /* PropResource in Resources */,
 				82FFA96B1EA9FA7C0061D94D /* GamePlayer in Resources */,
 				826873211EA930AB00F7EB27 /* TileGameResources in Resources */,
 				50EF629817ECD46A001EB2F8 /* Icon-80.png in Resources */,
@@ -596,6 +600,7 @@
 				5087E77E17EB970100C73F5D /* Default.png in Resources */,
 				521A8E6419F0C34300D177D7 /* Default-667h@2x.png in Resources */,
 				46880B7B19C43A67006E1F66 /* CloseNormal.png in Resources */,
+				82A878911EC1BD7F006385CC /* GameProp in Resources */,
 				82F3DBF51EA26A2700C6DBDA /* BackGround in Resources */,
 				50EF629717ECD46A001EB2F8 /* Icon-58.png in Resources */,
 			);
@@ -608,11 +613,12 @@
 				46880B8219C43A67006E1F66 /* HelloWorld.png in Resources */,
 				503AE0F817EB97AB00D1A890 /* Icon.icns in Resources */,
 				82F3DBF61EA26A2700C6DBDA /* BackGround in Resources */,
+				82A878921EC1BD7F006385CC /* GameProp in Resources */,
 				8222CA471EA6426D00092E33 /* GameUI in Resources */,
-				3EACC99019EE6D4300EB3C5E /* res in Resources */,
 				827A69BF1EA8FE750073F534 /* gameStart in Resources */,
 				521A8EAA19F11F5000D177D7 /* fonts in Resources */,
-				82FFA96A1EA9FA7C0061D94D /* GameItem in Resources */,
+				82A878951EC1C1D2006385CC /* BubbleImages in Resources */,
+				82A8788E1EC1BD76006385CC /* PropResource in Resources */,
 				826873221EA930AB00F7EB27 /* TileGameResources in Resources */,
 				82FFA9681EA9FA7C0061D94D /* GameBubble in Resources */,
 				46880B7C19C43A67006E1F66 /* CloseNormal.png in Resources */,

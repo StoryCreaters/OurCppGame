@@ -2,6 +2,8 @@
 #include "PauseWithLabelLayer.h"
 #include "ToStart.h"
 #include "GameScene.h"
+// TEST
+#include "PreLoadScene.h"
 
 Scene* OpenScene::createScene()
 {
@@ -51,8 +53,6 @@ bool OpenScene::init()
     auto musicList = cocos2d::MenuItemToggle::createWithCallback(CC_CALLBACK_1(OpenScene::musicOnAndOff, this), cocos2d::MenuItemFont::create("Music On"),   cocos2d::MenuItemFont::create("Music Off"), nullptr);
     auto musicM = cocos2d::Menu::create(musicList, nullptr);
     
-//    absolutelyLayoutScrollView();
-    
     addChild(musicM);
     musicM->setPosition(cocos2d::Vec2(visibleSize.width-60, 20));
     
@@ -68,7 +68,7 @@ cocos2d::Menu* OpenScene::setLayOutL1() {
     cocos2d::Vector<cocos2d::MenuItem*> vecs;
     
     std::string UiNames[] = {"GameUI/ProjectName", "GameUI/PlayMyself", "GameUI/PlayOnInternet", "GameUI/Help","GameUI/Quit"};
-    ccMenuCallback Uifuncs[] = {nullptr,CC_CALLBACK_1(OpenScene::ToStartGame, this),nullptr,CC_CALLBACK_1(OpenScene::OnTouchPause, this),CC_CALLBACK_1(OpenScene::menuCloseCallback, this)};
+    ccMenuCallback Uifuncs[] = {nullptr,CC_CALLBACK_1(OpenScene::ToStartGame, this), CC_CALLBACK_1(OpenScene::sceneTest, this),CC_CALLBACK_1(OpenScene::OnTouchPause, this),CC_CALLBACK_1(OpenScene::menuCloseCallback, this)};
     for (int i = 0; i < 5; ++i) {
         auto menuI = cocos2d::MenuItemImage::create(UiNames[i] + ".png", UiNames[i]+ "Selected.png",Uifuncs[i]);
         if (i != 0)
@@ -152,4 +152,10 @@ void OpenScene::ToStartGame(Ref *sender) {
     audio->stopBackgroundMusic();
     audio->playBackgroundMusic("music/Exit Music.mp3");
     Director::getInstance()->replaceScene(GameScene::createScene());
+}
+
+void OpenScene::sceneTest(Ref *sender) {
+    auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+    audio->stopBackgroundMusic();
+    Director::getInstance()->replaceScene(PreLoadScene::createScene());
 }
