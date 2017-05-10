@@ -148,9 +148,11 @@ void GameScene::myKeyboardOnL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
             break;
     }
     // DEBUG
-    if (code != DEFAULT)
+    if (code != DEFAULT) {
         for (auto &b : _my_sprite_move)     b = false;
-    _my_sprite_move[code] = true;       //有移动的趋势
+//        _direction = code;
+        _my_sprite_move[code] = true;       //有移动的趋势, 防止爆栈
+    }
 }
 
 void GameScene::mySpriteMove() {
@@ -223,8 +225,9 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
     }
     
     // DEBUG
-    if (code == GO_CODE)
+    if (code == GO_CODE) {
         _my_sprite_move[key] = false;       //有移动的趋势
+    }
     else if (code == BUBBLE_CODE) {
         setBubble();
     }
@@ -240,20 +243,17 @@ void GameScene::setBubble() {
     if (accessAble(mySpritePos)) {
         // TODO: 调整精灵位置
         auto newBubble = Bubbles::create(_myplayer->_currentPower);
+        
         // DEBUG: 判断泡泡放置是否是accessable 的
         newBubble->setPosition(mySpritePos);
         auto timeBoom = CallFuncN::create(CC_CALLBACK_1(GameScene::BubbleBoom, this));
         
         // 动画(是否可以抽象)
         auto anime = getAnimationByName("Popo_", 0.25, bubble_frame_nums);
-        if (anime == nullptr) {
-            log("sigh");
-        } else {
-            auto animate = Animate::create(anime);
-            auto bubbleAction = RepeatForever::create(animate);
-            newBubble->runAction(bubbleAction);
-        }
         
+        auto animate = Animate::create(anime);
+        auto bubbleAction = RepeatForever::create(animate);
+        newBubble->runAction(bubbleAction);
         
         addChild(newBubble);
         ++_my_bubbles;

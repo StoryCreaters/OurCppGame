@@ -19,3 +19,4 @@ Bubbles* Bubbles::create(int power) {
         return nullptr;
     }
 }
+

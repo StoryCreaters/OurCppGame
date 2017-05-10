@@ -58,7 +58,7 @@ private:
     // 表示自己运动状况的量, true就开始运动, 共有四个方向
     enum _optionCode {
         GO_UP, GO_DOWN, GO_LEFT, GO_RIGHT, DEFAULT
-    };
+    } _direction;
     std::array<bool, 4> _my_sprite_move;
     
 };

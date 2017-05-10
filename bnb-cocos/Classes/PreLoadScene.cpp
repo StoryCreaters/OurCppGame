@@ -1,3 +1,4 @@
+// TODO: 增加一个exit时 清场的function
 #include "PreLoadScene.h"
 #include "SimpleAudioEngine.h"
 #include "Settings.h"
@@ -105,9 +106,9 @@ void PreLoadScene::update(float dt) {
 
 void PreLoadScene::onEnterTransitionDidFinish(){
     Layer::onEnterTransitionDidFinish();
-    _sourceCount = 500;
+    _sourceCount = delayFrame;
     // 设置进度条更新次数=100/需要加载的资源数量
-    _progressInterval = 100 / _sourceCount;
+    _progressInterval = 100 / static_cast<float>(_sourceCount);
     // 依次加载资源
     loadMusic();
     loadSpriteFrame();

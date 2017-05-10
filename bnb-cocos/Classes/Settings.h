@@ -4,6 +4,9 @@
 namespace settings {
     // 人物属性设定
     namespace Character {
+        // 人物的x, y
+        constexpr float character_x[] = {51, 48, 55};
+        constexpr float character_y[] = {64, 60, 67};
         
         // 人物基础属性
         constexpr int start_bubbles[] = {2, 1, 2};
@@ -43,6 +46,8 @@ namespace settings {
         constexpr char* bubbles_animation = "BubbleImages/images/stable/bubble_bump.plist";
         
         constexpr char* to_load_music = "music/Temple of Time.mp3";
+        
+        constexpr int delayFrame = 250;
     }
     
     namespace Bubbles {

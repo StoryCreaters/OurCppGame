@@ -33,20 +33,40 @@ bool character::initWithPlayerType(characterType type)
     _maxPower = max_powers[type];
     _currentVelocity = start_velocity[type];
     _maxVelocity = max_velocity[type];
-//    switch(type)
-//    {
-//        case MAPLE_WISH:
-//            _spriteName = "GamePlayer/player1.png";
-//            _startPower = _startBubbles = _startVelocity = 1;
-//            break;
-//        case CHRIS:
-//            _spriteName = "GamePlayer/player2.png";
-//            break;
-//        case SHADOWFOX:
-//            _spriteName = "GamePlayer/player3.png";
-//            break;
-//    }
+
+    _sprite_width = character_x[type];
+    _sprite_height = character_y[type];
+    
     this->initWithFile(sprite_paths[type]);
     return true;
+}
+
+cocos2d::Vec2 character::get_collision_ld() {
+    auto pos = this->getPosition();
+    auto x = pos.x, y = pos.y;
+    x -= _sprite_width / 2;
+    y -= _sprite_height / 2;
+    return cocos2d::Vec2(x, y);
+}
+cocos2d::Vec2 character::get_collision_rd() {
+    auto pos = this->getPosition();
+    auto x = pos.x, y = pos.y;
+    x += _sprite_width / 2;
+    y -= _sprite_height / 2;
+    return cocos2d::Vec2(x, y);
+}
+cocos2d::Vec2 character::get_collision_lu() {
+    auto pos = this->getPosition();
+    auto x = pos.x, y = pos.y;
+    x -= _sprite_width / 2;
+    y += _sprite_height / 2;
+    return cocos2d::Vec2(x, y);
+}
+cocos2d::Vec2 character::get_collision_ru() {
+    auto pos = this->getPosition();
+    auto x = pos.x, y = pos.y;
+    x += _sprite_width / 2;
+    y += _sprite_height / 2;
+    return cocos2d::Vec2(x, y);
 }
 
