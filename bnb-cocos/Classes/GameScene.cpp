@@ -30,9 +30,9 @@ bool GameScene::init()
         return false;
     }
     
-    auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
-    audio->playBackgroundMusic(background_music, true);
-    audio->resumeAllEffects();
+//    auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+//    audio->playBackgroundMusic(background_music, true);
+//    audio->resumeAllEffects();
     
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -44,31 +44,37 @@ bool GameScene::init()
     addChild(backG, -10);
     backG->setPosition(visibleSize / 2);
     
-    // tile map and basic player
+    /***** tilemap ******/
     _tileMap = TMXTiledMap::create("gameStart/map01.tmx");
-    _background = _tileMap->layerNamed("Background");
+    
+    log("init:%f %f", _tileMap->getTileSize().height, _tileMap->getTileSize().width);
     
     _tileMap->setAnchorPoint(Vec2(0.5f, 0.5f));
     _tileMap->setPosition(Point(visibleSize.width / 2 , visibleSize.height / 2));
     _tileMap->setScale(settings::GameScene::_tile_delta_rate);
+    log("aft:%f %f", _tileMap->getTileSize().height, _tileMap->getMapSize().width);
+    
     _meta = _tileMap->getLayer("Unbroken");
+    _background = _tileMap->getLayer("Background");
+    addChild(_tileMap, -1);
     
     // 注意坐标位置差
-    auto offx = (visibleSize.width - _tileMap->getContentSize().width)/ 2;
-    auto offy = (visibleSize.height - _tileMap->getContentSize().height) / 2;
+    float offx = (visibleSize.width - _tileMap->getContentSize().width * _tile_delta_rate)/ 2;
+    float offy = (visibleSize.height - _tileMap->getContentSize().height * _tile_delta_rate) / 2;
     TMXObjectGroup *objects = _tileMap->getObjectGroup("player");
     CCASSERT(nullptr != objects, "'Objects' object group not found");
     auto spawnPoint = objects->getObject("SpawnPoint1");
     CCASSERT(!spawnPoint.empty(), "SpawnPoint object not found");
-    int x = spawnPoint["x"].asFloat();
-    int y = spawnPoint["y"].asFloat();
-    // 用某个该死的家伙建立精灵
+    int x = spawnPoint["x"].asFloat() * _tile_delta_rate;
+    int y = spawnPoint["y"].asFloat() * _tile_delta_rate;
     
+    
+    /*** add sprite***/
     _myplayer = character::create(character::MAPLE_WISH);
     _myplayer->setPosition(offx + x, offy + y);
+    addChild(_myplayer, 1);
     
-    addChild(_myplayer);
-    addChild(_tileMap, -1);
+    
     
     // basic bubbles
     _my_bubbles = 0;
@@ -131,6 +137,7 @@ void GameScene::addCloseMenu() {
     this->addChild(closeMenu, 1);
 }
 
+/*****键盘监听*****/
 void GameScene::myKeyboardOnL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
     GameScene::_optionCode code = DEFAULT;
     switch (keyCode) {
@@ -168,47 +175,7 @@ void GameScene::myKeyboardOnL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
     }
 }
 
-void GameScene::mySpriteMove() {
-    Vector<FiniteTimeAction *> moves;
-    const int step = 5;
-    float dur = 0.1f;
-    //TODO:增加边界检测
-    // 获得x y 的上界 下界
-    auto visibleSize = Director::getInstance()->getVisibleSize();
-    auto offx = (visibleSize.width - _tileMap->getContentSize().width)/ 2;
-    auto offy = (visibleSize.height - _tileMap->getContentSize().height) / 2;
-    auto lowerx = offx, upperx = visibleSize.width - offx;
-    auto lowery = offy, uppery = visibleSize.height - offy;
-    
-    const static int BORDER = 2;        //边界长
-    if (_my_sprite_move[GO_RIGHT]) {
-        if (upperx >= _myplayer->getPosition().x + BORDER)
-            if (accessAble(Vec2(_myplayer->getPosition().x + step + _myplayer->getContentSize().width / 2, _myplayer->getPosition().y)))
-                moves.pushBack(MoveBy::create(dur, Vec2(step, 0)));
-    }
-    
-    if (_my_sprite_move[GO_LEFT]) {
-        if (lowerx <= _myplayer->getPosition().x - BORDER)
-            if (accessAble(Vec2(_myplayer->getPosition().x - step - _myplayer->getContentSize().width / 2, _myplayer->getPosition().y)))
-                moves.pushBack(MoveBy::create(dur, Vec2(-step, 0)));
-    }
-    
-    if (_my_sprite_move[GO_UP]) {
-        if (uppery >= _myplayer->getPosition().y + BORDER)
-            if (accessAble(Vec2(_myplayer->getPosition().x, _myplayer->getPosition().y + step + _myplayer->getContentSize().height / 2)))
-                moves.pushBack(MoveBy::create(dur, Vec2(0, step)));
-    }
-    
-    if (_my_sprite_move[GO_DOWN]) {
-        if (lowery <= _myplayer->getPosition().y - BORDER)
-            if (accessAble(Vec2(_myplayer->getPosition().x, _myplayer->getPosition().y - step - _myplayer->getContentSize().height / 2)))
-                moves.pushBack(MoveBy::create(dur, Vec2(0, -step)));
-    }
-    
-    // 有可能啥都没有2333
-    if (moves.size())
-        _myplayer->runAction(cocos2d::Spawn::create(moves));
-}
+
 
 void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
     GameScene::_optionCode key;
@@ -237,7 +204,6 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
             break;
     }
     
-    // DEBUG
     if (code == GO_CODE) {
         _my_sprite_move[key] = false;       //有移动的趋势
         _myplayer->stopAllActions();
@@ -245,6 +211,49 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
     else if (code == BUBBLE_CODE) {
         setBubble();
     }
+}
+
+/****人物移动****/
+void GameScene::mySpriteMove() {
+    Vector<FiniteTimeAction *> moves;
+    const int step = 5;
+    float dur = 0.1f;
+    //TODO: 增加边界检测
+    // 获得x y 的上界 下界
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    auto offx = (visibleSize.width - _tileMap->getContentSize().width * _tile_delta_rate)/ 2;
+    auto offy = (visibleSize.height - _tileMap->getContentSize().height * _tile_delta_rate) / 2;
+    auto lowerx = offx, upperx = visibleSize.width - offx;
+    auto lowery = offy, uppery = visibleSize.height - offy;
+    
+    const static int BORDER = 2;        //边界长
+    if (_my_sprite_move[GO_RIGHT]) {
+        if (upperx >= _myplayer->getPosition().x + BORDER)
+            if (accessAble(Vec2(_myplayer->getPosition().x + step + _myplayer->getContentSize().width / 2, _myplayer->getPosition().y)))
+                moves.pushBack(MoveBy::create(dur, Vec2(step, 0)));
+    }
+    
+    if (_my_sprite_move[GO_LEFT]) {
+        if (lowerx <= _myplayer->getPosition().x - BORDER)
+            if (accessAble(Vec2(_myplayer->getPosition().x - step - _myplayer->getContentSize().width / 2, _myplayer->getPosition().y)))
+                moves.pushBack(MoveBy::create(dur, Vec2(-step, 0)));
+    }
+    
+    if (_my_sprite_move[GO_UP]) {
+        if (uppery >= _myplayer->getPosition().y + BORDER)
+            if (accessAble(Vec2(_myplayer->getPosition().x, _myplayer->getPosition().y + step + _myplayer->getContentSize().height/ 2)))
+                moves.pushBack(MoveBy::create(dur, Vec2(0, step)));
+    }
+    
+    if (_my_sprite_move[GO_DOWN]) {
+        if (lowery <= _myplayer->getPosition().y - BORDER)
+            if (accessAble(Vec2(_myplayer->getPosition().x, _myplayer->getPosition().y - step - _myplayer->getContentSize().height / 2)))
+                moves.pushBack(MoveBy::create(dur, Vec2(0, -step)));
+    }
+    
+    // 有可能啥都没有2333
+    if (moves.size())
+        _myplayer->runAction(cocos2d::Spawn::create(moves));
 }
 
 // bubble应该设置在tilemap的grid上
@@ -255,17 +264,17 @@ void GameScene::setBubble() {
     }
     auto pos0 = tileCoordForPosition(_myplayer->getPosition());
     pos0.x = static_cast<int>(pos0.x); pos0.y = static_cast<int>(pos0.y);
-    auto mySpritePos = _background->getPositionAt(pos0);
+    auto mySpritePos = _background->getPositionAt(pos0) * _tile_delta_rate;
     
     auto visibleSize = Director::getInstance()->getWinSize();
-    mySpritePos += (visibleSize - _tileMap->getContentSize()) / 2;
-//    log("shows:%f %f, my: %f %f", mySpritePos.x, mySpritePos.y, _myplayer->getPosition().x, _myplayer->getPosition().y);
-    
-//    auto mySpritePos = _myplayer->getPosition();
+    mySpritePos += (visibleSize - _tileMap->getContentSize() * _tile_delta_rate) / 2;
+
     if (accessAble(mySpritePos)) {
         // TODO: 调整精灵位置
         auto newBubble = Bubbles::create(_myplayer->_currentPower);
         newBubble->setAnchorPoint(Vec2::ZERO);
+        newBubble->setScale(_tile_delta_rate);
+        
         // DEBUG: 判断泡泡放置是否是accessable 的
         newBubble->setPosition(mySpritePos);
         auto timeBoom = CallFuncN::create(CC_CALLBACK_1(GameScene::BubbleBoom, this));
@@ -296,14 +305,27 @@ void GameScene::update(float dt) {
 
 cocos2d::Vec2 GameScene::tileCoordForPosition(cocos2d::Vec2 pos) {
     auto visibleSize = Director::getInstance()->getWinSize();
-    auto offx = (visibleSize.width - _tileMap->getContentSize().width)/ 2;
-    auto offy = (visibleSize.height - _tileMap->getContentSize().height) / 2;
-    float x = (pos.x - offx) / (_tileMap->getTileSize().width * _tile_delta_rate);
-    // TODO: find what was fucking wrong with this bullshit position
-    float y = (pos.y - offy) / (_tileMap->getTileSize().height * _tile_delta_rate) - 0.3; // 原先-0.3
-    if (14 - y > 14)
-        y = 0;
-    return Vec2(x + 1, 14 - y);
+    auto offx = (visibleSize.width - static_cast<float>(_tileMap->getContentSize().width * _tile_delta_rate))/ 2;
+    auto offy = (visibleSize.height - static_cast<float>(_tileMap->getContentSize().height * _tile_delta_rate))/ 2;
+
+    /*** test ***/
+    int x = (int)((pos.x - offx) / (_tileMap->getTileSize().width * _tile_delta_rate / CC_CONTENT_SCALE_FACTOR()));
+    // 玩家位置的y除以地图的高，得到的是地图纵向第几个格子（tile），
+    // 但是因为cocos2d-x的y轴（左下角）和TileMap的y轴（左上角）轴相反，所以使用地图的高度减去玩家位置的y
+    
+    float pointHeight = _tileMap->getTileSize().height * _tile_delta_rate / CC_CONTENT_SCALE_FACTOR();
+    int y = (int)((_tileMap->getMapSize().height* _tile_delta_rate * pointHeight - pos.y - offy) / pointHeight);
+    if (y > 14) y = 14;
+    if (x > 14) x = 14;
+    return Vec2(x,y);
+    
+    // DEBUG
+//    float x = (pos.x - offx) / (_tileMap->getTileSize().width * _tile_delta_rate);
+//    // TODO: find what was fucking wrong with this bullshit position
+//    float y = (pos.y - offy) / (_tileMap->getTileSize().height * _tile_delta_rate) - 0.3; // 原先-0.3
+//    if (14 - y > 14)
+//        y = 0;
+//    return Vec2(x + 1, 14 - y);
 }
 
 bool GameScene::accessAble(cocos2d::Vec2 pos) {

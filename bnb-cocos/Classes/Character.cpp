@@ -41,7 +41,6 @@ bool character::initWithPlayerType(characterType type)
     
     // 记住加入png
     this->initWithSpriteFrameName("player" + std::to_string(type + 1) + "_down_01.png");
-//    cocos2d::log("initial: %s", ("player" + std::to_string(type + 1) + "_down_01.png").c_str());
     this->initWithFile(sprite_paths[type]);
     return true;
 }
