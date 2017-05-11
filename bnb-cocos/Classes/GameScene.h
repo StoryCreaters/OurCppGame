@@ -51,16 +51,11 @@ private:
 //    cocos2d::Vector<character*> _players;        //保存玩家的容器
 //    std::vector<cocos2d::Vec2> _bubbles;        // 保存玩家释放的bubble
     int _my_bubbles;
-    
-//    const static int _round = 0.3;       // 人物半径
-    
-    
     // 表示自己运动状况的量, true就开始运动, 共有四个方向
     enum _optionCode {
         GO_UP, GO_DOWN, GO_LEFT, GO_RIGHT, DEFAULT
     } _direction;
     std::array<bool, 4> _my_sprite_move;
-    
 };
 
 #endif /* GameTheme_hpp */

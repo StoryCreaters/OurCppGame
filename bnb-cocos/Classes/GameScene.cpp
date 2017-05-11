@@ -2,6 +2,7 @@
 #include "GameScene.h"
 #include "Bubbles.h"
 #include "Settings.h"
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
 using namespace settings::GameScene;
@@ -29,6 +30,9 @@ bool GameScene::init()
         return false;
     }
     
+    auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+    audio->playBackgroundMusic(background_music, true);
+    audio->resumeAllEffects();
     
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -48,8 +52,6 @@ bool GameScene::init()
     _tileMap->setPosition(Point(visibleSize.width / 2 , visibleSize.height / 2));
     _tileMap->setScale(settings::GameScene::_tile_delta_rate);
     _meta = _tileMap->getLayer("Unbroken");
-    if (_meta == nullptr)
-        log("xxxd");
     
     // 注意坐标位置差
     auto offx = (visibleSize.width - _tileMap->getContentSize().width)/ 2;
@@ -148,10 +150,21 @@ void GameScene::myKeyboardOnL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
             break;
     }
     // DEBUG
+    // TODO:走路可以用状态机实现
     if (code != DEFAULT) {
         for (auto &b : _my_sprite_move)     b = false;
-//        _direction = code;
         _my_sprite_move[code] = true;       //有移动的趋势, 防止爆栈
+        
+        // animation and direction
+        std::string next_direction(_myplayer->_spriteName + "_"+ std::string(direc_string[code]) +"_");
+        auto tmp_f = SpriteFrameCache::getInstance()->getSpriteFrameByName(next_direction + "01.png");
+        _myplayer->setSpriteFrame(tmp_f);
+
+        
+        auto anime = getAnimationByName(next_direction, 0.1f, _myplayer->_animation_frames);
+        auto animate = Animate::create(anime);
+        auto player_action = RepeatForever::create(animate);
+        _myplayer->runAction(player_action);
     }
 }
 
@@ -227,6 +240,7 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
     // DEBUG
     if (code == GO_CODE) {
         _my_sprite_move[key] = false;       //有移动的趋势
+        _myplayer->stopAllActions();
     }
     else if (code == BUBBLE_CODE) {
         setBubble();
@@ -239,11 +253,19 @@ void GameScene::setBubble() {
     if (_my_bubbles >= _myplayer->_currentBubbles) {
         return;
     }
-    auto mySpritePos = _myplayer->getPosition();
+    auto pos0 = tileCoordForPosition(_myplayer->getPosition());
+    pos0.x = static_cast<int>(pos0.x); pos0.y = static_cast<int>(pos0.y);
+    auto mySpritePos = _background->getPositionAt(pos0);
+    
+    auto visibleSize = Director::getInstance()->getWinSize();
+    mySpritePos += (visibleSize - _tileMap->getContentSize()) / 2;
+//    log("shows:%f %f, my: %f %f", mySpritePos.x, mySpritePos.y, _myplayer->getPosition().x, _myplayer->getPosition().y);
+    
+//    auto mySpritePos = _myplayer->getPosition();
     if (accessAble(mySpritePos)) {
         // TODO: 调整精灵位置
         auto newBubble = Bubbles::create(_myplayer->_currentPower);
-        
+        newBubble->setAnchorPoint(Vec2::ZERO);
         // DEBUG: 判断泡泡放置是否是accessable 的
         newBubble->setPosition(mySpritePos);
         auto timeBoom = CallFuncN::create(CC_CALLBACK_1(GameScene::BubbleBoom, this));
@@ -278,7 +300,7 @@ cocos2d::Vec2 GameScene::tileCoordForPosition(cocos2d::Vec2 pos) {
     auto offy = (visibleSize.height - _tileMap->getContentSize().height) / 2;
     float x = (pos.x - offx) / (_tileMap->getTileSize().width * _tile_delta_rate);
     // TODO: find what was fucking wrong with this bullshit position
-    float y = (pos.y - offy) / (_tileMap->getTileSize().height * _tile_delta_rate) - 0.3;
+    float y = (pos.y - offy) / (_tileMap->getTileSize().height * _tile_delta_rate) - 0.3; // 原先-0.3
     if (14 - y > 14)
         y = 0;
     return Vec2(x + 1, 14 - y);

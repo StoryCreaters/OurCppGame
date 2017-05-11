@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>person1_down_01.png</key>
+            <key>player1_down_01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{194,109},{46,57}}</string>
@@ -17,7 +17,7 @@
                 <key>sourceSize</key>
                 <string>{46,57}</string>
             </dict>
-            <key>person1_down_02.png</key>
+            <key>player1_down_02.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{49,182},{45,58}}</string>
@@ -30,7 +30,7 @@
                 <key>sourceSize</key>
                 <string>{45,58}</string>
             </dict>
-            <key>person1_down_03.png</key>
+            <key>player1_down_03.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{146,98},{46,57}}</string>
@@ -43,7 +43,7 @@
                 <key>sourceSize</key>
                 <string>{46,57}</string>
             </dict>
-            <key>person1_down_04.png</key>
+            <key>player1_down_04.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,182},{45,58}}</string>
@@ -56,7 +56,7 @@
                 <key>sourceSize</key>
                 <string>{45,58}</string>
             </dict>
-            <key>person1_left_01.png</key>
+            <key>player1_left_01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{98,109},{46,57}}</string>
@@ -69,7 +69,7 @@
                 <key>sourceSize</key>
                 <string>{46,57}</string>
             </dict>
-            <key>person1_left_02.png</key>
+            <key>player1_left_02.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{203,50},{46,57}}</string>
@@ -82,7 +82,7 @@
                 <key>sourceSize</key>
                 <string>{46,57}</string>
             </dict>
-            <key>person1_left_03.png</key>
+            <key>player1_left_03.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{144,50},{46,57}}</string>
@@ -95,7 +95,7 @@
                 <key>sourceSize</key>
                 <string>{46,57}</string>
             </dict>
-            <key>person1_left_04.png</key>
+            <key>player1_left_04.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{96,168},{46,57}}</string>
@@ -108,7 +108,7 @@
                 <key>sourceSize</key>
                 <string>{46,57}</string>
             </dict>
-            <key>person1_right_01.png</key>
+            <key>player1_right_01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{50,109},{46,57}}</string>
@@ -121,7 +121,7 @@
                 <key>sourceSize</key>
                 <string>{46,57}</string>
             </dict>
-            <key>person1_right_02.png</key>
+            <key>player1_right_02.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{50,50},{46,57}}</string>
@@ -134,7 +134,7 @@
                 <key>sourceSize</key>
                 <string>{46,57}</string>
             </dict>
-            <key>person1_right_03.png</key>
+            <key>player1_right_03.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{155,2},{46,57}}</string>
@@ -147,7 +147,7 @@
                 <key>sourceSize</key>
                 <string>{46,57}</string>
             </dict>
-            <key>person1_right_04.png</key>
+            <key>player1_right_04.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{96,2},{46,57}}</string>
@@ -160,7 +160,7 @@
                 <key>sourceSize</key>
                 <string>{46,57}</string>
             </dict>
-            <key>person1_up_01.png</key>
+            <key>player1_up_01.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,122},{46,58}}</string>
@@ -173,7 +173,7 @@
                 <key>sourceSize</key>
                 <string>{46,58}</string>
             </dict>
-            <key>person1_up_02.png</key>
+            <key>player1_up_02.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,62},{46,58}}</string>
@@ -186,7 +186,7 @@
                 <key>sourceSize</key>
                 <string>{46,58}</string>
             </dict>
-            <key>person1_up_03.png</key>
+            <key>player1_up_03.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,122},{46,58}}</string>
@@ -199,7 +199,7 @@
                 <key>sourceSize</key>
                 <string>{46,58}</string>
             </dict>
-            <key>person1_up_04.png</key>
+            <key>player1_up_04.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,2},{46,58}}</string>
@@ -218,13 +218,13 @@
             <key>format</key>
             <integer>2</integer>
             <key>realTextureFileName</key>
-            <string>person1.png</string>
+            <string>player1.png</string>
             <key>size</key>
             <string>{256,256}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:8f358d44943a56fca68e405455676070:1/1$</string>
+            <string>$TexturePacker:SmartUpdate:9b89f4ada4d97b26cd80dabe6d34da5c:1/1$</string>
             <key>textureFileName</key>
-            <string>person1.png</string>
+            <string>player1.png</string>
         </dict>
     </dict>
 </plist>

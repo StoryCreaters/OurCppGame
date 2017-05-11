@@ -2,7 +2,7 @@
 #include "PreLoadScene.h"
 #include "SimpleAudioEngine.h"
 #include "Settings.h"
-#include "GameScene.h"
+#include "OpenScene.h"
 
 using namespace settings::PreLoadScene;
 USING_NS_CC;
@@ -67,7 +67,9 @@ void PreLoadScene::loadSpriteFrame() {
     // 道具动画
     auto sprite_frame_cache = SpriteFrameCache::getInstance();
     sprite_frame_cache->addSpriteFramesWithFile(gifts_animation);
-    sprite_frame_cache->addSpriteFramesWithFile(person_animation);
+    for (auto s: person_animation) {
+        sprite_frame_cache->addSpriteFramesWithFile(s);
+    }
     sprite_frame_cache->addSpriteFramesWithFile(bubbles_animation);
 }
 
@@ -87,9 +89,9 @@ void PreLoadScene::progressUpdate() {
         // 定义了一个CallFunc动作
         auto callFunc = CallFunc::create([=]{
             // 当加载资源完成，延迟2秒跳转到游戏主场景
-            auto delay = DelayTime::create(2.0f);
+            auto delay = DelayTime::create(delaytime);
             auto callFunc = CallFunc::create([]{
-                Director::getInstance()->replaceScene(GameScene::createScene());
+                Director::getInstance()->replaceScene(OpenScene::createScene());
             });
             auto action = Sequence::create(delay,callFunc, NULL);
             this->runAction(action);

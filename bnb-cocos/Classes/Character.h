@@ -28,6 +28,10 @@ public:
     int _maxBubbles;
     int _currentBubbles;
     
+    int _animation_frames;
+    // 每个精灵对应的_spriteName
+    std::string _spriteName;
+    
     /*****碰撞点******/
     // 获取泡泡的碰撞点, l表示左, r表示右, d表示下, u表示上
     cocos2d::Vec2 get_collision_ld();
@@ -35,8 +39,7 @@ public:
     cocos2d::Vec2 get_collision_lu();
     cocos2d::Vec2 get_collision_ru();
 private:
-    // 每个精灵对应的_spriteName
-    std::string _spriteName;
+    
     // 人物的身材
     int _sprite_width;
     int _sprite_height;
