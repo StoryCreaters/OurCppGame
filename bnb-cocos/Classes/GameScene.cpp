@@ -1,4 +1,7 @@
 // 理想状况这里应该用继承的... 但是这里先写一个试试看咯～
+// TODO: 改变遮挡关系
+// 泡泡炸裂
+// 制作FSM
 #include "GameScene.h"
 #include "Bubbles.h"
 #include "Settings.h"
@@ -71,6 +74,7 @@ bool GameScene::init()
     
     /*** add sprite***/
     _myplayer = character::create(character::MAPLE_WISH);
+    _myplayer->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     _myplayer->setPosition(offx + x, offy + y);
     addChild(_myplayer, 1);
     
@@ -263,13 +267,13 @@ void GameScene::setBubble() {
         return;
     }
     auto pos0 = tileCoordForPosition(_myplayer->getPosition());
-    pos0.x = static_cast<int>(pos0.x); pos0.y = static_cast<int>(pos0.y);
+//    pos0.x = static_cast<int>(pos0.x); pos0.y = static_cast<int>(pos0.y);
     auto mySpritePos = _background->getPositionAt(pos0) * _tile_delta_rate;
-    
     auto visibleSize = Director::getInstance()->getWinSize();
     mySpritePos += (visibleSize - _tileMap->getContentSize() * _tile_delta_rate) / 2;
 
-    if (accessAble(mySpritePos)) {
+    // DEBUG : not mySpritePos
+    if (accessAble(_myplayer->getPosition())) {
         // TODO: 调整精灵位置
         auto newBubble = Bubbles::create(_myplayer->_currentPower);
         newBubble->setAnchorPoint(Vec2::ZERO);
@@ -307,16 +311,20 @@ cocos2d::Vec2 GameScene::tileCoordForPosition(cocos2d::Vec2 pos) {
     auto visibleSize = Director::getInstance()->getWinSize();
     auto offx = (visibleSize.width - static_cast<float>(_tileMap->getContentSize().width * _tile_delta_rate))/ 2;
     auto offy = (visibleSize.height - static_cast<float>(_tileMap->getContentSize().height * _tile_delta_rate))/ 2;
-
+    
     /*** test ***/
-    int x = (int)((pos.x - offx) / (_tileMap->getTileSize().width * _tile_delta_rate / CC_CONTENT_SCALE_FACTOR()));
+    
     // 玩家位置的y除以地图的高，得到的是地图纵向第几个格子（tile），
     // 但是因为cocos2d-x的y轴（左下角）和TileMap的y轴（左上角）轴相反，所以使用地图的高度减去玩家位置的y
     
     float pointHeight = _tileMap->getTileSize().height * _tile_delta_rate / CC_CONTENT_SCALE_FACTOR();
-    int y = (int)((_tileMap->getMapSize().height* _tile_delta_rate * pointHeight - pos.y - offy) / pointHeight);
+    int x = (int)((pos.x - offx) / (_tileMap->getTileSize().width * _tile_delta_rate / CC_CONTENT_SCALE_FACTOR()));
+    
+//    int y = (int)((_tileMap->getMapSize().height * _tile_delta_rate * pointHeight - pos.y - offy) / pointHeight);
+    int y = static_cast<int>((visibleSize.height - offy - pos.y) / pointHeight);
     if (y > 14) y = 14;
     if (x > 14) x = 14;
+    log("coord : %d %d", x, y);
     return Vec2(x,y);
     
     // DEBUG

@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 #include "Character.h"
+#include "Bubbles.h"
 #include <array>
 
 class GameScene : public cocos2d::Layer
@@ -52,9 +53,13 @@ private:
     
     /**** player的属性, 和自己的player的属性, 可以考虑fsm和vector ****/
     character* _myplayer;
+    cocos2d::Vector<Bubbles*> _screen_bubbles;                  // 保存玩家的泡泡, 用来检测碰撞
 //    cocos2d::Vector<character*> _players;        //保存玩家的容器
 //    std::vector<cocos2d::Vec2> _bubbles;        // 保存玩家释放的bubble
     int _my_bubbles;
+    
+    // 临时纠错值, y坐标还有坑呜呜呜
+    float tmp_y = 0.1;
     
     // 表示自己运动状况的量, true就开始运动, 共有四个方向
     enum _optionCode {
