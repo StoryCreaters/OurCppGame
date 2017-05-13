@@ -165,13 +165,12 @@ void GameScene::myKeyboardOnL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
     if (code != DEFAULT) {
         for (auto &b : _my_sprite_move)     b = false;
         _my_sprite_move[code] = true;       //有移动的趋势, 防止爆栈
+        _direction = code;
         
         // animation and direction
         std::string next_direction(_myplayer->_spriteName + "_"+ std::string(direc_string[code]) +"_");
-        auto tmp_f = SpriteFrameCache::getInstance()->getSpriteFrameByName(next_direction + "01.png");
-        _myplayer->setSpriteFrame(tmp_f);
-
-        
+//        auto tmp_f = SpriteFrameCache::getInstance()->getSpriteFrameByName(next_direction + "01.png");
+//        _myplayer->setSpriteFrame(tmp_f);
         auto anime = getAnimationByName(next_direction, 0.1f, _myplayer->_animation_frames);
         auto animate = Animate::create(anime);
         auto player_action = RepeatForever::create(animate);
@@ -210,6 +209,9 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
     
     if (code == GO_CODE) {
         _my_sprite_move[key] = false;       //有移动的趋势
+        std::string next_direction(_myplayer->_spriteName + "_"+ std::string(direc_string[_direction]) +"_");
+        auto tmp_f = SpriteFrameCache::getInstance()->getSpriteFrameByName(next_direction + "01.png");
+        _myplayer->setSpriteFrame(tmp_f);
         _myplayer->stopAllActions();
     }
     else if (code == BUBBLE_CODE) {
@@ -324,16 +326,8 @@ cocos2d::Vec2 GameScene::tileCoordForPosition(cocos2d::Vec2 pos) {
     int y = static_cast<int>((visibleSize.height - offy - pos.y) / pointHeight);
     if (y > 14) y = 14;
     if (x > 14) x = 14;
-    log("coord : %d %d", x, y);
+//    log("coord : %d %d", x, y);
     return Vec2(x,y);
-    
-    // DEBUG
-//    float x = (pos.x - offx) / (_tileMap->getTileSize().width * _tile_delta_rate);
-//    // TODO: find what was fucking wrong with this bullshit position
-//    float y = (pos.y - offy) / (_tileMap->getTileSize().height * _tile_delta_rate) - 0.3; // 原先-0.3
-//    if (14 - y > 14)
-//        y = 0;
-//    return Vec2(x + 1, 14 - y);
 }
 
 bool GameScene::accessAble(cocos2d::Vec2 pos) {

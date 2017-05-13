@@ -38,12 +38,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Classes/GameScene.cpp"
-            timestampString = "516209917.700655"
+            timestampString = "516352947.08019"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "339"
-            endingLineNumber = "339"
-            landmarkName = "GameScene::accessAble(cocos2d::Vec2 pos)"
+            startingLineNumber = "330"
+            endingLineNumber = "330"
+            landmarkName = "GameScene::tileCoordForPosition(cocos2d::Vec2 pos)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -54,43 +54,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Classes/GameScene.cpp"
-            timestampString = "516209917.700655"
+            timestampString = "516352637.148896"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "338"
-            endingLineNumber = "338"
-            landmarkName = "GameScene::accessAble(cocos2d::Vec2 pos)"
+            startingLineNumber = "263"
+            endingLineNumber = "263"
+            landmarkName = "GameScene::mySpriteMove()"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../Classes/GameScene.cpp"
-            timestampString = "516209917.700655"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "337"
-            endingLineNumber = "337"
-            landmarkName = "GameScene::accessAble(cocos2d::Vec2 pos)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../Classes/GameScene.cpp"
-            timestampString = "516209917.700655"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "260"
-            endingLineNumber = "260">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -114,11 +84,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Classes/GameScene.cpp"
-            timestampString = "516210309.604308"
+            timestampString = "516352637.148896"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "270"
-            endingLineNumber = "270"
+            startingLineNumber = "273"
+            endingLineNumber = "273"
             landmarkName = "GameScene::setBubble()"
             landmarkType = "7">
          </BreakpointContent>
