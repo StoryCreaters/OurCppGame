@@ -1,4 +1,5 @@
 #include "settingScene.h"
+#include "OpenScene.h"
 #include "SimpleAudioEngine.h"
 /*理想的setting 包括：
 1.音效开关 （音效调节大小）
@@ -141,7 +142,9 @@ bool Setting::init()
 
 void Setting::menuOkCallback(cocos2d::Ref* pSender)
 {
-	Director::getInstance()->popScene();
+	auto sc = OpenScene::createScene();
+	auto reScene = TransitionSlideInL::create(0.618f, sc);
+	Director::getInstance()->replaceScene(reScene);
 }
 
 

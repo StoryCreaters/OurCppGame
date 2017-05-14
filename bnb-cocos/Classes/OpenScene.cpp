@@ -47,9 +47,13 @@ bool OpenScene::init()
 
 	auto menu_list = setLayOutL1();
 	addChild(menu_list);
+
 	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
 	audio->playBackgroundMusic("music/When The Morning Comes.mp3", true);
-	auto musicList = cocos2d::MenuItemToggle::createWithCallback(CC_CALLBACK_1(OpenScene::musicOnAndOff, this), cocos2d::MenuItemFont::create("Music On"), cocos2d::MenuItemFont::create("Music Off"), nullptr);
+	auto musicList = cocos2d::MenuItemToggle::createWithCallback(
+		CC_CALLBACK_1(OpenScene::musicOnAndOff, this),
+		cocos2d::MenuItemFont::create("Music On"), 
+		cocos2d::MenuItemFont::create("Music Off"), nullptr);
 	auto musicM = cocos2d::Menu::create(musicList, nullptr);
 
 	addChild(musicM);
@@ -153,11 +157,15 @@ void OpenScene::ToStartGame(Ref *sender) {
 	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
 	audio->stopBackgroundMusic();
 	audio->playBackgroundMusic("music/MEGALOVANIA.mp3");
-	Director::getInstance()->replaceScene(GameScene::createScene());
+
+	auto sc = GameScene::createScene();
+	auto reScene = TransitionSlideInR::create(0.618f, sc); // 0.618f 控制速度
+	Director::getInstance()->replaceScene(reScene);
 }
 
 void OpenScene::menuSetting(cocos2d::Ref* pSender)
 {
 	auto sc = Setting::createScene();
-	Director::getInstance()->pushScene(sc);
+	auto reScene = TransitionSlideInR::create(0.618f, sc);
+	Director::getInstance()->replaceScene(reScene);
 }
