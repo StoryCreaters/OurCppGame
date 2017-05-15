@@ -37,6 +37,7 @@ public:
     bool accessAble(cocos2d::Vec2);
     // 把坐标变更为tilemap的坐标
     cocos2d::Vec2 tileCoordForPosition(cocos2d::Vec2 pos);
+    bool hasCollisionInGridPos(cocos2d::Vec2 pos);
     
     /********泡泡释放*************/
     void setBubble();
@@ -44,6 +45,7 @@ public:
 private:
     // 获取动画
     cocos2d::Animation* getAnimationByName(std::string animName,float delay,int animNum);
+    
     
     /***** tilemap的大小变化率 TODO:可以放到配置文件 *****/
     cocos2d::TMXTiledMap *_tileMap;
@@ -66,6 +68,11 @@ private:
         GO_UP, GO_DOWN, GO_LEFT, GO_RIGHT, DEFAULT
     } _direction;
     std::array<bool, 4> _my_sprite_move;
+    
+    void horizontal_boom(cocos2d::Vec2 pos, int power);
+    void vertival_boom(cocos2d::Vec2 pos, int power);
+    void add_and_clear_with_time(cocos2d::Sprite* sp, float dt, cocos2d::Vec2 pos);
+    void spriteMoveFinished(cocos2d::Object* psender);
 };
 
 #endif /* GameTheme_hpp */

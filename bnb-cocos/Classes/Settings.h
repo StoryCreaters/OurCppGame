@@ -2,8 +2,15 @@
 #define Settings_h
 
 namespace settings {
+//    // 基本方向
+//    enum optionCode {
+//        GO_UP, GO_DOWN, GO_LEFT, GO_RIGHT, DEFAULT
+//    };
     // 人物属性设定
     namespace Character {
+        // 与delta_rate(1.15) 相关， 考虑修改
+        constexpr float grid_size = 40 * 1.15;
+        constexpr float little_grid_size = 25 * 1.15;
         // 人物的x, y
         constexpr float character_x[] = {46, 44, 54};
         constexpr float character_y[] = {57, 56, 62};
@@ -34,8 +41,11 @@ namespace settings {
     }
     
     namespace GameScene {
+        constexpr float boom_time = 0.5f;
         // 瓦片地图大小变化率
         constexpr float _tile_delta_rate = 1.15f;
+        
+        constexpr char* backGroundPicture = "BackGround/Cool_background.jpg";
         
         // animation 相关
         constexpr int bubble_frame_nums = 3;
@@ -43,6 +53,14 @@ namespace settings {
         constexpr char* background_music = "music/MEGALOVANIA.mp3";
         
         constexpr char* direc_string[] = {"up", "down", "left", "right"};
+        
+        // 碰撞格子大小
+        constexpr int grid_size = 40;
+        
+        /****爆炸图片****/
+        constexpr char* boom_v = "BubbleImages/images/vertical_demo.png";        // 水平爆炸
+        constexpr char* boom_h = "BubbleImages/images/horizontal_demo.png";        // 竖直爆炸
+        constexpr char* center_boom = "BubbleImages/images/center_demo.png";
     }
     
     namespace PreLoadScene {

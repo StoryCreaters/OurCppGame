@@ -33,9 +33,6 @@ bool GameScene::init()
         return false;
     }
     
-//    auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
-//    audio->playBackgroundMusic(background_music, true);
-//    audio->resumeAllEffects();
     
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -43,7 +40,7 @@ bool GameScene::init()
     addCloseMenu();
     
     // 一张临时背景
-    auto backG = Sprite::create("BackGround/Cool_background.jpg");
+    auto backG = Sprite::create(backGroundPicture);
     addChild(backG, -10);
     backG->setPosition(visibleSize / 2);
     
@@ -55,7 +52,7 @@ bool GameScene::init()
     _tileMap->setAnchorPoint(Vec2(0.5f, 0.5f));
     _tileMap->setPosition(Point(visibleSize.width / 2 , visibleSize.height / 2));
     _tileMap->setScale(settings::GameScene::_tile_delta_rate);
-    log("aft:%f %f", _tileMap->getTileSize().height, _tileMap->getMapSize().width);
+//    log("aft:%f %f", _tileMap->getTileSize().height, _tileMap->getMapSize().width);
     
     _meta = _tileMap->getLayer("Unbroken");
     _background = _tileMap->getLayer("Background");
@@ -222,41 +219,49 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 /****人物移动****/
 void GameScene::mySpriteMove() {
     Vector<FiniteTimeAction *> moves;
-    const int step = 5;
+    const int basic_step = 2;
     float dur = 0.1f;
     //TODO: 增加边界检测
     // 获得x y 的上界 下界
     auto visibleSize = Director::getInstance()->getVisibleSize();
-    auto offx = (visibleSize.width - _tileMap->getContentSize().width * _tile_delta_rate)/ 2;
-    auto offy = (visibleSize.height - _tileMap->getContentSize().height * _tile_delta_rate) / 2;
-    auto lowerx = offx, upperx = visibleSize.width - offx;
-    auto lowery = offy, uppery = visibleSize.height - offy;
+    float offx = (visibleSize.width - _tileMap->getContentSize().width * _tile_delta_rate) / 2;
+    float offy = (visibleSize.height - _tileMap->getContentSize().height * _tile_delta_rate) / 2;
+    float lowerx = offx, upperx = visibleSize.width - offx;
+    float lowery = offy, uppery = visibleSize.height - offy;
     
-    const static int BORDER = 2;        //边界长
-    if (_my_sprite_move[GO_RIGHT]) {
-        if (upperx >= _myplayer->getPosition().x + BORDER)
-            if (accessAble(Vec2(_myplayer->getPosition().x + step + _myplayer->getContentSize().width / 2, _myplayer->getPosition().y)))
-                moves.pushBack(MoveBy::create(dur, Vec2(step, 0)));
+    lowerx += 3, lowery+=3;
+    auto in_tile_map = [&](Vec2 pos)->bool{
+        if (pos.x >= lowerx && pos.x <= upperx)
+            if (pos.y >= lowery && pos.y <= uppery)
+                return true;
+//        log("curpos :%f %f ", _myplayer->getPosition().x, _myplayer->getPosition().y);
+//        log("pos coord :%f %f", pos.x, pos.y);
+//        log("lx:%f ly:%f ux:%f uy:%f", lowerx, lowery, upperx, uppery);
+        
+        return false;
+    };
+    
+    int curstep = _myplayer->_currentVelocity + basic_step;
+    
+    // UP, DOWN, LEFT, RIGHT
+    Vec2 delta_pos[4]{Vec2(0, curstep), Vec2(0, -curstep), Vec2(-curstep, 0), Vec2(curstep, 0)};
+    // 判断动作，调整step
+    for (int index = 0; index < 4; ++index) {
+        // 获取具体的方向
+        Vec2 cur_delta = delta_pos[index];
+        if (!_my_sprite_move[index])
+            continue;
+        bool walk(false);           // 是否走动
+        auto deltas = _myplayer->get_collection_point(index);
+        auto pos1 = deltas.first, pos2 = deltas.second;
+        if (in_tile_map(pos1 + cur_delta) && in_tile_map(pos2 + cur_delta))
+            if (accessAble(pos1 + cur_delta) && in_tile_map(pos2 + cur_delta))
+                walk = true;
+        if (walk) {
+            moves.pushBack(MoveBy::create(dur, cur_delta));
+        }
+        break;
     }
-    
-    if (_my_sprite_move[GO_LEFT]) {
-        if (lowerx <= _myplayer->getPosition().x - BORDER)
-            if (accessAble(Vec2(_myplayer->getPosition().x - step - _myplayer->getContentSize().width / 2, _myplayer->getPosition().y)))
-                moves.pushBack(MoveBy::create(dur, Vec2(-step, 0)));
-    }
-    
-    if (_my_sprite_move[GO_UP]) {
-        if (uppery >= _myplayer->getPosition().y + BORDER)
-            if (accessAble(Vec2(_myplayer->getPosition().x, _myplayer->getPosition().y + step + _myplayer->getContentSize().height/ 2)))
-                moves.pushBack(MoveBy::create(dur, Vec2(0, step)));
-    }
-    
-    if (_my_sprite_move[GO_DOWN]) {
-        if (lowery <= _myplayer->getPosition().y - BORDER)
-            if (accessAble(Vec2(_myplayer->getPosition().x, _myplayer->getPosition().y - step - _myplayer->getContentSize().height / 2)))
-                moves.pushBack(MoveBy::create(dur, Vec2(0, -step)));
-    }
-    
     // 有可能啥都没有2333
     if (moves.size())
         _myplayer->runAction(cocos2d::Spawn::create(moves));
@@ -300,9 +305,15 @@ void GameScene::setBubble() {
 
 // 泡泡爆炸, 可以添加逻辑
 void GameScene::BubbleBoom(Ref* sender) {
-    Sprite *sprite = dynamic_cast<Sprite*>(sender);
+    auto *sprite = dynamic_cast<Bubbles*>(sender);
+    auto beg_pos = sprite->getPosition();
+    int power = sprite->get_power();
     --_my_bubbles;
     this->removeChild(sprite);
+    /***爆炸逻辑***/
+    add_and_clear_with_time( Sprite::create(center_boom), boom_time, beg_pos);
+    horizontal_boom(beg_pos, power);
+    vertival_boom(beg_pos, power);
 }
 
 void GameScene::update(float dt) {
@@ -314,7 +325,6 @@ cocos2d::Vec2 GameScene::tileCoordForPosition(cocos2d::Vec2 pos) {
     auto offx = (visibleSize.width - static_cast<float>(_tileMap->getContentSize().width * _tile_delta_rate))/ 2;
     auto offy = (visibleSize.height - static_cast<float>(_tileMap->getContentSize().height * _tile_delta_rate))/ 2;
     
-    /*** test ***/
     
     // 玩家位置的y除以地图的高，得到的是地图纵向第几个格子（tile），
     // 但是因为cocos2d-x的y轴（左下角）和TileMap的y轴（左上角）轴相反，所以使用地图的高度减去玩家位置的y
@@ -326,21 +336,24 @@ cocos2d::Vec2 GameScene::tileCoordForPosition(cocos2d::Vec2 pos) {
     int y = static_cast<int>((visibleSize.height - offy - pos.y) / pointHeight);
     if (y > 14) y = 14;
     if (x > 14) x = 14;
-//    log("coord : %d %d", x, y);
     return Vec2(x,y);
 }
 
 bool GameScene::accessAble(cocos2d::Vec2 pos) {
     Vec2 tileCoord = tileCoordForPosition(pos);
+    return hasCollisionInGridPos(tileCoord);
+}
+
+bool GameScene::hasCollisionInGridPos(Vec2 tileCoord) {
     int tileGid = _meta->getTileGIDAt(tileCoord);
     if (tileGid) {
         auto propertiy = _tileMap->getPropertiesForGID(tileGid);
-        if (propertiy.isNull()) //
+        if (propertiy.isNull())
             return false;
         auto properties = propertiy.asValueMap();
         if (!properties.empty()) {
             auto collision = properties["Collidable"].asString();
-            if ("True" == collision) {
+            if ("true" == collision) {
                 return false;
             }
         }
@@ -365,5 +378,63 @@ Animation* GameScene::getAnimationByName(std::string animName,float delay,int an
     animation->setRestoreOriginalFrame(true);
     // 返回动画对象
     return animation;
+}
+
+void GameScene::add_and_clear_with_time(cocos2d::Sprite* sp, float dt, Vec2 pos) {
+    sp->setAnchorPoint(Vec2::ZERO);
+    sp->setPosition(pos);
+    sp->setScale(_tile_delta_rate);
+    this->addChild(sp);
+    sp->runAction(Sequence::create(DelayTime::create(dt), CallFuncN::create(CC_CALLBACK_1(GameScene::spriteMoveFinished, this)),NULL));
+}
+
+void GameScene::spriteMoveFinished(cocos2d::Object* psender) {
+    Sprite *sprite = dynamic_cast<Sprite*>(psender);
+    this->removeChild(sprite);
+}
+
+static inline bool in_map(int x, int y) {
+    if (x >= 0 && x < 15)
+        if (y >= 0 && y < 15)
+            return true;
+    return false;
+}
+
+void GameScene::horizontal_boom(cocos2d::Vec2 pos, int power, int vector) {
+    /*
+     args: pos->position of sprite, power:power of bubble, vector:direction
+     */
+    auto tiled_position = tileCoordForPosition(pos);
+    --tiled_position.y;
+    
+    static auto visibleSize = Director::getInstance()->getWinSize();
+    static float offx = (visibleSize.width - _tileMap->getContentSize().width * _tile_delta_rate)/ 2;
+    static float offy = (visibleSize.height - _tileMap->getContentSize().height * _tile_delta_rate) / 2;
+    static auto std_delta = Vec2(offx, offy);
+    
+    // dir: 0->horizontal, 1->vertical;
+    Vec2 dirs = {Vec2(1, 0), Vec2(0, 1)};
+    int syn[] = {-1, 1};
+    bool synb[] = {true, true};
+    for (int i = 1; i <= power; ++i) {
+        for (int j = 0; j < 2; ++j) {
+            if (!synb[j])
+                continue;
+            auto next_p = dirs[]
+            int px = tiled_position.x + i * syn[j];
+            // 超界
+            if (!in_map(px, tiled_position.y)) {
+                synb[j] = false;
+                continue;
+            }
+            auto mySpritePos = _background->getPositionAt(Vec2(tiled_position.x + i * syn[j], tiled_position.y)) * _tile_delta_rate + std_delta;
+            add_and_clear_with_time(Sprite::create(boom_h), boom_time, mySpritePos);
+        }
+        
+    }
+}
+
+void GameScene::vertival_boom(cocos2d::Vec2 pos, int power) {
+    
 }
 

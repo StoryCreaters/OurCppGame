@@ -1,3 +1,7 @@
+/*
+ :from PreLoadScene
+ :to   RoomChooseScene(final), GameScene(current)
+*/
 #ifndef OpenScene_hpp
 #define OpenScene_hpp
 
