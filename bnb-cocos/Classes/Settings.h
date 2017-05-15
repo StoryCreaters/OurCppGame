@@ -80,6 +80,10 @@ namespace settings {
     namespace Bubbles {
         constexpr char* bubbles_file = "BubbleImages/images/stable/Popo_01.png";
     }
+
+	namespace SettingScene {
+		//temporary empty
+	}
 }
 
 #endif /* Settings_h */
