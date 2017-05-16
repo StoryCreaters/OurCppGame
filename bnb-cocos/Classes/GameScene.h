@@ -58,7 +58,6 @@ private:
     
     /**** player的属性, 和自己的player的属性, 可以考虑fsm和vector ****/
     character* _myplayer;
-//    cocos2d::Map<cocos2d::Vec2, Bubbles*> _screen_bubbles;
     
     int _my_bubbles;
     
@@ -74,11 +73,9 @@ private:
     };
     
     // stores positon of bubbles
-    cocos2d::Vector<Bubbles*> _screen_bubbles;
     std::map<cocos2d::Vec2, Bubbles*> _map_screen_bubbles;
     
     bool check_chain_boom(cocos2d::Vec2 pos);
-    bool check_chain_boom(cocos2d::Sprite*);
     // 爆炸，受下方两种爆炸方式调用
     void boom_animate(cocos2d::Vec2 pos, int power, int vector);
     void horizontal_boom(cocos2d::Vec2 pos, int power);

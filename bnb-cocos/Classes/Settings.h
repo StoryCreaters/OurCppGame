@@ -9,8 +9,8 @@ namespace settings {
     // 人物属性设定
     namespace Character {
         // 与delta_rate(1.15) 相关， 考虑修改
-        constexpr float grid_size = 40 * 1.15;
-        constexpr float little_grid_size = 25 * 1.15;
+        constexpr float grid_size = 40 ;
+        constexpr float little_grid_size = 35 ;
         // 人物的x, y
         constexpr float character_x[] = {46, 44, 54};
         constexpr float character_y[] = {57, 56, 62};

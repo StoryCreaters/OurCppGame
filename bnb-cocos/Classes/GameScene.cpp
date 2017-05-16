@@ -47,7 +47,7 @@ bool GameScene::init()
     /***** tilemap ******/
     _tileMap = TMXTiledMap::create("gameStart/map01.tmx");
     
-    log("init:%f %f", _tileMap->getTileSize().height, _tileMap->getTileSize().width);
+//    log("init:%f %f", _tileMap->getTileSize().height, _tileMap->getTileSize().width);
     
     _tileMap->setAnchorPoint(Vec2(0.5f, 0.5f));
     _tileMap->setPosition(Point(visibleSize.width / 2 , visibleSize.height / 2));
@@ -309,7 +309,7 @@ void GameScene::setBubble() {
         newBubble->runAction(bubbleAction);
         
         addChild(newBubble);
-        _screen_bubbles.pushBack(newBubble);
+
         _map_screen_bubbles[pos0] = newBubble;
         ++_my_bubbles;
         newBubble->runAction(Sequence::create(DelayTime::create(3), timeBoom, NULL));
@@ -323,7 +323,6 @@ void GameScene::BubbleBoom(Ref* sender) {
     int power = sprite->get_power();
     --_my_bubbles;
     this->removeChild(sprite);
-    _screen_bubbles.eraseObject(sprite);
     for (auto iter = _map_screen_bubbles.begin(); iter != _map_screen_bubbles.end(); ++iter) {
         if (iter->second == sprite) {
             _map_screen_bubbles.erase(iter);
@@ -472,20 +471,6 @@ void GameScene::vertival_boom(cocos2d::Vec2 pos, int power) {
     boom_animate(pos, power, 0);
 }
 
-bool GameScene::check_chain_boom(cocos2d::Sprite* blaze) {
-    for (unsigned int i = 0; i < _screen_bubbles.size(); i++) {
-        auto bullet = _screen_bubbles.at(i);
-        // 如果敌机与子弹发生了碰撞
-        if(blaze->getBoundingBox().intersectsRect(bullet->getBoundingBox())){
-            // 删除子弹精灵
-            _screen_bubbles.eraseObject(bullet);
-            bullet->stopAllActions();
-            BubbleBoom(bullet);
-            return true;
-        }
-    }
-    return false;
-}
 
 bool GameScene::check_chain_boom(cocos2d::Vec2 blaze_pos) {
     auto bubbleIter = _map_screen_bubbles.find(blaze_pos);
