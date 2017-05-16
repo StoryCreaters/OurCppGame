@@ -2,6 +2,7 @@
 #include "PauseWithLabelLayer.h"
 #include "ToStart.h"
 #include "GameScene.h"
+#include "SettingScene.h"
 
 Scene* OpenScene::createScene()
 {
@@ -65,9 +66,9 @@ cocos2d::Menu* OpenScene::setLayOutL1() {
     
     cocos2d::Vector<cocos2d::MenuItem*> vecs;
     
-    std::string UiNames[] = {"GameUI/ProjectName", "GameUI/PlayMyself", "GameUI/PlayOnInternet", "GameUI/Help","GameUI/Quit"};
-    ccMenuCallback Uifuncs[] = {nullptr,CC_CALLBACK_1(OpenScene::ToStartGame, this), nullptr,CC_CALLBACK_1(OpenScene::OnTouchPause, this),CC_CALLBACK_1(OpenScene::menuCloseCallback, this)};
-    for (int i = 0; i < 5; ++i) {
+    std::string UiNames[] = {"GameUI/ProjectName", "GameUI/PlayMyself", "GameUI/PlayOnInternet", "GameUI/Settings","GameUI/Help","GameUI/Quit"};
+    ccMenuCallback Uifuncs[] = {nullptr,CC_CALLBACK_1(OpenScene::ToStartGame, this), nullptr,CC_CALLBACK_1(OpenScene::MenuSettingsItem,this),CC_CALLBACK_1(OpenScene::OnTouchPause, this),CC_CALLBACK_1(OpenScene::menuCloseCallback, this)};
+    for (int i = 0; i < 6; ++i) {
         auto menuI = cocos2d::MenuItemImage::create(UiNames[i] + ".png", UiNames[i]+ "Selected.png",Uifuncs[i]);
         if (i != 0)
             menuI->setScale(0.8, 0.6);
@@ -152,3 +153,9 @@ void OpenScene::ToStartGame(Ref *sender) {
     Director::getInstance()->replaceScene(GameScene::createScene());
 }
 
+void OpenScene::MenuSettingsItem(cocos2d::Ref* pSender)
+{
+	auto sc = GameSettings::createScene();
+	auto reScene = TransitionSlideInR::create(0.618f, sc);
+	Director::getInstance()->replaceScene(reScene);
+}

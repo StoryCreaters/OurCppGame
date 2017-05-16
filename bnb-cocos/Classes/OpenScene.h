@@ -32,6 +32,7 @@ public:
     void OnTouchPause(cocos2d::Ref* pSender);
     void OnTouchResume();
     void ToStartGame(cocos2d::Ref* sender);
+    void MenuSettingsItem(cocos2d::Ref* pSender);
     
     // debug
     void sceneTest(Ref *sender);

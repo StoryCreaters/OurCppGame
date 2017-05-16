@@ -83,6 +83,8 @@
 		827A69BF1EA8FE750073F534 /* gameStart in Resources */ = {isa = PBXBuildFile; fileRef = 827A69BD1EA8FE750073F534 /* gameStart */; };
 		827A69C21EA8FE9B0073F534 /* GameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 827A69C01EA8FE9B0073F534 /* GameScene.cpp */; };
 		827A69C31EA8FE9B0073F534 /* GameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 827A69C01EA8FE9B0073F534 /* GameScene.cpp */; };
+		828C87781ECB503E00D930A1 /* SettingScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 828C87761ECB503E00D930A1 /* SettingScene.cpp */; };
+		828C87791ECB503E00D930A1 /* SettingScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 828C87761ECB503E00D930A1 /* SettingScene.cpp */; };
 		82A8788D1EC1BD76006385CC /* PropResource in Resources */ = {isa = PBXBuildFile; fileRef = 82A8788C1EC1BD75006385CC /* PropResource */; };
 		82A8788E1EC1BD76006385CC /* PropResource in Resources */ = {isa = PBXBuildFile; fileRef = 82A8788C1EC1BD75006385CC /* PropResource */; };
 		82A878911EC1BD7F006385CC /* GameProp in Resources */ = {isa = PBXBuildFile; fileRef = 82A878901EC1BD7F006385CC /* GameProp */; };
@@ -224,6 +226,8 @@
 		827A69BD1EA8FE750073F534 /* gameStart */ = {isa = PBXFileReference; lastKnownFileType = folder; path = gameStart; sourceTree = "<group>"; };
 		827A69C01EA8FE9B0073F534 /* GameScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameScene.cpp; sourceTree = "<group>"; };
 		827A69C11EA8FE9B0073F534 /* GameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameScene.h; sourceTree = "<group>"; };
+		828C87761ECB503E00D930A1 /* SettingScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SettingScene.cpp; sourceTree = "<group>"; };
+		828C87771ECB503E00D930A1 /* SettingScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingScene.h; sourceTree = "<group>"; };
 		82A8788C1EC1BD75006385CC /* PropResource */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PropResource; sourceTree = "<group>"; };
 		82A878901EC1BD7F006385CC /* GameProp */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GameProp; sourceTree = "<group>"; };
 		82A878931EC1C1D2006385CC /* BubbleImages */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BubbleImages; sourceTree = "<group>"; };
@@ -420,6 +424,8 @@
 				827A69C11EA8FE9B0073F534 /* GameScene.h */,
 				821EAAA51EBF6CBA009FBE14 /* PreLoadScene.cpp */,
 				821EAAA61EBF6CBA009FBE14 /* PreLoadScene.h */,
+				828C87761ECB503E00D930A1 /* SettingScene.cpp */,
+				828C87771ECB503E00D930A1 /* SettingScene.h */,
 				82C45F691EC09B6C001BD822 /* Settings.h */,
 			);
 			name = Classes;
@@ -647,6 +653,7 @@
 				821EAAA71EBF6CBA009FBE14 /* PreLoadScene.cpp in Sources */,
 				8222CA621EA72E7100092E33 /* GameItem.cpp in Sources */,
 				820EB1F81EA7B3BB00C51921 /* RoomChooseScene.cpp in Sources */,
+				828C87781ECB503E00D930A1 /* SettingScene.cpp in Sources */,
 				8222CA4A1EA654A900092E33 /* PauseWithLabelLayer.cpp in Sources */,
 				46880B8819C43A87006E1F66 /* AppDelegate.cpp in Sources */,
 				82F3DBE11EA262DF00C6DBDA /* Character.cpp in Sources */,
@@ -664,6 +671,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				828C87791ECB503E00D930A1 /* SettingScene.cpp in Sources */,
 				46880B8919C43A87006E1F66 /* AppDelegate.cpp in Sources */,
 				503AE10517EB98FF00D1A890 /* main.cpp in Sources */,
 				827A69C31EA8FE9B0073F534 /* GameScene.cpp in Sources */,
