@@ -400,41 +400,45 @@ static inline bool in_map(int x, int y) {
     return false;
 }
 
-void GameScene::horizontal_boom(cocos2d::Vec2 pos, int power, int vector) {
-    /*
-     args: pos->position of sprite, power:power of bubble, vector:direction
-     */
+// 做爆炸
+void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
     auto tiled_position = tileCoordForPosition(pos);
     --tiled_position.y;
-    
     static auto visibleSize = Director::getInstance()->getWinSize();
     static float offx = (visibleSize.width - _tileMap->getContentSize().width * _tile_delta_rate)/ 2;
     static float offy = (visibleSize.height - _tileMap->getContentSize().height * _tile_delta_rate) / 2;
     static auto std_delta = Vec2(offx, offy);
     
     // dir: 0->horizontal, 1->vertical;
-    Vec2 dirs = {Vec2(1, 0), Vec2(0, 1)};
+    Vec2 dirs[] = {Vec2(1, 0), Vec2(0, 1)};
+    // 正负方向和该方向是否停止
     int syn[] = {-1, 1};
     bool synb[] = {true, true};
     for (int i = 1; i <= power; ++i) {
         for (int j = 0; j < 2; ++j) {
             if (!synb[j])
                 continue;
-            auto next_p = dirs[]
-            int px = tiled_position.x + i * syn[j];
-            // 超界
-            if (!in_map(px, tiled_position.y)) {
+            // 获取下一个爆炸的位置
+            auto next_p = dirs[r_vec] * syn[j] + tiled_position;
+            // 判断爆炸位置是否在地图中
+            if (!in_map(next_p.x, next_p.y)) {
                 synb[j] = false;
                 continue;
             }
-            auto mySpritePos = _background->getPositionAt(Vec2(tiled_position.x + i * syn[j], tiled_position.y)) * _tile_delta_rate + std_delta;
-            add_and_clear_with_time(Sprite::create(boom_h), boom_time, mySpritePos);
+            auto mySpritePos = _background->getPositionAt(next_p) * _tile_delta_rate + std_delta;
+            add_and_clear_with_time(Sprite::create(boom_anime[r_vec]), boom_time, mySpritePos);
         }
-        
     }
 }
 
+void GameScene::horizontal_boom(cocos2d::Vec2 pos, int power) {
+    /*
+     args: pos->position of sprite, power:power of bubble, vector:direction
+     */
+    boom_animate(pos, power, 1);
+}
+
 void GameScene::vertival_boom(cocos2d::Vec2 pos, int power) {
-    
+    boom_animate(pos, power, 0);
 }
 

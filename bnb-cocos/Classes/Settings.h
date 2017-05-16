@@ -58,6 +58,10 @@ namespace settings {
         constexpr int grid_size = 40;
         
         /****爆炸图片****/
+        constexpr char* boom_anime[] = {
+            "BubbleImages/images/horizontal_demo.png",
+            "BubbleImages/images/vertical_demo.png"
+        };
         constexpr char* boom_v = "BubbleImages/images/vertical_demo.png";        // 水平爆炸
         constexpr char* boom_h = "BubbleImages/images/horizontal_demo.png";        // 竖直爆炸
         constexpr char* center_boom = "BubbleImages/images/center_demo.png";

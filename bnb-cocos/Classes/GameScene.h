@@ -69,6 +69,12 @@ private:
     } _direction;
     std::array<bool, 4> _my_sprite_move;
     
+    /**** 爆炸相关 ****/
+    enum boom_vec {
+        HORIZONTAL, VERTICAL
+    };
+    // 爆炸，受下方两种爆炸方式调用
+    void boom_animate(cocos2d::Vec2 pos, int power, int vector);
     void horizontal_boom(cocos2d::Vec2 pos, int power);
     void vertival_boom(cocos2d::Vec2 pos, int power);
     void add_and_clear_with_time(cocos2d::Sprite* sp, float dt, cocos2d::Vec2 pos);
