@@ -234,10 +234,6 @@ void GameScene::mySpriteMove() {
         if (pos.x >= lowerx && pos.x <= upperx)
             if (pos.y >= lowery && pos.y <= uppery)
                 return true;
-//        log("curpos :%f %f ", _myplayer->getPosition().x, _myplayer->getPosition().y);
-//        log("pos coord :%f %f", pos.x, pos.y);
-//        log("lx:%f ly:%f ux:%f uy:%f", lowerx, lowery, upperx, uppery);
-        
         return false;
     };
     
@@ -267,21 +263,30 @@ void GameScene::mySpriteMove() {
         _myplayer->runAction(cocos2d::Spawn::create(moves));
 }
 
+cocos2d::Vec2 GameScene::PositionForTileCoord(cocos2d::Vec2 pos) {
+    auto pos0 = tileCoordForPosition(_myplayer->getPosition());
+    if (_myplayer->getAnchorPoint() != Vec2::ZERO) {
+        if (pos0.x > 14) pos0.x = 14;
+    }
+    // TODO: find out what was wrong
+    if (pos0.y > 14) pos0.y = 14;
+    auto mySpritePos = _background->getPositionAt(pos0) * _tile_delta_rate;
+    auto visibleSize = Director::getInstance()->getWinSize();
+    mySpritePos += (visibleSize - _tileMap->getContentSize() * _tile_delta_rate) / 2;
+    return mySpritePos;
+}
+
 // bubble应该设置在tilemap的grid上
 // bubble渲染问题
 void GameScene::setBubble() {
     if (_my_bubbles >= _myplayer->_currentBubbles) {
         return;
     }
-    auto pos0 = tileCoordForPosition(_myplayer->getPosition());
-//    pos0.x = static_cast<int>(pos0.x); pos0.y = static_cast<int>(pos0.y);
-    auto mySpritePos = _background->getPositionAt(pos0) * _tile_delta_rate;
-    auto visibleSize = Director::getInstance()->getWinSize();
-    mySpritePos += (visibleSize - _tileMap->getContentSize() * _tile_delta_rate) / 2;
+    auto mySpritePos = PositionForTileCoord(_myplayer->getPosition());
 
     // DEBUG : not mySpritePos
     if (accessAble(_myplayer->getPosition())) {
-        // TODO: 调整精灵位置
+        // 调整精灵位置
         auto newBubble = Bubbles::create(_myplayer->_currentPower);
         newBubble->setAnchorPoint(Vec2::ZERO);
         newBubble->setScale(_tile_delta_rate);
@@ -298,6 +303,7 @@ void GameScene::setBubble() {
         newBubble->runAction(bubbleAction);
         
         addChild(newBubble);
+        _screen_bubbles.pushBack(newBubble);
         ++_my_bubbles;
         newBubble->runAction(Sequence::create(DelayTime::create(3), timeBoom, NULL));
     }
@@ -310,8 +316,9 @@ void GameScene::BubbleBoom(Ref* sender) {
     int power = sprite->get_power();
     --_my_bubbles;
     this->removeChild(sprite);
+    _screen_bubbles.eraseObject(sprite);
     /***爆炸逻辑***/
-    add_and_clear_with_time( Sprite::create(center_boom), boom_time, beg_pos);
+    add_and_clear_with_time(Sprite::create(center_boom), boom_time, beg_pos);
     horizontal_boom(beg_pos, power);
     vertival_boom(beg_pos, power);
 }
@@ -334,13 +341,15 @@ cocos2d::Vec2 GameScene::tileCoordForPosition(cocos2d::Vec2 pos) {
     
 //    int y = (int)((_tileMap->getMapSize().height * _tile_delta_rate * pointHeight - pos.y - offy) / pointHeight);
     int y = static_cast<int>((visibleSize.height - offy - pos.y) / pointHeight);
-    if (y > 14) y = 14;
+//    if (y > 14) y = 14;
     if (x > 14) x = 14;
     return Vec2(x,y);
 }
 
 bool GameScene::accessAble(cocos2d::Vec2 pos) {
     Vec2 tileCoord = tileCoordForPosition(pos);
+    // TODO: find out what was wrong
+    if (tileCoord.y > 14) tileCoord.y = 14;
     return hasCollisionInGridPos(tileCoord);
 }
 
@@ -383,6 +392,7 @@ Animation* GameScene::getAnimationByName(std::string animName,float delay,int an
 void GameScene::add_and_clear_with_time(cocos2d::Sprite* sp, float dt, Vec2 pos) {
     sp->setAnchorPoint(Vec2::ZERO);
     sp->setPosition(pos);
+//    sp->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     sp->setScale(_tile_delta_rate);
     this->addChild(sp);
     sp->runAction(Sequence::create(DelayTime::create(dt), CallFuncN::create(CC_CALLBACK_1(GameScene::spriteMoveFinished, this)),NULL));
@@ -400,8 +410,10 @@ static inline bool in_map(int x, int y) {
     return false;
 }
 
-// 做爆炸
 void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
+    /*
+     args: pos->position of sprite, power:power of bubble, vector:direction
+     */
     auto tiled_position = tileCoordForPosition(pos);
     --tiled_position.y;
     static auto visibleSize = Director::getInstance()->getWinSize();
@@ -425,16 +437,22 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
                 synb[j] = false;
                 continue;
             }
-            auto mySpritePos = _background->getPositionAt(next_p) * _tile_delta_rate + std_delta;
-            add_and_clear_with_time(Sprite::create(boom_anime[r_vec]), boom_time, mySpritePos);
+            auto new_blaze = Sprite::create(boom_anime[r_vec]);
+//            new_blaze->setAnchorPoint(Vec2::ZERO);
+            new_blaze->setPosition(pos);
+            if (!check_chain_boom(new_blaze)) {
+                // 没有chain爆破
+                auto mySpritePos = _background->getPositionAt(next_p) * _tile_delta_rate + std_delta;
+                add_and_clear_with_time(Sprite::create(boom_anime[r_vec]), boom_time, mySpritePos);
+            } else {
+                // 有chain爆破
+                synb[j] = false;
+            }
         }
     }
 }
 
 void GameScene::horizontal_boom(cocos2d::Vec2 pos, int power) {
-    /*
-     args: pos->position of sprite, power:power of bubble, vector:direction
-     */
     boom_animate(pos, power, 1);
 }
 
@@ -442,3 +460,17 @@ void GameScene::vertival_boom(cocos2d::Vec2 pos, int power) {
     boom_animate(pos, power, 0);
 }
 
+bool GameScene::check_chain_boom(cocos2d::Sprite* blaze) {
+    for (unsigned int i = 0; i < _screen_bubbles.size(); i++) {
+        auto bullet = _screen_bubbles.at(i);
+        // 如果敌机与子弹发生了碰撞
+        if(blaze->getBoundingBox().intersectsRect(bullet->getBoundingBox())){
+            // 删除子弹精灵
+            _screen_bubbles.eraseObject(bullet);
+            bullet->stopAllActions();
+            BubbleBoom(bullet);
+            return true;
+        }
+    }
+    return false;
+}

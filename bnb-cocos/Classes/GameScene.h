@@ -9,6 +9,8 @@
 class GameScene : public cocos2d::Layer
 {
 public:
+    using tilePosition = cocos2d::Vec2;
+    
     static cocos2d::Scene* createScene();
     
     virtual bool init();
@@ -31,13 +33,14 @@ public:
     void mySpriteMove();
     
     void update(float dt) override;
-    
     /*********碰撞检测*************/
     // 检测人物移动是否可以进行，碰撞检测
     bool accessAble(cocos2d::Vec2);
     // 把坐标变更为tilemap的坐标
     cocos2d::Vec2 tileCoordForPosition(cocos2d::Vec2 pos);
+    cocos2d::Vec2 PositionForTileCoord(cocos2d::Vec2 pos);
     bool hasCollisionInGridPos(cocos2d::Vec2 pos);
+    
     
     /********泡泡释放*************/
     void setBubble();
@@ -55,13 +58,9 @@ private:
     
     /**** player的属性, 和自己的player的属性, 可以考虑fsm和vector ****/
     character* _myplayer;
+//    cocos2d::Map<cocos2d::Vec2, Bubbles*> _screen_bubbles;
     cocos2d::Vector<Bubbles*> _screen_bubbles;                  // 保存玩家的泡泡, 用来检测碰撞
-//    cocos2d::Vector<character*> _players;        //保存玩家的容器
-//    std::vector<cocos2d::Vec2> _bubbles;        // 保存玩家释放的bubble
     int _my_bubbles;
-    
-    // 临时纠错值, y坐标还有坑呜呜呜
-    float tmp_y = 0.1;
     
     // 表示自己运动状况的量, true就开始运动, 共有四个方向
     enum _optionCode {
@@ -73,6 +72,8 @@ private:
     enum boom_vec {
         HORIZONTAL, VERTICAL
     };
+    // 检查连锁爆炸
+    bool check_chain_boom(cocos2d::Sprite* blaze);
     // 爆炸，受下方两种爆炸方式调用
     void boom_animate(cocos2d::Vec2 pos, int power, int vector);
     void horizontal_boom(cocos2d::Vec2 pos, int power);
