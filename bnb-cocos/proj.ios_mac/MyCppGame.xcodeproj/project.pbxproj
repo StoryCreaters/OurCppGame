@@ -72,8 +72,6 @@
 		8222CA4B1EA654A900092E33 /* PauseWithLabelLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8222CA481EA654A900092E33 /* PauseWithLabelLayer.cpp */; };
 		8222CA621EA72E7100092E33 /* GameItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8222CA601EA72E7100092E33 /* GameItem.cpp */; };
 		8222CA631EA72E7100092E33 /* GameItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8222CA601EA72E7100092E33 /* GameItem.cpp */; };
-		823223261EC446190063DD8E /* Property List.plist in Resources */ = {isa = PBXBuildFile; fileRef = 823223251EC446190063DD8E /* Property List.plist */; };
-		823223271EC446190063DD8E /* Property List.plist in Resources */ = {isa = PBXBuildFile; fileRef = 823223251EC446190063DD8E /* Property List.plist */; };
 		8262943E1AAF051F00CB7CF7 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8262943D1AAF051F00CB7CF7 /* Security.framework */; };
 		826873211EA930AB00F7EB27 /* TileGameResources in Resources */ = {isa = PBXBuildFile; fileRef = 826873201EA930AB00F7EB27 /* TileGameResources */; };
 		826873221EA930AB00F7EB27 /* TileGameResources in Resources */ = {isa = PBXBuildFile; fileRef = 826873201EA930AB00F7EB27 /* TileGameResources */; };
@@ -218,7 +216,6 @@
 		8222CA491EA654A900092E33 /* PauseWithLabelLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PauseWithLabelLayer.h; sourceTree = "<group>"; };
 		8222CA601EA72E7100092E33 /* GameItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameItem.cpp; sourceTree = "<group>"; };
 		8222CA611EA72E7100092E33 /* GameItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameItem.h; sourceTree = "<group>"; };
-		823223251EC446190063DD8E /* Property List.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Property List.plist"; path = "../Resources/Property List.plist"; sourceTree = "<group>"; };
 		8262943D1AAF051F00CB7CF7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		826873201EA930AB00F7EB27 /* TileGameResources */ = {isa = PBXFileReference; lastKnownFileType = folder; name = TileGameResources; path = ../../../../Downloads/TileGameResources; sourceTree = "<group>"; };
 		827A69B21EA8E5E30073F534 /* ToStart.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ToStart.cpp; sourceTree = "<group>"; };
@@ -334,7 +331,6 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				823223251EC446190063DD8E /* Property List.plist */,
 				46880B8319C43A87006E1F66 /* Classes */,
 				46880B7519C43A67006E1F66 /* Resources */,
 				1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */,
@@ -590,7 +586,6 @@
 				46880B8119C43A67006E1F66 /* HelloWorld.png in Resources */,
 				82F3DBF21EA267EB00C6DBDA /* music in Resources */,
 				82A878941EC1C1D2006385CC /* BubbleImages in Resources */,
-				823223261EC446190063DD8E /* Property List.plist in Resources */,
 				46880B7D19C43A67006E1F66 /* CloseSelected.png in Resources */,
 				5087E77D17EB970100C73F5D /* Default-568h@2x.png in Resources */,
 				827A69BE1EA8FE750073F534 /* gameStart in Resources */,
@@ -635,7 +630,6 @@
 				46880B7C19C43A67006E1F66 /* CloseNormal.png in Resources */,
 				82F3DBF31EA267EB00C6DBDA /* music in Resources */,
 				46880B7E19C43A67006E1F66 /* CloseSelected.png in Resources */,
-				823223271EC446190063DD8E /* Property List.plist in Resources */,
 				82FFA96C1EA9FA7C0061D94D /* GamePlayer in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

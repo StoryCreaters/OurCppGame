@@ -59,7 +59,7 @@ private:
     /**** player的属性, 和自己的player的属性, 可以考虑fsm和vector ****/
     character* _myplayer;
 //    cocos2d::Map<cocos2d::Vec2, Bubbles*> _screen_bubbles;
-    cocos2d::Vector<Bubbles*> _screen_bubbles;                  // 保存玩家的泡泡, 用来检测碰撞
+    
     int _my_bubbles;
     
     // 表示自己运动状况的量, true就开始运动, 共有四个方向
@@ -72,8 +72,13 @@ private:
     enum boom_vec {
         HORIZONTAL, VERTICAL
     };
-    // 检查连锁爆炸
-    bool check_chain_boom(cocos2d::Sprite* blaze);
+    
+    // stores positon of bubbles
+    cocos2d::Vector<Bubbles*> _screen_bubbles;
+    std::map<cocos2d::Vec2, Bubbles*> _map_screen_bubbles;
+    
+    bool check_chain_boom(cocos2d::Vec2 pos);
+    bool check_chain_boom(cocos2d::Sprite*);
     // 爆炸，受下方两种爆炸方式调用
     void boom_animate(cocos2d::Vec2 pos, int power, int vector);
     void horizontal_boom(cocos2d::Vec2 pos, int power);

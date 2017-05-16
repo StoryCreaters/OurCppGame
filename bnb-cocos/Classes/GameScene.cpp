@@ -39,7 +39,7 @@ bool GameScene::init()
     
     addCloseMenu();
     
-    // 一张临时背景
+    // a temporary background
     auto backG = Sprite::create(backGroundPicture);
     addChild(backG, -10);
     backG->setPosition(visibleSize / 2);
@@ -166,8 +166,6 @@ void GameScene::myKeyboardOnL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
         
         // animation and direction
         std::string next_direction(_myplayer->_spriteName + "_"+ std::string(direc_string[code]) +"_");
-//        auto tmp_f = SpriteFrameCache::getInstance()->getSpriteFrameByName(next_direction + "01.png");
-//        _myplayer->setSpriteFrame(tmp_f);
         auto anime = getAnimationByName(next_direction, 0.1f, _myplayer->_animation_frames);
         auto animate = Animate::create(anime);
         auto player_action = RepeatForever::create(animate);
@@ -282,6 +280,14 @@ void GameScene::setBubble() {
     if (_my_bubbles >= _myplayer->_currentBubbles) {
         return;
     }
+    // TODO: duplicate here!!
+    auto pos0 = tileCoordForPosition(_myplayer->getPosition());
+    if (_myplayer->getAnchorPoint() != Vec2::ZERO) {
+        if (pos0.x > 14) pos0.x = 14;
+    }
+    // TODO: find out what was wrong
+    if (pos0.y > 14) pos0.y = 14;
+    
     auto mySpritePos = PositionForTileCoord(_myplayer->getPosition());
 
     // DEBUG : not mySpritePos
@@ -304,6 +310,7 @@ void GameScene::setBubble() {
         
         addChild(newBubble);
         _screen_bubbles.pushBack(newBubble);
+        _map_screen_bubbles[pos0] = newBubble;
         ++_my_bubbles;
         newBubble->runAction(Sequence::create(DelayTime::create(3), timeBoom, NULL));
     }
@@ -317,6 +324,12 @@ void GameScene::BubbleBoom(Ref* sender) {
     --_my_bubbles;
     this->removeChild(sprite);
     _screen_bubbles.eraseObject(sprite);
+    for (auto iter = _map_screen_bubbles.begin(); iter != _map_screen_bubbles.end(); ++iter) {
+        if (iter->second == sprite) {
+            _map_screen_bubbles.erase(iter);
+            break;
+        }
+    }
     /***爆炸逻辑***/
     add_and_clear_with_time(Sprite::create(center_boom), boom_time, beg_pos);
     horizontal_boom(beg_pos, power);
@@ -438,12 +451,11 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
                 continue;
             }
             auto new_blaze = Sprite::create(boom_anime[r_vec]);
-//            new_blaze->setAnchorPoint(Vec2::ZERO);
-            new_blaze->setPosition(pos);
-            if (!check_chain_boom(new_blaze)) {
-                // 没有chain爆破
-                auto mySpritePos = _background->getPositionAt(next_p) * _tile_delta_rate + std_delta;
-                add_and_clear_with_time(Sprite::create(boom_anime[r_vec]), boom_time, mySpritePos);
+            auto mySpritePos = _background->getPositionAt(next_p) * _tile_delta_rate + std_delta;
+            // DEBUG
+            if (!check_chain_boom(next_p)) {
+                // chain booming!!!
+                add_and_clear_with_time(new_blaze, boom_time, mySpritePos);
             } else {
                 // 有chain爆破
                 synb[j] = false;
@@ -471,6 +483,18 @@ bool GameScene::check_chain_boom(cocos2d::Sprite* blaze) {
             BubbleBoom(bullet);
             return true;
         }
+    }
+    return false;
+}
+
+bool GameScene::check_chain_boom(cocos2d::Vec2 blaze_pos) {
+    auto bubbleIter = _map_screen_bubbles.find(blaze_pos);
+    if (bubbleIter != _map_screen_bubbles.end()) {
+        auto bubble = bubbleIter->second;
+        _map_screen_bubbles.erase(bubbleIter);
+        bubble->stopAllActions();
+        BubbleBoom(bubble);
+        return true;
     }
     return false;
 }
