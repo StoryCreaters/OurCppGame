@@ -66,26 +66,25 @@ bool OpenScene::init()
 }
 
 cocos2d::Menu* OpenScene::setLayOutL1() {
-	auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-
-	cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
-
-	cocos2d::Vector<cocos2d::MenuItem*> vecs;
-
-	//UPDATE HERE:  ADD  "SETTINGS" 
-	std::string UiNames[] = { "GameUI/ProjectName", "GameUI/PlayMyself", "GameUI/PlayOnInternet","GameUI/Settings", "GameUI/Help","GameUI/Quit" };
-	ccMenuCallback Uifuncs[] = { nullptr,CC_CALLBACK_1(OpenScene::ToStartGame, this), nullptr,CC_CALLBACK_1(OpenScene::menuSetting,this),CC_CALLBACK_1(OpenScene::OnTouchPause, this),CC_CALLBACK_1(OpenScene::menuCloseCallback, this) };
-	for (int i = 0; i < 6; ++i) {
-		auto menuI = cocos2d::MenuItemImage::create(UiNames[i] + ".png", UiNames[i] + "Selected.png", Uifuncs[i]);   //这方法666
-		if (i != 0)
-			menuI->setScale(0.8, 0.6);
-		vecs.pushBack(menuI);
-	}
-
-	UImenus = cocos2d::Menu::createWithArray(vecs);
-	UImenus->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
-	UImenus->alignItemsVertically();
-	return UImenus;
+    auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
+    
+    cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
+    
+    cocos2d::Vector<cocos2d::MenuItem*> vecs;
+    
+    std::string UiNames[] = {"GameUI/ProjectName", "GameUI/PlayMyself", "GameUI/PlayOnInternet", "GameUI/Settings","GameUI/Help","GameUI/Quit"};
+    ccMenuCallback Uifuncs[] = {nullptr,CC_CALLBACK_1(OpenScene::ToStartGame, this), nullptr,CC_CALLBACK_1(OpenScene::MenuSettingsItem,this),CC_CALLBACK_1(OpenScene::OnTouchPause, this),CC_CALLBACK_1(OpenScene::menuCloseCallback, this)};
+    for (int i = 0; i < 6; ++i) {
+        auto menuI = cocos2d::MenuItemImage::create(UiNames[i] + ".png", UiNames[i]+ "Selected.png",Uifuncs[i]);
+        if (i != 0)
+            menuI->setScale(0.8, 0.6);
+        vecs.pushBack(menuI);
+    }
+    
+    UImenus = cocos2d::Menu::createWithArray(vecs);
+    UImenus->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+    UImenus->alignItemsVertically();
+    return UImenus;
 }
 
 
@@ -163,9 +162,9 @@ void OpenScene::ToStartGame(Ref *sender) {
 	Director::getInstance()->replaceScene(reScene);
 }
 
-void OpenScene::menuSetting(cocos2d::Ref* pSender)
+void OpenScene::MenuSettingsItem(cocos2d::Ref* pSender)
 {
-	auto sc = Setting::createScene();
+	auto sc = GameSettings::createScene();
 	auto reScene = TransitionSlideInR::create(0.618f, sc);
 	Director::getInstance()->replaceScene(reScene);
 }

@@ -1,23 +1,26 @@
 #include "settingScene.h"
 #include "OpenScene.h"
 #include "SimpleAudioEngine.h"
-/*ÀíÏëµÄsetting °üÀ¨£º
-1.ÒôÐ§¿ª¹Ø £¨ÒôÐ§µ÷½Ú´óÐ¡£©
-2.ÒôÀÖ¿ª¹Ø £¨ÒôÀÖµ÷½Ú´óÐ¡£©
-3.ÓÎÏ·¼üµÄÉèÖÃ£¨Ê²Ã´¼üÓÃÀ´ÒÆ¶¯£¬Ê²Ã´¼üÓÃÀ´·ÅÅÚ£©
-4.ÓÎÏ·µÄ½ø¶È£¨¿ì Õý³£ Âý£©
+#include "Settings.h"
+/*ç†æƒ³çš„GameSettings åŒ…æ‹¬ï¼š
 
-ÄÑ¶ÈµÄÑ¡Ôñ»¹ÓÐÈËÊýµÄÑ¡ÔñÒÔ¼°¹Ø¿¨µÄÑ¡Ôñ£¨ÉõÖÁÈËÎïµÄÑ¡Ôñ£© ÁôÔÚ GameScene ½çÃæ
+1.éŸ³æ•ˆå¼€å…³ ï¼ˆéŸ³æ•ˆè°ƒèŠ‚å¤§å°ï¼‰
+2.éŸ³ä¹å¼€å…³ ï¼ˆéŸ³ä¹è°ƒèŠ‚å¤§å°ï¼‰
+3.æ¸¸æˆé”®çš„è®¾ç½®ï¼ˆä»€ä¹ˆé”®ç”¨æ¥ç§»åŠ¨ï¼Œä»€ä¹ˆé”®ç”¨æ¥æ”¾ç‚®ï¼‰
+4.æ¸¸æˆçš„è¿›åº¦ï¼ˆå¿« æ­£å¸¸ æ…¢ï¼‰
+
+éš¾åº¦çš„é€‰æ‹©è¿˜æœ‰äººæ•°çš„é€‰æ‹©ä»¥åŠå…³å¡çš„é€‰æ‹©ï¼ˆç”šè‡³äººç‰©çš„é€‰æ‹©ï¼‰ ç•™åœ¨ GameScene ç•Œé¢
 */
 USING_NS_CC;
 
-Scene* Setting::createScene()
+
+Scene* GameSettings::createScene()
 {
 	// 'scene' is an autorelease object
 	auto scene = Scene::create();
 
 	// 'layer' is an autorelease object
-	auto layer = Setting::create();
+	auto layer = GameSettings::create();
 
 	// add layer as a child to scene
 	scene->addChild(layer);
@@ -26,7 +29,8 @@ Scene* Setting::createScene()
 	return scene;
 }
 
-bool Setting::init()
+
+bool GameSettings::init()
 {
 	if (!Layer::init())
 	{
@@ -42,18 +46,21 @@ bool Setting::init()
 	this->addChild(bg);
 
 
-	//ÒôÐ§¿ª¹Ø   Ö»ÓÐ¸öÐÎÊ½ÉÏµÄ¿ª¹Ø¡­¡­É¶Ò²²»ÄÜ¸ÉµÄ£¬ÐèÒªÍêÉÆ
+	//éŸ³æ•ˆå¼€å…³  
+	/*
+	TODO:å®žçŽ°ç‚¹å‡»åŽå°±èƒ½å…³åœéŸ³æ•ˆï¼ˆæˆ–è€…ç”¨ä¸€ä¸ªéŸ³é‡æ¡æ¥è°ƒèŠ‚ï¼‰
+	*/
 	auto soundOnMenuItem = MenuItemImage::create(
-		"SettingScene/on.png",
-		"SettingScene/on.png"
+		"GameUI/on.png",
+		"GameUI/on.png"
 	);
 	auto soundOffMenuItem = MenuItemImage::create(
-		"SettingScene/off.png",
-		"SettingScene/off,png"
+		"GameUI/off.png",
+		"GameUI/off,png"
 	);
 
 	auto soundToggleMenuItem = MenuItemToggle::createWithCallback(
-		CC_CALLBACK_1(Setting::menuSoundToggleCallback, this),
+		CC_CALLBACK_1(GameSettings::menuSoundToggleCallback, this),
 		soundOnMenuItem,
 		soundOffMenuItem,
 		nullptr
@@ -63,25 +70,28 @@ bool Setting::init()
 		convertToGL(Vec2(origin.x + visibleSize.width / 2,
 			origin.y + visibleSize.height / 3)));
 	
-		//ÎÄ×Ö²¿·Ö
-	auto labelSound = Label::createWithTTF("Sound", "fonts/arial.ttf",24);
+		//æ–‡å­—éƒ¨åˆ†
+	auto labelSound = Label::createWithTTF("Sound", "fonts/GloriaHallelujah.ttf",24);
 	labelSound->setPosition(Director::getInstance()->
 		convertToGL(Vec2(origin.x + visibleSize.width / 2 - 100,
 			origin.y + visibleSize.height / 3)));
 	this->addChild(labelSound);
 
 
-	//ÒôÀÖ¿ª¹Ø   Í¬ÉÏ£¬Ö»ÓÐ¸öÐÎÊ½ÉÏµÄ¿ª¹Ø¡­¡­É¶Ò²²»ÄÜ¸ÉµÄ£¬ÐèÒªÍêÉÆ
+	//éŸ³ä¹å¼€å…³  
+	/*
+	TODO:å®žçŽ°ç‚¹å‡»åŽå°±èƒ½å…³åœéŸ³æ•ˆï¼ˆæˆ–è€…ç”¨ä¸€ä¸ªéŸ³é‡æ¡æ¥è°ƒèŠ‚ï¼‰
+	*/
 	auto musicOnMenuItem = MenuItemImage::create(
-		"SettingScene/on.png",
-		"SettingScene/on.png"
+		"GameUI/on.png",
+		"GameUI/on.png"
 	);
 	auto musicOffMenuItem = MenuItemImage::create(
-		"SettingScene/off.png",
-		"SettingScene/off.png"
+		"GameUI/off.png",
+		"GameUI/off.png"
 	);
 	auto musicToggleMenuItem = MenuItemToggle::createWithCallback(
-		CC_CALLBACK_1(Setting::menuMusicToggleCallback, this),
+		CC_CALLBACK_1(GameSettings::menuMusicToggleCallback, this),
 		musicOnMenuItem,
 		musicOffMenuItem,
 		nullptr
@@ -91,22 +101,31 @@ bool Setting::init()
 		convertToGL(Vec2(origin.x + visibleSize.width / 2,
 			origin.y + visibleSize.height / 3 + 100)));
 
-		//ÎÄ×Ö²¿·Ö
-	auto labelMusic = Label::createWithTTF("Music", "fonts/arial.ttf", 24);
+		//æ–‡å­—éƒ¨åˆ†
+	auto labelMusic = Label::createWithTTF("Music", "fonts/GloriaHallelujah.ttf", 24);
 	labelMusic->setPosition(Director::getInstance()->
 		convertToGL(Vec2(origin.x + visibleSize.width / 2 - 100,
 			origin.y + visibleSize.height / 3 + 100)));
 	this->addChild(labelMusic);
 
-	//ÓÎÏ·¼üµÄÉèÖÃ  ²»ÖªµÀÔõÃ´ÅªÏÈ¿Õ×Å
+	//æŽ§åˆ¶é”®çš„è®¾ç½®  ï¼ˆæš‚ç¼ºï¼‰
+	/*
+	TODO:
+	  1.è§’è‰²ä¸Šä¸‹å·¦å³
+	  2.æ”¾æ³¡æ³¡é”®
+	*/
 
-	//ÓÎÏ·½ø¶È¿ìÂý   £¨ÁÙÊ±ÓÃÎÄ×Ö´úÌæ£©
+	//æ¸¸æˆè¿›åº¦å¿«æ…¢   
+	/*
+	TODO:
+	ç®€å•åœ°è¯´å°±æ˜¯æ¸¸æˆçš„é€Ÿåº¦å¿«æ…¢ï¼Œèµ°å¾—å¿«ï¼Œèµ°å¾—æ…¢ï¼Œå¯ä»¥é€šè¿‡è¿™é‡Œè°ƒèŠ‚ã€‚
+	*/
 	MenuItemFont * quickItem = MenuItemFont::create("Quick",
-		CC_CALLBACK_1(Setting::menuQuickItemCallback, this));
+		CC_CALLBACK_1(GameSettings::menuQuickItemCallback, this));
 	MenuItemFont * normalItem = MenuItemFont::create("Normal",
-		CC_CALLBACK_1(Setting::menuNormalItemCallback, this));
+		CC_CALLBACK_1(GameSettings::menuNormalItemCallback, this));
 	MenuItemFont * slowItem = MenuItemFont::create("Slow",
-		CC_CALLBACK_1(Setting::menuSlowItemCallback, this));
+		CC_CALLBACK_1(GameSettings::menuSlowItemCallback, this));
 	Menu * schedule = Menu::create(quickItem, normalItem,
 		slowItem, nullptr);
 	schedule->alignItemsVertically();
@@ -114,18 +133,22 @@ bool Setting::init()
 		convertToGL(Vec2(origin.x + visibleSize.width / 2 - 250,
 			origin.y + visibleSize.height / 3 + 100)));
 	this->addChild(schedule,0);
-		//ÎÄ×ÖÌáÊ¾
-	auto labelSchedule = Label::createWithTTF("Schedule", "fonts/arial.ttf", 24);
+		//æ–‡å­—æç¤º
+	auto labelSchedule = Label::createWithTTF("Schedule", "fonts/GloriaHallelujah.ttf", 24);
 	labelSchedule->setPosition(Director::getInstance()->
 		convertToGL(Vec2(origin.x + visibleSize.width / 2 - 380,
 			origin.y + visibleSize.height / 3 + 100)));
 	this->addChild(labelSchedule);
 
-	//Ok°´Å¥ £¬ ·µ»Øµ½Ö÷½çÃæ 
+	//OkæŒ‰é’® ï¼Œ è¿”å›žåˆ°ä¸»ç•Œé¢ 
+	/*
+	è§£é‡Šï¼šå›žåˆ°ä¸»ç•Œé¢
+	BUG:èƒŒæ™¯éŸ³ä¹ä¼šé‡æ–°æ’­æ”¾
+	*/
 	auto okMenuItem = MenuItemImage::create(
-		"SettingScene/OK1.png",
-		"SettingScene/OK2.png",
-		CC_CALLBACK_1(Setting::menuOkCallback, this)
+		"GameUI/OK1.png",
+		"GameUI/OK2.png",
+		CC_CALLBACK_1(GameSettings::menuOkCallback, this)
 	);
 	okMenuItem->setPosition(Director::getInstance()->
 		convertToGL(Vec2(origin.x + visibleSize.width / 2,
@@ -140,7 +163,7 @@ bool Setting::init()
 	return true;
 }
 
-void Setting::menuOkCallback(cocos2d::Ref* pSender)
+void GameSettings::menuOkCallback(cocos2d::Ref* pSender)
 {
 	auto sc = OpenScene::createScene();
 	auto reScene = TransitionSlideInL::create(0.618f, sc);
@@ -148,31 +171,31 @@ void Setting::menuOkCallback(cocos2d::Ref* pSender)
 }
 
 
-/******´ýÊµÏÖµÄ¿ª¹Ø²¿·Ö******/
-void Setting::menuSoundToggleCallback(cocos2d::Ref* pSender)
-{
-
-}
-
-void Setting::menuMusicToggleCallback(cocos2d::Ref* pSender)
-{
-
-}
-
-void Setting::menuQuickItemCallback(cocos2d::Ref* pSender)
+void GameSettings::menuQuickItemCallback(cocos2d::Ref* pSender)
 {
 	MenuItem * item = (MenuItem *)pSender;
 	log("Touch Start Menu Item %p", item);
 }
 
-void Setting::menuNormalItemCallback(cocos2d::Ref* pSender)
+void GameSettings::menuNormalItemCallback(cocos2d::Ref* pSender)
 {
 	MenuItem * item = (MenuItem *)pSender;
 	log("Touch Start Menu Item %p", item);
 }
 
-void Setting::menuSlowItemCallback(cocos2d::Ref* pSender)
+void GameSettings::menuSlowItemCallback(cocos2d::Ref* pSender)
 {
 	MenuItem * item = (MenuItem *)pSender;
 	log("Touch Start Menu Item %p", item);
+}
+
+/******å¾…å®žçŽ°çš„å¼€å…³éƒ¨åˆ†******/
+void GameSettings::menuSoundToggleCallback(cocos2d::Ref* pSender)
+{
+
+}
+
+void GameSettings::menuMusicToggleCallback(cocos2d::Ref* pSender)
+{
+
 }

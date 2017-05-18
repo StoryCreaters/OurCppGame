@@ -2,7 +2,7 @@
 #define Character_hpp
 
 #include "cocos2d.h"
-
+#include <utility>
 
 class character: public cocos2d::Sprite {
 public:
@@ -33,11 +33,10 @@ public:
     std::string _spriteName;
     
     /*****碰撞点******/
-    // 获取泡泡的碰撞点, l表示左, r表示右, d表示下, u表示上
-    cocos2d::Vec2 get_collision_ld();
-    cocos2d::Vec2 get_collision_rd();
-    cocos2d::Vec2 get_collision_lu();
-    cocos2d::Vec2 get_collision_ru();
+    // 根据方向给出一对碰撞点
+    std::pair<cocos2d::Vec2, cocos2d::Vec2> get_collection_point(int direction);
+    // 获取人物的碰撞点, l表示左, r表示右, d表示下, u表示上
+    
 private:
     
     // 人物的身材

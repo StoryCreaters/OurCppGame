@@ -5,7 +5,7 @@
 
 #include "cocos2d.h" 
 
-class Setting : public cocos2d::Layer
+class GameSettings : public cocos2d::Layer
 {
 public:
 	static cocos2d::Scene* createScene();
