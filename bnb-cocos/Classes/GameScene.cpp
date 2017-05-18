@@ -49,7 +49,6 @@ bool GameScene::init()
     _tileMap->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     _tileMap->setPosition(Point(visibleSize.width / 2 , visibleSize.height / 2));
     _tileMap->setScale(settings::GameScene::_tile_delta_rate);
-//    log("aft:%f %f", _tileMap->getTileSize().height, _tileMap->getMapSize().width);
     
     _meta = _tileMap->getLayer("Unbroken");
     _background = _tileMap->getLayer("Background");
@@ -216,7 +215,6 @@ void GameScene::mySpriteMove() {
     // last move
     static Vec2 last_move(0,0);
     static _optionCode last_ops = DEFAULT;
-//    log("last: %f %f", last_move.x, last_move.y);
     
     Vector<FiniteTimeAction *> moves;
     const int basic_step = 2;
@@ -233,7 +231,6 @@ void GameScene::mySpriteMove() {
                 return true;
         return false;
     };
-    log("%f %f", last_move.x, last_move.y);
     
     int curstep = _myplayer->_currentVelocity + basic_step;
     

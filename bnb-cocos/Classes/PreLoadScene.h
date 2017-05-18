@@ -26,7 +26,7 @@ private:
     void progressUpdate();
     
     void onEnterTransitionDidFinish() override;
-    void update(float dt);
+    void update(float dt) override;
 protected:
     // 用来保存游戏需要加载的资源总数
     int _sourceCount;

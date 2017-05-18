@@ -20,7 +20,7 @@ public:
 	void menuNormalItemCallback(cocos2d::Ref* pSender);
 	void menuSlowItemCallback(cocos2d::Ref* pSender);
 	// implement the "static create()" method manually
-	CREATE_FUNC(Setting);
+	CREATE_FUNC(GameSettings);
 };
 
 

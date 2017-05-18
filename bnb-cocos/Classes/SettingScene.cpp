@@ -1,4 +1,4 @@
-#include "settingScene.h"
+#include "SettingScene.h"
 #include "OpenScene.h"
 #include "SimpleAudioEngine.h"
 #include "Settings.h"
