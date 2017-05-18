@@ -47,35 +47,6 @@ bool character::initWithPlayerType(characterType type)
     return true;
 }
 
-cocos2d::Vec2 character::get_collision_ld() {
-    auto pos = this->getPosition();
-    auto x = pos.x, y = pos.y;
-    x -= grid_size / 2;
-    y -= grid_size / 2;
-    return cocos2d::Vec2(x, y);
-}
-cocos2d::Vec2 character::get_collision_rd() {
-    auto pos = this->getPosition();
-    auto x = pos.x, y = pos.y;
-    x += grid_size / 2;
-    y -= grid_size / 2;
-    return cocos2d::Vec2(x, y);
-}
-cocos2d::Vec2 character::get_collision_lu() {
-    auto pos = this->getPosition();
-    auto x = pos.x, y = pos.y;
-    x -= grid_size / 2;
-    y += grid_size / 2;
-    return cocos2d::Vec2(x, y);
-}
-cocos2d::Vec2 character::get_collision_ru() {
-    auto pos = this->getPosition();
-    auto x = pos.x, y = pos.y;
-    x += grid_size / 2;
-    y += grid_size / 2;
-    return cocos2d::Vec2(x, y);
-}
-
 // 根据方向给出一对碰撞点
 std::pair<cocos2d::Vec2, cocos2d::Vec2> character::get_collection_point(int direction) {
     /*

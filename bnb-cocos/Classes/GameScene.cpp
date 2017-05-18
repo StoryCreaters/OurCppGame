@@ -34,7 +34,7 @@ bool GameScene::init()
     }
     
     
-    auto visibleSize = Director::getInstance()->getVisibleSize();
+    visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     
     addCloseMenu();
@@ -46,10 +46,7 @@ bool GameScene::init()
     
     /***** tilemap ******/
     _tileMap = TMXTiledMap::create("gameStart/map01.tmx");
-    
-//    log("init:%f %f", _tileMap->getTileSize().height, _tileMap->getTileSize().width);
-    
-    _tileMap->setAnchorPoint(Vec2(0.5f, 0.5f));
+    _tileMap->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     _tileMap->setPosition(Point(visibleSize.width / 2 , visibleSize.height / 2));
     _tileMap->setScale(settings::GameScene::_tile_delta_rate);
 //    log("aft:%f %f", _tileMap->getTileSize().height, _tileMap->getMapSize().width);
@@ -59,14 +56,14 @@ bool GameScene::init()
     addChild(_tileMap, -1);
     
     // 注意坐标位置差
-    float offx = (visibleSize.width - _tileMap->getContentSize().width * _tile_delta_rate)/ 2;
-    float offy = (visibleSize.height - _tileMap->getContentSize().height * _tile_delta_rate) / 2;
+    offx = (visibleSize.width - _tileMap->getContentSize().width * _tile_delta_rate)/ 2;
+    offy = (visibleSize.height - _tileMap->getContentSize().height * _tile_delta_rate) / 2;
     TMXObjectGroup *objects = _tileMap->getObjectGroup("player");
     CCASSERT(nullptr != objects, "'Objects' object group not found");
     auto spawnPoint = objects->getObject("SpawnPoint1");
     CCASSERT(!spawnPoint.empty(), "SpawnPoint object not found");
-    int x = spawnPoint["x"].asFloat() * _tile_delta_rate;
-    int y = spawnPoint["y"].asFloat() * _tile_delta_rate;
+    float x = spawnPoint["x"].asFloat() * _tile_delta_rate;
+    float y = spawnPoint["y"].asFloat() * _tile_delta_rate;
     
     
     /*** add sprite***/
@@ -216,14 +213,16 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 
 /****人物移动****/
 void GameScene::mySpriteMove() {
+    // last move
+    static Vec2 last_move(0,0);
+    static _optionCode last_ops = DEFAULT;
+//    log("last: %f %f", last_move.x, last_move.y);
+    
     Vector<FiniteTimeAction *> moves;
     const int basic_step = 2;
     float dur = 0.1f;
     //TODO: 增加边界检测
     // 获得x y 的上界 下界
-    auto visibleSize = Director::getInstance()->getVisibleSize();
-    float offx = (visibleSize.width - _tileMap->getContentSize().width * _tile_delta_rate) / 2;
-    float offy = (visibleSize.height - _tileMap->getContentSize().height * _tile_delta_rate) / 2;
     float lowerx = offx, upperx = visibleSize.width - offx;
     float lowery = offy, uppery = visibleSize.height - offy;
     
@@ -234,6 +233,7 @@ void GameScene::mySpriteMove() {
                 return true;
         return false;
     };
+    log("%f %f", last_move.x, last_move.y);
     
     int curstep = _myplayer->_currentVelocity + basic_step;
     
@@ -241,18 +241,34 @@ void GameScene::mySpriteMove() {
     Vec2 delta_pos[4]{Vec2(0, curstep), Vec2(0, -curstep), Vec2(-curstep, 0), Vec2(curstep, 0)};
     // 判断动作，调整step
     for (int index = 0; index < 4; ++index) {
-        // 获取具体的方向
+        // get exact direction and last move
         Vec2 cur_delta = delta_pos[index];
         if (!_my_sprite_move[index])
             continue;
-        bool walk(false);           // 是否走动
+        auto test_point = cur_delta;
+        if ( last_ops == index) {
+            test_point += last_move;
+            last_move += cur_delta;
+        } else {
+            last_move = cur_delta;
+        }
+        last_ops = static_cast<GameScene::_optionCode>(index);
+        
+        
+        bool walk(false);           // really move?
         auto deltas = _myplayer->get_collection_point(index);
         auto pos1 = deltas.first, pos2 = deltas.second;
-        if (in_tile_map(pos1 + cur_delta) && in_tile_map(pos2 + cur_delta))
-            if (accessAble(pos1 + cur_delta) && in_tile_map(pos2 + cur_delta))
+        if (in_tile_map(pos1 + test_point) && in_tile_map(pos2 + test_point)) {
+            if (accessAble(pos1 + test_point) && accessAble(pos2 + test_point))
                 walk = true;
+        }
         if (walk) {
-            moves.pushBack(MoveBy::create(dur, cur_delta));
+            moves.pushBack(Sequence::create(MoveBy::create(dur, cur_delta), CallFuncN::create(
+            [&](Ref* sender) {
+                last_move -= cur_delta;
+            }), NULL));
+        } else {
+            last_move = {0,0};
         }
         break;
     }
@@ -340,18 +356,10 @@ void GameScene::update(float dt) {
 }
 
 cocos2d::Vec2 GameScene::tileCoordForPosition(cocos2d::Vec2 pos) {
-    auto visibleSize = Director::getInstance()->getWinSize();
-    auto offx = (visibleSize.width - static_cast<float>(_tileMap->getContentSize().width * _tile_delta_rate))/ 2;
-    auto offy = (visibleSize.height - static_cast<float>(_tileMap->getContentSize().height * _tile_delta_rate))/ 2;
-    
-    
     // 玩家位置的y除以地图的高，得到的是地图纵向第几个格子（tile），
     // 但是因为cocos2d-x的y轴（左下角）和TileMap的y轴（左上角）轴相反，所以使用地图的高度减去玩家位置的y
-    
     float pointHeight = _tileMap->getTileSize().height * _tile_delta_rate / CC_CONTENT_SCALE_FACTOR();
     int x = (int)((pos.x - offx) / (_tileMap->getTileSize().width * _tile_delta_rate / CC_CONTENT_SCALE_FACTOR()));
-    
-//    int y = (int)((_tileMap->getMapSize().height * _tile_delta_rate * pointHeight - pos.y - offy) / pointHeight);
     int y = static_cast<int>((visibleSize.height - offy - pos.y) / pointHeight);
 //    if (y > 14) y = 14;
     if (x > 14) x = 14;
@@ -361,7 +369,8 @@ cocos2d::Vec2 GameScene::tileCoordForPosition(cocos2d::Vec2 pos) {
 bool GameScene::accessAble(cocos2d::Vec2 pos) {
     Vec2 tileCoord = tileCoordForPosition(pos);
     // TODO: find out what was wrong
-    if (tileCoord.y > 14) tileCoord.y = 14;
+    if (tileCoord.x < 0 || tileCoord.y < 0)
+        return false;
     return hasCollisionInGridPos(tileCoord);
 }
 
@@ -428,9 +437,6 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
      */
     auto tiled_position = tileCoordForPosition(pos);
     --tiled_position.y;
-    static auto visibleSize = Director::getInstance()->getWinSize();
-    static float offx = (visibleSize.width - _tileMap->getContentSize().width * _tile_delta_rate)/ 2;
-    static float offy = (visibleSize.height - _tileMap->getContentSize().height * _tile_delta_rate) / 2;
     static auto std_delta = Vec2(offx, offy);
     
     // dir: 0->horizontal, 1->vertical;

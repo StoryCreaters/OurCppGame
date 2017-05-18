@@ -9,8 +9,9 @@ namespace settings {
     // 人物属性设定
     namespace Character {
         // 与delta_rate(1.15) 相关， 考虑修改
-        constexpr float grid_size = 40 ;
-        constexpr float little_grid_size = 35 ;
+        constexpr float grid_size = 40 * 1.15;
+        constexpr float little_grid_size = 32;
+        
         // 人物的x, y
         constexpr float character_x[] = {46, 44, 54};
         constexpr float character_y[] = {57, 56, 62};
@@ -55,7 +56,7 @@ namespace settings {
         constexpr char* direc_string[] = {"up", "down", "left", "right"};
         
         // 碰撞格子大小
-        constexpr int grid_size = 40;
+//        constexpr int grid_size = 40;
         
         /****爆炸图片****/
         constexpr char* boom_v = "BubbleImages/images/vertical_demo.png";        // 水平爆炸

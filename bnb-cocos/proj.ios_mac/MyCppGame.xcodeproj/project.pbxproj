@@ -73,8 +73,6 @@
 		8222CA621EA72E7100092E33 /* GameItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8222CA601EA72E7100092E33 /* GameItem.cpp */; };
 		8222CA631EA72E7100092E33 /* GameItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8222CA601EA72E7100092E33 /* GameItem.cpp */; };
 		8262943E1AAF051F00CB7CF7 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8262943D1AAF051F00CB7CF7 /* Security.framework */; };
-		826873211EA930AB00F7EB27 /* TileGameResources in Resources */ = {isa = PBXBuildFile; fileRef = 826873201EA930AB00F7EB27 /* TileGameResources */; };
-		826873221EA930AB00F7EB27 /* TileGameResources in Resources */ = {isa = PBXBuildFile; fileRef = 826873201EA930AB00F7EB27 /* TileGameResources */; };
 		827A69B41EA8E5E30073F534 /* ToStart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 827A69B21EA8E5E30073F534 /* ToStart.cpp */; };
 		827A69B51EA8E5E30073F534 /* ToStart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 827A69B21EA8E5E30073F534 /* ToStart.cpp */; };
 		827A69BE1EA8FE750073F534 /* gameStart in Resources */ = {isa = PBXBuildFile; fileRef = 827A69BD1EA8FE750073F534 /* gameStart */; };
@@ -217,7 +215,6 @@
 		8222CA601EA72E7100092E33 /* GameItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameItem.cpp; sourceTree = "<group>"; };
 		8222CA611EA72E7100092E33 /* GameItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameItem.h; sourceTree = "<group>"; };
 		8262943D1AAF051F00CB7CF7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		826873201EA930AB00F7EB27 /* TileGameResources */ = {isa = PBXFileReference; lastKnownFileType = folder; name = TileGameResources; path = ../../../../Downloads/TileGameResources; sourceTree = "<group>"; };
 		827A69B21EA8E5E30073F534 /* ToStart.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ToStart.cpp; sourceTree = "<group>"; };
 		827A69B31EA8E5E30073F534 /* ToStart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToStart.h; sourceTree = "<group>"; };
 		827A69BD1EA8FE750073F534 /* gameStart */ = {isa = PBXFileReference; lastKnownFileType = folder; path = gameStart; sourceTree = "<group>"; };
@@ -377,7 +374,6 @@
 				82A8788C1EC1BD75006385CC /* PropResource */,
 				82FFA9641EA9FA7C0061D94D /* GameBubble */,
 				82FFA9661EA9FA7C0061D94D /* GamePlayer */,
-				826873201EA930AB00F7EB27 /* TileGameResources */,
 				827A69BD1EA8FE750073F534 /* gameStart */,
 				8222CA451EA6426D00092E33 /* GameUI */,
 				82F3DBF41EA26A2700C6DBDA /* BackGround */,
@@ -600,7 +596,6 @@
 				5087E78217EB970100C73F5D /* Icon-144.png in Resources */,
 				82A8788D1EC1BD76006385CC /* PropResource in Resources */,
 				82FFA96B1EA9FA7C0061D94D /* GamePlayer in Resources */,
-				826873211EA930AB00F7EB27 /* TileGameResources in Resources */,
 				50EF629817ECD46A001EB2F8 /* Icon-80.png in Resources */,
 				5087E78417EB970100C73F5D /* Icon-57.png in Resources */,
 				5087E77E17EB970100C73F5D /* Default.png in Resources */,
@@ -625,7 +620,6 @@
 				521A8EAA19F11F5000D177D7 /* fonts in Resources */,
 				82A878951EC1C1D2006385CC /* BubbleImages in Resources */,
 				82A8788E1EC1BD76006385CC /* PropResource in Resources */,
-				826873221EA930AB00F7EB27 /* TileGameResources in Resources */,
 				82FFA9681EA9FA7C0061D94D /* GameBubble in Resources */,
 				46880B7C19C43A67006E1F66 /* CloseNormal.png in Resources */,
 				82F3DBF31EA267EB00C6DBDA /* music in Resources */,

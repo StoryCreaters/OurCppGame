@@ -46,6 +46,11 @@ public:
     void setBubble();
     void BubbleBoom(Ref* sender);
 private:
+    // SIZE OF SCREEN
+    cocos2d::Size visibleSize;
+    float offx;
+    float offy;
+    
     // 获取动画
     cocos2d::Animation* getAnimationByName(std::string animName,float delay,int animNum);
     
