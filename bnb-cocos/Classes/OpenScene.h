@@ -1,7 +1,11 @@
+
 /*
  :from PreLoadScene
  :to   RoomChooseScene(final), GameScene(current)
 */
+
+#pragma once
+
 #ifndef OpenScene_hpp
 #define OpenScene_hpp
 
@@ -15,6 +19,7 @@ using namespace cocos2d;
 class OpenScene : public cocos2d::Layer
 {
 public:
+
     static cocos2d::Scene* createScene();
     
     virtual bool init();
@@ -37,7 +42,7 @@ public:
     // debug
     void sceneTest(Ref *sender);
 private:
-    Menu* UImenus = nullptr;
+	Menu* UImenus = nullptr;
 };
 
 

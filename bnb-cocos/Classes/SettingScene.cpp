@@ -2,15 +2,17 @@
 #include "OpenScene.h"
 #include "SimpleAudioEngine.h"
 #include "Settings.h"
-/*ÀíÏëµÄGameSettings °üÀ¨£º
-1.ÒôÐ§¿ª¹Ø £¨ÒôÐ§µ÷½Ú´óÐ¡£©
-2.ÒôÀÖ¿ª¹Ø £¨ÒôÀÖµ÷½Ú´óÐ¡£©
-3.ÓÎÏ·¼üµÄÉèÖÃ£¨Ê²Ã´¼üÓÃÀ´ÒÆ¶¯£¬Ê²Ã´¼üÓÃÀ´·ÅÅÚ£©
-4.ÓÎÏ·µÄ½ø¶È£¨¿ì Õý³£ Âý£©
+/*ç†æƒ³çš„GameSettings åŒ…æ‹¬ï¼š
 
-ÄÑ¶ÈµÄÑ¡Ôñ»¹ÓÐÈËÊýµÄÑ¡ÔñÒÔ¼°¹Ø¿¨µÄÑ¡Ôñ£¨ÉõÖÁÈËÎïµÄÑ¡Ôñ£© ÁôÔÚ GameScene ½çÃæ
+1.éŸ³æ•ˆå¼€å…³ ï¼ˆéŸ³æ•ˆè°ƒèŠ‚å¤§å°ï¼‰
+2.éŸ³ä¹å¼€å…³ ï¼ˆéŸ³ä¹è°ƒèŠ‚å¤§å°ï¼‰
+3.æ¸¸æˆé”®çš„è®¾ç½®ï¼ˆä»€ä¹ˆé”®ç”¨æ¥ç§»åŠ¨ï¼Œä»€ä¹ˆé”®ç”¨æ¥æ”¾ç‚®ï¼‰
+4.æ¸¸æˆçš„è¿›åº¦ï¼ˆå¿« æ­£å¸¸ æ…¢ï¼‰
+
+éš¾åº¦çš„é€‰æ‹©è¿˜æœ‰äººæ•°çš„é€‰æ‹©ä»¥åŠå…³å¡çš„é€‰æ‹©ï¼ˆç”šè‡³äººç‰©çš„é€‰æ‹©ï¼‰ ç•™åœ¨ GameScene ç•Œé¢
 */
 USING_NS_CC;
+
 
 Scene* GameSettings::createScene()
 {
@@ -26,6 +28,7 @@ Scene* GameSettings::createScene()
 	// return the scene
 	return scene;
 }
+
 
 bool GameSettings::init()
 {
@@ -43,9 +46,9 @@ bool GameSettings::init()
 	this->addChild(bg);
 
 
-	//ÒôÐ§¿ª¹Ø  
+	//éŸ³æ•ˆå¼€å…³  
 	/*
-	TODO:ÊµÏÖµã»÷ºó¾ÍÄÜ¹ØÍ£ÒôÐ§£¨»òÕßÓÃÒ»¸öÒôÁ¿ÌõÀ´µ÷½Ú£©
+	TODO:å®žçŽ°ç‚¹å‡»åŽå°±èƒ½å…³åœéŸ³æ•ˆï¼ˆæˆ–è€…ç”¨ä¸€ä¸ªéŸ³é‡æ¡æ¥è°ƒèŠ‚ï¼‰
 	*/
 	auto soundOnMenuItem = MenuItemImage::create(
 		"GameUI/on.png",
@@ -67,7 +70,7 @@ bool GameSettings::init()
 		convertToGL(Vec2(origin.x + visibleSize.width / 2,
 			origin.y + visibleSize.height / 3)));
 	
-		//ÎÄ×Ö²¿·Ö
+		//æ–‡å­—éƒ¨åˆ†
 	auto labelSound = Label::createWithTTF("Sound", "fonts/GloriaHallelujah.ttf",24);
 	labelSound->setPosition(Director::getInstance()->
 		convertToGL(Vec2(origin.x + visibleSize.width / 2 - 100,
@@ -75,9 +78,9 @@ bool GameSettings::init()
 	this->addChild(labelSound);
 
 
-	//ÒôÀÖ¿ª¹Ø  
+	//éŸ³ä¹å¼€å…³  
 	/*
-	TODO:ÊµÏÖµã»÷ºó¾ÍÄÜ¹ØÍ£ÒôÐ§£¨»òÕßÓÃÒ»¸öÒôÁ¿ÌõÀ´µ÷½Ú£©
+	TODO:å®žçŽ°ç‚¹å‡»åŽå°±èƒ½å…³åœéŸ³æ•ˆï¼ˆæˆ–è€…ç”¨ä¸€ä¸ªéŸ³é‡æ¡æ¥è°ƒèŠ‚ï¼‰
 	*/
 	auto musicOnMenuItem = MenuItemImage::create(
 		"GameUI/on.png",
@@ -98,24 +101,24 @@ bool GameSettings::init()
 		convertToGL(Vec2(origin.x + visibleSize.width / 2,
 			origin.y + visibleSize.height / 3 + 100)));
 
-		//ÎÄ×Ö²¿·Ö
+		//æ–‡å­—éƒ¨åˆ†
 	auto labelMusic = Label::createWithTTF("Music", "fonts/GloriaHallelujah.ttf", 24);
 	labelMusic->setPosition(Director::getInstance()->
 		convertToGL(Vec2(origin.x + visibleSize.width / 2 - 100,
 			origin.y + visibleSize.height / 3 + 100)));
 	this->addChild(labelMusic);
 
-	//¿ØÖÆ¼üµÄÉèÖÃ  £¨ÔÝÈ±£©
+	//æŽ§åˆ¶é”®çš„è®¾ç½®  ï¼ˆæš‚ç¼ºï¼‰
 	/*
 	TODO:
-	  1.½ÇÉ«ÉÏÏÂ×óÓÒ
-	  2.·ÅÅÝÅÝ¼ü
+	  1.è§’è‰²ä¸Šä¸‹å·¦å³
+	  2.æ”¾æ³¡æ³¡é”®
 	*/
 
-	//ÓÎÏ·½ø¶È¿ìÂý   
+	//æ¸¸æˆè¿›åº¦å¿«æ…¢   
 	/*
 	TODO:
-	¼òµ¥µØËµ¾ÍÊÇÓÎÏ·µÄËÙ¶È¿ìÂý£¬×ßµÃ¿ì£¬×ßµÃÂý£¬¿ÉÒÔÍ¨¹ýÕâÀïµ÷½Ú¡£
+	ç®€å•åœ°è¯´å°±æ˜¯æ¸¸æˆçš„é€Ÿåº¦å¿«æ…¢ï¼Œèµ°å¾—å¿«ï¼Œèµ°å¾—æ…¢ï¼Œå¯ä»¥é€šè¿‡è¿™é‡Œè°ƒèŠ‚ã€‚
 	*/
 	MenuItemFont * quickItem = MenuItemFont::create("Quick",
 		CC_CALLBACK_1(GameSettings::menuQuickItemCallback, this));
@@ -130,17 +133,17 @@ bool GameSettings::init()
 		convertToGL(Vec2(origin.x + visibleSize.width / 2 - 250,
 			origin.y + visibleSize.height / 3 + 100)));
 	this->addChild(schedule,0);
-		//ÎÄ×ÖÌáÊ¾
+		//æ–‡å­—æç¤º
 	auto labelSchedule = Label::createWithTTF("Schedule", "fonts/GloriaHallelujah.ttf", 24);
 	labelSchedule->setPosition(Director::getInstance()->
 		convertToGL(Vec2(origin.x + visibleSize.width / 2 - 380,
 			origin.y + visibleSize.height / 3 + 100)));
 	this->addChild(labelSchedule);
 
-	//Ok°´Å¥ £¬ ·µ»Øµ½Ö÷½çÃæ 
+	//OkæŒ‰é’® ï¼Œ è¿”å›žåˆ°ä¸»ç•Œé¢ 
 	/*
-	½âÊÍ£º»Øµ½Ö÷½çÃæ
-	BUG:±³¾°ÒôÀÖ»áÖØÐÂ²¥·Å
+	è§£é‡Šï¼šå›žåˆ°ä¸»ç•Œé¢
+	BUG:èƒŒæ™¯éŸ³ä¹ä¼šé‡æ–°æ’­æ”¾
 	*/
 	auto okMenuItem = MenuItemImage::create(
 		"GameUI/OK1.png",
@@ -167,6 +170,7 @@ void GameSettings::menuOkCallback(cocos2d::Ref* pSender)
 	Director::getInstance()->replaceScene(reScene);
 }
 
+
 void GameSettings::menuQuickItemCallback(cocos2d::Ref* pSender)
 {
 	MenuItem * item = (MenuItem *)pSender;
@@ -185,7 +189,7 @@ void GameSettings::menuSlowItemCallback(cocos2d::Ref* pSender)
 	log("Touch Start Menu Item %p", item);
 }
 
-/******´ýÊµÏÖµÄ¿ª¹Ø²¿·Ö******/
+/******å¾…å®žçŽ°çš„å¼€å…³éƒ¨åˆ†******/
 void GameSettings::menuSoundToggleCallback(cocos2d::Ref* pSender)
 {
 
@@ -195,4 +199,3 @@ void GameSettings::menuMusicToggleCallback(cocos2d::Ref* pSender)
 {
 
 }
-
