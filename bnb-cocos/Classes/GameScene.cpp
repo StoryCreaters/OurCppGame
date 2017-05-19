@@ -213,11 +213,8 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 
 
 /****人物移动****/
-
-void GameScene::mySpriteMove() {
-    // last move
-    static Vec2 last_move(0,0);
-    static _optionCode last_ops = DEFAULT;
+void GameScene::CharacterMove(character* chara, settings::directions direc) {
+    
     const static int basic_step = 2;
     const static float dur = 0.1f;
     //TODO: 增加边界检测
@@ -233,55 +230,47 @@ void GameScene::mySpriteMove() {
         return false;
     };
     
-    int curstep = _myplayer->_currentVelocity + basic_step;
+    int curstep = chara->_currentVelocity + basic_step;
     
     // UP, DOWN, LEFT, RIGHT
     Vec2 delta_pos[4]{Vec2(0, curstep), Vec2(0, -curstep), Vec2(-curstep, 0), Vec2(curstep, 0)};
     // 判断动作，调整step
-    for (int index = 0; index < 4; ++index) {
-        // get exact direction and last move
-        Vec2 cur_delta = delta_pos[index];
-        if (!_my_sprite_move[index])
-            continue;
-        auto test_point = cur_delta;
-        if ( last_ops == index) {
-            test_point += last_move;
-            last_move += cur_delta;
-        } else {
-            last_move = cur_delta;
-        }
-        last_ops = static_cast<GameScene::_optionCode>(index);
+    // get exact direction and last move
+    Vec2 cur_delta = delta_pos[direc];
+    auto test_point = cur_delta;
+    if ( chara->last_ops == direc) {
+        test_point += chara->last_move;
+        chara->last_move += cur_delta;
+    } else {
+        chara->last_move = cur_delta;
+    }
+    chara->last_ops = static_cast<settings::directions>(direc);
+    
+    bool walk(true);           // really move?
+    auto deltas = chara->get_collection_point(direc);
+    auto pos1 = deltas.first, pos2 = deltas.second;
+    if (!in_tile_map(pos1 + test_point) || !in_tile_map(pos2 + test_point)) {
+        walk = false;
+    } else if (!accessAble(pos1 + test_point) || !accessAble(pos2 + test_point)) {
+        walk = false;
+    }
+    
+    if (hasBubble(tileCoordForPosition(pos1 + test_point + Vec2(0, -6))) || hasBubble(tileCoordForPosition(pos2 + test_point) + Vec2(0, -6))) {
+        walk = false;
+    }
         
-        
-        bool walk(true);           // really move?
-        auto deltas = _myplayer->get_collection_point(index);
-        auto pos1 = deltas.first, pos2 = deltas.second;
-        if (!in_tile_map(pos1 + test_point) || !in_tile_map(pos2 + test_point)) {
-            walk = false;
-        } else if (!accessAble(pos1 + test_point) || !accessAble(pos2 + test_point)) {
-            walk = false;
-        }
-        
-        if (hasBubble(tileCoordForPosition(pos1 + test_point + Vec2(0, -6))) || hasBubble(tileCoordForPosition(pos2 + test_point) + Vec2(0, -6))) {
-            walk = false;
-        }
-        
-        if (walk) {
-            moves.pushBack(Sequence::create(MoveBy::create(dur, cur_delta), CallFuncN::create(
+    if (walk) {
+        moves.pushBack(Sequence::create(MoveBy::create(dur, cur_delta), CallFuncN::create(
             [&](Ref* sender) {
-                last_move -= cur_delta;
-            }), NULL));
-        } else {
-            last_move = {0,0};
-        }
-        break;
+                chara->last_move -= cur_delta;
+                }), NULL));
+    } else {
+        chara->last_move = {0,0};
     }
     // 有可能啥都没有2333
     if (moves.size())
-        _myplayer->runAction(cocos2d::Spawn::create(moves));
+        chara->runAction(cocos2d::Spawn::create(moves));
 }
-
-
 
 // bubble应该设置在tilemap的grid上
 // bubble渲染问题
@@ -345,7 +334,13 @@ void GameScene::BubbleBoom(Ref* sender) {
 }
 
 void GameScene::update(float dt) {
-    mySpriteMove();
+//  TODO: DEBUG
+    for (int i = 0; i < 4; ++i) {
+        if (_my_sprite_move[i])
+            CharacterMove(_myplayer, static_cast<settings::directions>(i));
+    }
+    //    mySpriteMove();
+    
 }
 
 /**** coord convert ****/

@@ -18,4 +18,5 @@ void CharMoveState::excute(cocos2d::Sprite* spr) {
     auto player_action = RepeatForever::create(animate);
     cur_char->runAction(player_action);
     // move
+    
 }

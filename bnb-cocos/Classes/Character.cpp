@@ -26,6 +26,10 @@ bool character::initWithPlayerType(characterType type)
     // TODO: 更新人物和属性
     using namespace settings::Character;
     
+    // 初始化运动状态
+    last_move = {0, 0};
+    last_ops = settings::DEFAULT;
+    
     // 属性设置
     _spriteName = sprite_names[type];
     
