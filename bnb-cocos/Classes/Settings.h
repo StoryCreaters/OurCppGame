@@ -1,11 +1,27 @@
 #ifndef Settings_h
 #define Settings_h
 
+#include <string>
+
 namespace settings {
-//    // 基本方向
-//    enum optionCode {
-//        GO_UP, GO_DOWN, GO_LEFT, GO_RIGHT, DEFAULT
-//    };
+    namespace OpenScene {
+        constexpr char* UiNames[] = {
+            "GameUI/ProjectName",
+            "GameUI/PlayMyself",
+            "GameUI/PlayOnInternet",
+            "GameUI/Settings",
+            "GameUI/Help",
+            "GameUI/Quit"
+        };
+        
+        constexpr char* helps[] = {
+            "Hi, this is a bnb game",
+            "made by maplewind, Chris and shadowfox",
+            "use up\\down\\left\\right to control your charactor",
+            "and you can press \"help\" to get some information",
+            "have fun~"
+        };
+    }
     // 人物属性设定
     namespace Character {
         // 与delta_rate(1.15) 相关， 考虑修改

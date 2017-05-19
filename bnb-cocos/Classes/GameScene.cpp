@@ -66,7 +66,7 @@ bool GameScene::init()
     
     
     /*** add sprite***/
-    _myplayer = character::create(character::MAPLE_WISH);
+    _myplayer = character::create(character::CHRIS);
     _myplayer->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     _myplayer->setPosition(offx + x, offy + y);
     addChild(_myplayer, 1);
@@ -274,18 +274,7 @@ void GameScene::mySpriteMove() {
         _myplayer->runAction(cocos2d::Spawn::create(moves));
 }
 
-cocos2d::Vec2 GameScene::PositionForTileCoord(cocos2d::Vec2 pos) {
-    auto pos0 = tileCoordForPosition(_myplayer->getPosition());
-    if (_myplayer->getAnchorPoint() != Vec2::ZERO) {
-        if (pos0.x > 14) pos0.x = 14;
-    }
-    // TODO: find out what was wrong
-    if (pos0.y > 14) pos0.y = 14;
-    auto mySpritePos = _background->getPositionAt(pos0) * _tile_delta_rate;
-    auto visibleSize = Director::getInstance()->getWinSize();
-    mySpritePos += (visibleSize - _tileMap->getContentSize() * _tile_delta_rate) / 2;
-    return mySpritePos;
-}
+
 
 // bubble应该设置在tilemap的grid上
 // bubble渲染问题
@@ -301,7 +290,7 @@ void GameScene::setBubble() {
     // TODO: find out what was wrong
     if (pos0.y > 14) pos0.y = 14;
     
-    auto mySpritePos = PositionForTileCoord(_myplayer->getPosition());
+    auto mySpritePos = PositionForTileCoord(tileCoordForPosition(_myplayer->getPosition()));
 
     // DEBUG : not mySpritePos
     if (accessAble(_myplayer->getPosition())) {
@@ -350,6 +339,19 @@ void GameScene::BubbleBoom(Ref* sender) {
 
 void GameScene::update(float dt) {
     mySpriteMove();
+}
+
+/**** coord convert ****/
+cocos2d::Vec2 GameScene::PositionForTileCoord(cocos2d::Vec2 pos) {
+    if (_myplayer->getAnchorPoint() != Vec2::ZERO) {
+        if (pos.x > 14) pos.x = 14;
+    }
+    // TODO: find out what was wrong
+    if (pos.y > 14) pos.y = 14;
+    auto mySpritePos = _background->getPositionAt(pos) * _tile_delta_rate;
+    auto visibleSize = Director::getInstance()->getWinSize();
+    mySpritePos += (visibleSize - _tileMap->getContentSize() * _tile_delta_rate) / 2;
+    return mySpritePos;
 }
 
 cocos2d::Vec2 GameScene::tileCoordForPosition(cocos2d::Vec2 pos) {

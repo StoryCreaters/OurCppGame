@@ -3,6 +3,9 @@
 #include "ToStart.h"
 #include "GameScene.h"
 #include "SettingScene.h"
+#include "Settings.h"
+
+using namespace settings::OpenScene;
 
 Scene* OpenScene::createScene()
 {
@@ -72,10 +75,17 @@ cocos2d::Menu* OpenScene::setLayOutL1() {
     
     cocos2d::Vector<cocos2d::MenuItem*> vecs;
     
-    std::string UiNames[] = {"GameUI/ProjectName", "GameUI/PlayMyself", "GameUI/PlayOnInternet", "GameUI/Settings","GameUI/Help","GameUI/Quit"};
+//    std::string UiNames[] = {
+//        "GameUI/ProjectName",
+//        "GameUI/PlayMyself",
+//        "GameUI/PlayOnInternet",
+//        "GameUI/Settings",
+//        "GameUI/Help",
+//        "GameUI/Quit"
+//    };
     ccMenuCallback Uifuncs[] = {nullptr,CC_CALLBACK_1(OpenScene::ToStartGame, this), nullptr,CC_CALLBACK_1(OpenScene::MenuSettingsItem,this),CC_CALLBACK_1(OpenScene::OnTouchPause, this),CC_CALLBACK_1(OpenScene::menuCloseCallback, this)};
     for (int i = 0; i < 6; ++i) {
-        auto menuI = cocos2d::MenuItemImage::create(UiNames[i] + ".png", UiNames[i]+ "Selected.png",Uifuncs[i]);
+        auto menuI = cocos2d::MenuItemImage::create(std::string(UiNames[i]) + ".png", std::string(UiNames[i])+ "Selected.png",Uifuncs[i]);
         if (i != 0)
             menuI->setScale(0.8, 0.6);
         vecs.pushBack(menuI);
@@ -89,13 +99,6 @@ cocos2d::Menu* OpenScene::setLayOutL1() {
 
 
 
-//cocos2d::Menu* HelloWorld::setMusicLine(const std::string &music_name) {
-//    auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
-//    audio->playBackgroundMusic(music_name.c_str(), true);
-//    auto musicList = MenuItemToggle::createWithCallback(CC_CALLBACK_1(HelloWorld::musicOnAndOff, this), MenuItemFont::create("Music On"),   MenuItemFont::create("Music Off"), nullptr);
-//    auto musicM = Menu::create(musicList, nullptr);
-//    return musicM;
-////}
 
 void OpenScene::menuCloseCallback(Ref* pSender)
 {
@@ -126,10 +129,6 @@ void OpenScene::SwitchToOpen(cocos2d::Ref *pSender) {
 void OpenScene::OnTouchPause(cocos2d::Ref* pSender) {
 	auto layer = PauseWithLabelLayer::create();
 
-	static std::string helps[] = { "Hi, this is a bnb game", "made by maplewind, Chris and shadowfox",
-		"use up\\down\\left\\right to control your charactor",
-		"and you can press \"help\" to get some information",
-		"have fun~" };
 
 	for (int i = 0; i < 5; ++i) {
 		auto label = MenuItemLabel::create(Label::create(helps[i], "fonts/GloriaHallelujah.ttf", 35));
