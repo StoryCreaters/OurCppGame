@@ -35,9 +35,6 @@ bool character::initWithPlayerType(characterType type)
     _maxPower = max_powers[type];
     _currentVelocity = start_velocity[type];
     _maxVelocity = max_velocity[type];
-
-//    _sprite_width = character_x[type];
-//    _sprite_height = character_y[type];
     
     _animation_frames = animation_frames[type];
     
@@ -53,7 +50,6 @@ std::pair<cocos2d::Vec2, cocos2d::Vec2> character::get_collection_point(int dire
      in:direction, 0->up, 1->down, 2->left, 3->right
      out: collection point(2)
      */
-    
     using namespace cocos2d;
     auto cur_pos = this->getPosition();
     switch (direction) {

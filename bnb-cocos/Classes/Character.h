@@ -37,12 +37,7 @@ public:
     std::pair<cocos2d::Vec2, cocos2d::Vec2> get_collection_point(int direction);
     // 获取人物的碰撞点, l表示左, r表示右, d表示下, u表示上
     
-private:
-    
-    // 人物的身材
-    int _sprite_width;
-    int _sprite_height;
-    
+
 };
 
 

@@ -215,16 +215,14 @@ void GameScene::mySpriteMove() {
     // last move
     static Vec2 last_move(0,0);
     static _optionCode last_ops = DEFAULT;
-    
-    Vector<FiniteTimeAction *> moves;
-    const int basic_step = 2;
-    float dur = 0.1f;
+    const static int basic_step = 2;
+    const static float dur = 0.1f;
     //TODO: 增加边界检测
     // 获得x y 的上界 下界
-    float lowerx = offx, upperx = visibleSize.width - offx;
-    float lowery = offy, uppery = visibleSize.height - offy;
+    const static float lowerx = offx + 3, upperx = visibleSize.width - offx;
+    const static float lowery = offy + 3, uppery = visibleSize.height - offy;
     
-    lowerx += 3, lowery+=3;
+    Vector<FiniteTimeAction *> moves;
     auto in_tile_map = [&](Vec2 pos)->bool{
         if (pos.x >= lowerx && pos.x <= upperx)
             if (pos.y >= lowery && pos.y <= uppery)
@@ -252,13 +250,19 @@ void GameScene::mySpriteMove() {
         last_ops = static_cast<GameScene::_optionCode>(index);
         
         
-        bool walk(false);           // really move?
+        bool walk(true);           // really move?
         auto deltas = _myplayer->get_collection_point(index);
         auto pos1 = deltas.first, pos2 = deltas.second;
-        if (in_tile_map(pos1 + test_point) && in_tile_map(pos2 + test_point)) {
-            if (accessAble(pos1 + test_point) && accessAble(pos2 + test_point))
-                walk = true;
+        if (!in_tile_map(pos1 + test_point) || !in_tile_map(pos2 + test_point)) {
+            walk = false;
+        } else if (!accessAble(pos1 + test_point) || !accessAble(pos2 + test_point)) {
+            walk = false;
         }
+        
+        if (hasBubble(tileCoordForPosition(pos1 + test_point + Vec2(0, 6))) || hasBubble(tileCoordForPosition(pos2 + test_point) + Vec2(0, 6))) {
+            walk = false;
+        }
+        
         if (walk) {
             moves.pushBack(Sequence::create(MoveBy::create(dur, cur_delta), CallFuncN::create(
             [&](Ref* sender) {
@@ -360,11 +364,15 @@ cocos2d::Vec2 GameScene::tileCoordForPosition(cocos2d::Vec2 pos) {
     float pointHeight = _tileMap->getTileSize().height * _tile_delta_rate / CC_CONTENT_SCALE_FACTOR();
     int x = (int)((pos.x - offx) / (_tileMap->getTileSize().width * _tile_delta_rate / CC_CONTENT_SCALE_FACTOR()));
     int y = static_cast<int>((visibleSize.height - offy - pos.y) / pointHeight);
-//    if (y > 14) y = 14;
     if (x > 14) x = 14;
     return Vec2(x,y);
 }
 
+/***
+ 检测是否可以到达
+ in: cocos2d pos
+ out: 是否与不可碰的发生碰撞
+ ***/
 bool GameScene::accessAble(cocos2d::Vec2 pos) {
     Vec2 tileCoord = tileCoordForPosition(pos);
     // TODO: find out what was wrong
@@ -487,4 +495,15 @@ bool GameScene::check_chain_boom(cocos2d::Vec2 blaze_pos) {
         return true;
     }
     return false;
+}
+
+/** 对给出的瓦片地图坐标，有精灵就返回精灵，没有就返回nullptr **/
+Bubbles* GameScene::hasBubble(cocos2d::Vec2 tilePos) {
+//    log("%f %f", tilePos.x, tilePos.y);
+    auto bubbleIter = _map_screen_bubbles.find(tilePos);
+    Bubbles* bubble = nullptr;
+    if (bubbleIter != _map_screen_bubbles.end()) {
+        bubble = bubbleIter->second;
+    }
+    return bubble;
 }

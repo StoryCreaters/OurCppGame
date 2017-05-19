@@ -4,6 +4,10 @@
 #include <string>
 
 namespace settings {
+    enum directions {
+        UP, DOWN, LEFT, RIGHT
+    };
+    
     namespace OpenScene {
         constexpr char* UiNames[] = {
             "GameUI/ProjectName",
@@ -25,7 +29,7 @@ namespace settings {
     // 人物属性设定
     namespace Character {
         // 与delta_rate(1.15) 相关， 考虑修改
-        constexpr float grid_size = 40 * 1.15;
+        constexpr float grid_size = 42 * 1.15;
         constexpr float little_grid_size = 32;
         
         // 人物的x, y
@@ -106,6 +110,10 @@ namespace settings {
 	namespace SettingScene {
 		//temporary empty
 	}
+    
+    namespace FSM {
+        
+    }
 }
 
 #endif /* Settings_h */

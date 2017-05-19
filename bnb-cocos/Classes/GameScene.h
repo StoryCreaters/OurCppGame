@@ -45,6 +45,7 @@ public:
     /********泡泡释放*************/
     void setBubble();
     void BubbleBoom(Ref* sender);
+    Bubbles* hasBubble(cocos2d::Vec2 tilePos);
 private:
     // SIZE OF SCREEN
     cocos2d::Size visibleSize;
