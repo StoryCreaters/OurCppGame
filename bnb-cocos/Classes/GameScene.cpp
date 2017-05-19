@@ -6,6 +6,7 @@
 #include "Bubbles.h"
 #include "Settings.h"
 #include "SimpleAudioEngine.h"
+#include "CommonUse.h"
 
 USING_NS_CC;
 using namespace settings::GameScene;
@@ -210,7 +211,9 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
     }
 }
 
+
 /****人物移动****/
+
 void GameScene::mySpriteMove() {
     // last move
     static Vec2 last_move(0,0);
@@ -259,7 +262,7 @@ void GameScene::mySpriteMove() {
             walk = false;
         }
         
-        if (hasBubble(tileCoordForPosition(pos1 + test_point + Vec2(0, 6))) || hasBubble(tileCoordForPosition(pos2 + test_point) + Vec2(0, 6))) {
+        if (hasBubble(tileCoordForPosition(pos1 + test_point + Vec2(0, -6))) || hasBubble(tileCoordForPosition(pos2 + test_point) + Vec2(0, -6))) {
             walk = false;
         }
         
@@ -398,24 +401,6 @@ bool GameScene::hasCollisionInGridPos(Vec2 tileCoord) {
     return true;
 }
 
-// 通过名字获取动画, 第二个参数为播放属性, 第三个参数为张数目, 从1开始
-Animation* GameScene::getAnimationByName(std::string animName,float delay,int animNum){
-    auto animation = Animation::create();
-    // 循环从精灵帧缓存中获取与图片名称相对应的精灵帧组成动画
-    for(unsigned int i = 1;i<animNum;i++){
-        // 获取动画图片名称，例如plane0.png
-        std::string frameName = animName;
-        frameName.append(StringUtils::format("%02d",i)).append(".png");
-        // 将单张图片添加为精灵帧（即动画帧）
-        animation->addSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(frameName.c_str()));
-    }
-    // 设置动画播放的属性
-    animation->setDelayPerUnit(delay);
-    // 让精灵对象在动画执行完后恢复到最初状态
-    animation->setRestoreOriginalFrame(true);
-    // 返回动画对象
-    return animation;
-}
 
 void GameScene::add_and_clear_with_time(cocos2d::Sprite* sp, float dt, Vec2 pos) {
     sp->setAnchorPoint(Vec2::ZERO);

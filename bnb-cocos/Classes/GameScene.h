@@ -4,11 +4,14 @@
 #include "cocos2d.h"
 #include "Character.h"
 #include "Bubbles.h"
+#include "ControlLayer.h"
+#include "Settings.h"
 #include <array>
 
 class GameScene : public cocos2d::Layer
 {
 public:
+    friend class ControlLayer;
     using tilePosition = cocos2d::Vec2;
     
     static cocos2d::Scene* createScene();
@@ -31,6 +34,7 @@ public:
     // 需要不停移动的...
     // 注意补充下动画逻辑
     void mySpriteMove();
+    void CharacterMove(character* chara, settings::directions direc);
     
     void update(float dt) override;
     /*********碰撞检测*************/
@@ -51,10 +55,6 @@ private:
     cocos2d::Size visibleSize;
     float offx;
     float offy;
-    
-    // 获取动画
-    cocos2d::Animation* getAnimationByName(std::string animName,float delay,int animNum);
-    
     
     /***** tilemap的大小变化率 TODO:可以放到配置文件 *****/
     cocos2d::TMXTiledMap *_tileMap;

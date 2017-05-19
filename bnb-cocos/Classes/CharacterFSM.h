@@ -20,4 +20,23 @@ public:
     void ToDie();
 };
 
+// the state shows move, have directions
+class CharMoveState: public state{
+public:
+    CharMoveState(settings::directions in_direc): direc(in_direc) {}
+    void excute(cocos2d::Sprite* spr) override;
+private:
+    settings::directions direc;
+};
+
+class CharStandState: public state{
+public:
+    void excute(cocos2d::Sprite* spr) override;
+};
+
+class CharToDieState: public state {
+public:
+    void excute(cocos2d::Sprite* spr) override;
+};
+
 #endif /* characterFSM_hpp */

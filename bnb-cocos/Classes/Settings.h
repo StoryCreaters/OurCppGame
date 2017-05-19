@@ -5,7 +5,7 @@
 
 namespace settings {
     enum directions {
-        UP, DOWN, LEFT, RIGHT
+        UP, DOWN, LEFT, RIGHT, DEFAULT
     };
     
     namespace OpenScene {

@@ -103,6 +103,8 @@
 		82FD4FCC1ECF056900025573 /* ControlLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FD4FC91ECF056900025573 /* ControlLayer.cpp */; };
 		82FD4FCF1ECF057F00025573 /* GameMapLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FD4FCD1ECF057F00025573 /* GameMapLayer.cpp */; };
 		82FD4FD01ECF057F00025573 /* GameMapLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FD4FCD1ECF057F00025573 /* GameMapLayer.cpp */; };
+		82FD4FD31ECF15B500025573 /* CommonUse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FD4FD11ECF15B500025573 /* CommonUse.cpp */; };
+		82FD4FD41ECF15B500025573 /* CommonUse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FD4FD11ECF15B500025573 /* CommonUse.cpp */; };
 		82FFA9671EA9FA7C0061D94D /* GameBubble in Resources */ = {isa = PBXBuildFile; fileRef = 82FFA9641EA9FA7C0061D94D /* GameBubble */; };
 		82FFA9681EA9FA7C0061D94D /* GameBubble in Resources */ = {isa = PBXBuildFile; fileRef = 82FFA9641EA9FA7C0061D94D /* GameBubble */; };
 		82FFA96B1EA9FA7C0061D94D /* GamePlayer in Resources */ = {isa = PBXBuildFile; fileRef = 82FFA9661EA9FA7C0061D94D /* GamePlayer */; };
@@ -247,6 +249,8 @@
 		82FD4FCA1ECF056900025573 /* ControlLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlLayer.h; sourceTree = "<group>"; };
 		82FD4FCD1ECF057F00025573 /* GameMapLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameMapLayer.cpp; sourceTree = "<group>"; };
 		82FD4FCE1ECF057F00025573 /* GameMapLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameMapLayer.h; sourceTree = "<group>"; };
+		82FD4FD11ECF15B500025573 /* CommonUse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommonUse.cpp; sourceTree = "<group>"; };
+		82FD4FD21ECF15B500025573 /* CommonUse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonUse.h; sourceTree = "<group>"; };
 		82FFA9641EA9FA7C0061D94D /* GameBubble */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GameBubble; sourceTree = "<group>"; };
 		82FFA9661EA9FA7C0061D94D /* GamePlayer */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GamePlayer; sourceTree = "<group>"; };
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -438,6 +442,8 @@
 				82FD4FCA1ECF056900025573 /* ControlLayer.h */,
 				82FD4FCD1ECF057F00025573 /* GameMapLayer.cpp */,
 				82FD4FCE1ECF057F00025573 /* GameMapLayer.h */,
+				82FD4FD11ECF15B500025573 /* CommonUse.cpp */,
+				82FD4FD21ECF15B500025573 /* CommonUse.h */,
 				82C45F691EC09B6C001BD822 /* Settings.h */,
 			);
 			name = Classes;
@@ -668,6 +674,7 @@
 				82F3DBE11EA262DF00C6DBDA /* Character.cpp in Sources */,
 				82FD4FC71ECF029800025573 /* CharacterFSM.cpp in Sources */,
 				46880B8A19C43A87006E1F66 /* HelloWorldScene.cpp in Sources */,
+				82FD4FD31ECF15B500025573 /* CommonUse.cpp in Sources */,
 				82FD4FCB1ECF056900025573 /* ControlLayer.cpp in Sources */,
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
@@ -688,6 +695,7 @@
 				827A69C31EA8FE9B0073F534 /* GameScene.cpp in Sources */,
 				82FD4FC81ECF029800025573 /* CharacterFSM.cpp in Sources */,
 				8222CA631EA72E7100092E33 /* GameItem.cpp in Sources */,
+				82FD4FD41ECF15B500025573 /* CommonUse.cpp in Sources */,
 				82F3DBDB1EA262B900C6DBDA /* OpenScene.cpp in Sources */,
 				82FD4FCC1ECF056900025573 /* ControlLayer.cpp in Sources */,
 				820EB1F91EA7B3BB00C51921 /* RoomChooseScene.cpp in Sources */,
