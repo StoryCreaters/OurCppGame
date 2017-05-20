@@ -11,6 +11,7 @@
 USING_NS_CC;
 using namespace settings::GameScene;
 
+
 Scene* GameScene::createScene()
 {
     // 'scene' is an autorelease object
@@ -18,6 +19,9 @@ Scene* GameScene::createScene()
     
     // 'layer' is an autorelease object
     auto layer = GameScene::create();
+    
+    // temporary set it zero
+    layer->setTag(1);
     
     // add layer as a child to scene
     scene->addChild(layer);
@@ -71,7 +75,7 @@ bool GameScene::init()
     _myplayer->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     _myplayer->setPosition(offx + x, offy + y);
     addChild(_myplayer, 1);
-    
+    _game_players.pushBack(_myplayer);
     
     
     // basic bubbles
@@ -444,14 +448,32 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
             }
             auto new_blaze = Sprite::create(boom_anime[r_vec]);
             auto mySpritePos = _background->getPositionAt(next_p) * _tile_delta_rate + std_delta;
-            // DEBUG
-            if (!check_chain_boom(next_p)) {
+            
+            // 是否扩展
+            bool ans(false);
+            if (check_chain_boom(next_p)) {
                 // chain booming!!!
-                add_and_clear_with_time(new_blaze, boom_time, mySpritePos);
+                log("chain here");
+            } else if (!hasCollisionInGridPos(next_p)) {
+                // have tile
+                // need delay time
+                auto to_delete = _meta->getTileAt(next_p);
+                to_delete->runAction(Sequence::create(DelayTime::create(0.3), CallFuncN::create(
+                      [&](Ref* sender) {
+                          _meta->removeTileAt(next_p);
+                      }),NULL));
             } else {
-                // 有chain爆破
-                synb[j] = false;
+                // check if someone dead
+                for (auto &chara: _game_players) {
+                    if (tileCoordForPosition(chara->getPosition()) == next_p) {
+                        // chara was fired
+                        log("chara was fired");
+                    }
+                }
+                ans = true;
+                add_and_clear_with_time(new_blaze, boom_time, mySpritePos);
             }
+            synb[j] = ans;
         }
     }
 }
@@ -479,7 +501,6 @@ bool GameScene::check_chain_boom(cocos2d::Vec2 blaze_pos) {
 
 /** 对给出的瓦片地图坐标，有精灵就返回精灵，没有就返回nullptr **/
 Bubbles* GameScene::hasBubble(cocos2d::Vec2 tilePos) {
-//    log("%f %f", tilePos.x, tilePos.y);
     auto bubbleIter = _map_screen_bubbles.find(tilePos);
     Bubbles* bubble = nullptr;
     if (bubbleIter != _map_screen_bubbles.end()) {
