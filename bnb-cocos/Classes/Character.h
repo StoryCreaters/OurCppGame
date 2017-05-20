@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include <utility>
 #include "Settings.h"
+#include <array>
 
 class character: public cocos2d::Sprite {
 public:
@@ -36,6 +37,7 @@ public:
     // 之前的运动状态
     cocos2d::Vec2 last_move;
     settings::directions last_ops;
+    std::array<bool, 4> _chara_move;
     /*****碰撞点******/
     // 根据方向给出一对碰撞点
     std::pair<cocos2d::Vec2, cocos2d::Vec2> get_collection_point(int direction);

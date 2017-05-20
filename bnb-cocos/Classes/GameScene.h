@@ -35,7 +35,7 @@ public:
     // 需要不停移动的...
     // 注意补充下动画逻辑
     void mySpriteMove();
-    void CharacterMove(character* chara, settings::directions direc);
+    void CharacterMove(character* chara);
     
     void update(float dt) override;
     /*********碰撞检测*************/

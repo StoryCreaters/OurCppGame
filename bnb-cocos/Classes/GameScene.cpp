@@ -161,8 +161,9 @@ void GameScene::myKeyboardOnL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
     // DEBUG
     // TODO:走路可以用状态机实现
     if (code != DEFAULT) {
-        for (auto &b : _my_sprite_move)     b = false;
-        _my_sprite_move[code] = true;       //有移动的趋势, 防止爆栈
+        for (auto &b : _myplayer->_chara_move)     b = false;
+        _myplayer->_chara_move[code] = true;
+        /*** DEBUG: direction is about animation */
         _direction = code;
         
         // animation and direction
@@ -204,7 +205,8 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
     }
     
     if (code == GO_CODE) {
-        _my_sprite_move[key] = false;       //有移动的趋势
+        // no attention to move
+        _myplayer->_chara_move[key] = false;
         std::string next_direction(_myplayer->_spriteName + "_"+ std::string(direc_string[_direction]) +"_");
         auto tmp_f = SpriteFrameCache::getInstance()->getSpriteFrameByName(next_direction + "01.png");
         _myplayer->setSpriteFrame(tmp_f);
@@ -217,7 +219,7 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 
 
 /****人物移动****/
-void GameScene::CharacterMove(character* chara, settings::directions direc) {
+void GameScene::CharacterMove(character* chara) {
     
     const static int basic_step = 2;
     const static float dur = 0.1f;
@@ -240,36 +242,43 @@ void GameScene::CharacterMove(character* chara, settings::directions direc) {
     Vec2 delta_pos[4]{Vec2(0, curstep), Vec2(0, -curstep), Vec2(-curstep, 0), Vec2(curstep, 0)};
     // 判断动作，调整step
     // get exact direction and last move
-    Vec2 cur_delta = delta_pos[direc];
-    auto test_point = cur_delta;
-    if ( chara->last_ops == direc) {
-        test_point += chara->last_move;
-        chara->last_move += cur_delta;
-    } else {
-        chara->last_move = cur_delta;
-    }
-    chara->last_ops = static_cast<settings::directions>(direc);
     
-    bool walk(true);           // really move?
-    auto deltas = chara->get_collection_point(direc);
-    auto pos1 = deltas.first, pos2 = deltas.second;
-    if (!in_tile_map(pos1 + test_point) || !in_tile_map(pos2 + test_point)) {
-        walk = false;
-    } else if (!accessAble(pos1 + test_point) || !accessAble(pos2 + test_point)) {
-        walk = false;
-    }
-    
-    if (hasBubble(tileCoordForPosition(pos1 + test_point + Vec2(0, -6))) || hasBubble(tileCoordForPosition(pos2 + test_point) + Vec2(0, -6))) {
-        walk = false;
-    }
+    for (int index = 0; index < 4; ++index) {
+        if (!chara->_chara_move[index]) {
+            continue;
+        }
+        Vec2 cur_delta = delta_pos[index];
+        auto test_point = cur_delta;
+        if ( chara->last_ops == index) {
+            test_point += chara->last_move;
+            chara->last_move += cur_delta;
+        } else {
+            chara->last_move = cur_delta;
+        }
+        chara->last_ops = static_cast<settings::directions>(index);
         
-    if (walk) {
-        moves.pushBack(Sequence::create(MoveBy::create(dur, cur_delta), CallFuncN::create(
-            [&](Ref* sender) {
-                chara->last_move -= cur_delta;
-                }), NULL));
-    } else {
-        chara->last_move = {0,0};
+        
+        bool walk(true);           // really move?
+        auto deltas = chara->get_collection_point(index);
+        auto pos1 = deltas.first, pos2 = deltas.second;
+        if (!in_tile_map(pos1 + test_point) || !in_tile_map(pos2 + test_point)) {
+            walk = false;
+        } else if (!accessAble(pos1 + test_point) || !accessAble(pos2 + test_point)) {
+            walk = false;
+        }
+        
+        if (hasBubble(tileCoordForPosition(pos1 + test_point + Vec2(0, -6))) || hasBubble(tileCoordForPosition(pos2 + test_point) + Vec2(0, -6))) {
+            walk = false;
+        }
+        if (walk) {
+            moves.pushBack(Sequence::create(MoveBy::create(dur, cur_delta), CallFuncN::create(
+                    [&](Ref* sender) {
+                        chara->last_move -= cur_delta;
+                    }), NULL));
+        } else {
+            chara->last_move = {0,0};
+        }
+        break;
     }
     // 有可能啥都没有2333
     if (moves.size())
@@ -318,6 +327,8 @@ void GameScene::setBubble() {
     }
 }
 
+
+
 // 泡泡爆炸, 可以添加逻辑
 void GameScene::BubbleBoom(Ref* sender) {
     auto *sprite = dynamic_cast<Bubbles*>(sender);
@@ -338,13 +349,7 @@ void GameScene::BubbleBoom(Ref* sender) {
 }
 
 void GameScene::update(float dt) {
-//  TODO: DEBUG
-    for (int i = 0; i < 4; ++i) {
-        if (_my_sprite_move[i])
-            CharacterMove(_myplayer, static_cast<settings::directions>(i));
-    }
-    //    mySpriteMove();
-    
+    CharacterMove(_myplayer);
 }
 
 /**** coord convert ****/
@@ -508,3 +513,4 @@ Bubbles* GameScene::hasBubble(cocos2d::Vec2 tilePos) {
     }
     return bubble;
 }
+

@@ -20,6 +20,6 @@ void CharMoveState::excute(cocos2d::Sprite* spr) {
     // motivation
     auto scene = Director::getInstance()->getRunningScene();
     auto gameScene = dynamic_cast<GameScene*>(scene->getChildByTag(1));
-    gameScene->CharacterMove(cur_char, direc);
+    gameScene->CharacterMove(cur_char);
 }
 
