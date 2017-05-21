@@ -170,8 +170,8 @@ void GameScene::myKeyboardOnL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
         std::string next_direction(_myplayer->_spriteName + "_"+ std::string(direc_string[code]) +"_");
         auto anime = getAnimationByName(next_direction, 0.1f, _myplayer->_animation_frames);
         auto animate = Animate::create(anime);
-        auto player_action = RepeatForever::create(animate);
-        _myplayer->runAction(player_action);
+        auto player_anime = RepeatForever::create(animate);
+        _myplayer->runAction(player_anime);
     }
 }
 
@@ -217,10 +217,71 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
     }
 }
 
+void GameScene::mySpriteMove() {
+    const static int basic_step = 2;
+    const static float dur = 0.1f;
+    //TODO: 增加边界检测
+    // 获得x y 的上界 下界
+    const static float lowerx = offx + 3, upperx = visibleSize.width - offx;
+    const static float lowery = offy + 3, uppery = visibleSize.height - offy;
+    
+    Vector<FiniteTimeAction *> moves;
+    auto in_tile_map = [&](Vec2 pos)->bool{
+        if (pos.x >= lowerx && pos.x <= upperx)
+            if (pos.y >= lowery && pos.y <= uppery)
+                return true;
+        return false;
+    };
+    
+    int curstep = _myplayer->_currentVelocity + basic_step;
+    
+    // UP, DOWN, LEFT, RIGHT
+    Vec2 delta_pos[4]{Vec2(0, curstep), Vec2(0, -curstep), Vec2(-curstep, 0), Vec2(curstep, 0)};
+    // 判断动作，调整step
+    // get exact direction and last move
+    for (int index = 0; index < 4; ++index) {
+        if (!_myplayer->_chara_move[index]) {
+            continue;
+        }
+        Vec2 cur_delta = delta_pos[index];
+        auto test_point = cur_delta;
+        if ( _myplayer->last_ops == index) {
+            test_point += _myplayer->last_move;
+            _myplayer->last_move += cur_delta;
+        } else {
+            _myplayer->last_move = cur_delta;
+            _myplayer->last_ops = static_cast<settings::directions>(index);
+        }
+        
+        bool walk(true);           // really move?
+        auto deltas = _myplayer->get_collection_point(index);
+        auto pos1 = deltas.first, pos2 = deltas.second;
+        if (!in_tile_map(pos1 + test_point) || !in_tile_map(pos2 + test_point)) {
+            _myplayer->last_move = {0,0};
+            break;
+        } else if (!accessAble(pos1 + test_point) || !accessAble(pos2 + test_point)) {
+            walk = false;
+        }
+        
+        if (hasBubble(tileCoordForPosition(pos1 + test_point + Vec2(0, -6))) || hasBubble(tileCoordForPosition(pos2 + test_point) + Vec2(0, -6))) {
+            walk = false;
+        }
+        if (walk) {
+            moves.pushBack(Sequence::create(MoveBy::create(dur, cur_delta), CallFuncN::create(
+                [&](Ref* sender) {
+                    _myplayer->last_move -= cur_delta;
+                }), NULL));
+        } else {
+            _myplayer->last_move = {0,0};
+        }
+        break;
+    }
+    if (moves.size())
+        _myplayer->runAction(cocos2d::Spawn::create(moves));
+}
 
 /****人物移动****/
 void GameScene::CharacterMove(character* chara) {
-    
     const static int basic_step = 2;
     const static float dur = 0.1f;
     //TODO: 增加边界检测
@@ -242,7 +303,6 @@ void GameScene::CharacterMove(character* chara) {
     Vec2 delta_pos[4]{Vec2(0, curstep), Vec2(0, -curstep), Vec2(-curstep, 0), Vec2(curstep, 0)};
     // 判断动作，调整step
     // get exact direction and last move
-    
     for (int index = 0; index < 4; ++index) {
         if (!chara->_chara_move[index]) {
             continue;
@@ -254,15 +314,15 @@ void GameScene::CharacterMove(character* chara) {
             chara->last_move += cur_delta;
         } else {
             chara->last_move = cur_delta;
+            chara->last_ops = static_cast<settings::directions>(index);
         }
-        chara->last_ops = static_cast<settings::directions>(index);
-        
         
         bool walk(true);           // really move?
         auto deltas = chara->get_collection_point(index);
         auto pos1 = deltas.first, pos2 = deltas.second;
         if (!in_tile_map(pos1 + test_point) || !in_tile_map(pos2 + test_point)) {
-            walk = false;
+            chara->last_move = {0,0};
+            break;
         } else if (!accessAble(pos1 + test_point) || !accessAble(pos2 + test_point)) {
             walk = false;
         }
@@ -272,15 +332,14 @@ void GameScene::CharacterMove(character* chara) {
         }
         if (walk) {
             moves.pushBack(Sequence::create(MoveBy::create(dur, cur_delta), CallFuncN::create(
-                    [&](Ref* sender) {
-                        chara->last_move -= cur_delta;
-                    }), NULL));
+                  [&](Ref* sender) {
+                       chara->last_move -= cur_delta;
+                  }), NULL));
         } else {
             chara->last_move = {0,0};
         }
         break;
     }
-    // 有可能啥都没有2333
     if (moves.size())
         chara->runAction(cocos2d::Spawn::create(moves));
 }
@@ -350,6 +409,7 @@ void GameScene::BubbleBoom(Ref* sender) {
 
 void GameScene::update(float dt) {
     CharacterMove(_myplayer);
+//    mySpriteMove();
 }
 
 /**** coord convert ****/
@@ -462,11 +522,12 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
             } else if (!hasCollisionInGridPos(next_p)) {
                 // have tile
                 // need delay time
-                auto to_delete = _meta->getTileAt(next_p);
-                to_delete->runAction(Sequence::create(DelayTime::create(0.3), CallFuncN::create(
-                      [&](Ref* sender) {
-                          _meta->removeTileAt(next_p);
-                      }),NULL));
+                log("debug here");
+//                auto to_delete = _meta->getTileAt(next_p);
+//                to_delete->runAction(Sequence::create(DelayTime::create(0.3), CallFuncN::create(
+//                      [&](Ref* sender) {
+//                          _meta->removeTileAt(next_p);
+//                      }),NULL));
             } else {
                 // check if someone dead
                 for (auto &chara: _game_players) {
