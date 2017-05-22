@@ -21,7 +21,6 @@ bool GameItem::initWithPlayerType(GameItem::ItemTools type)
     using namespace settings::Items;
     // 记住加入png
     this->initWithSpriteFrameName(std::string(settings::Items::ItemNames[type]) + "_01.png");
-    cocos2d::log("%s", (std::string(settings::Items::ItemNames[type]) + "_01.png").c_str());
     this->type = type;
     return true;
 }

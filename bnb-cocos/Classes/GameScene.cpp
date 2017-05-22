@@ -1,12 +1,10 @@
-// 理想状况这里应该用继承的... 但是这里先写一个试试看咯～
 // TODO: 改变遮挡关系
-// 泡泡炸裂
-// 制作FSM
 #include "GameScene.h"
 #include "Bubbles.h"
 #include "Settings.h"
 #include "SimpleAudioEngine.h"
 #include "CommonUse.h"
+#include <random>
 
 USING_NS_CC;
 using namespace settings::GameScene;
@@ -69,6 +67,7 @@ bool GameScene::init()
     float x = spawnPoint["x"].asFloat() * _tile_delta_rate;
     float y = spawnPoint["y"].asFloat() * _tile_delta_rate;
     
+    tileLoadProps();
     
     /*** add character***/
     _myplayer = character::create(character::CHRIS);
@@ -77,9 +76,11 @@ bool GameScene::init()
     addChild(_myplayer, 1);
     _game_players.pushBack(_myplayer);
     
-    addItems(Vec2(10, 10));
-    // basic bubbles
-    _my_bubbles = 0;
+    _my_bubbles = 0;        // bubbles start from 0
+    
+    // test
+//    addItems(Vec2(10, 10));
+    
     
     // 键盘监听
     auto listener = EventListenerKeyboard::create();
@@ -216,72 +217,9 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
     }
 }
 
-void GameScene::mySpriteMove() {
-    const static int basic_step = 2;
-    const static float dur = 0.1f;
-    //TODO: 增加边界检测
-    // 获得x y 的上界 下界
-    const static float lowerx = offx + 3, upperx = visibleSize.width - offx;
-    const static float lowery = offy + 3, uppery = visibleSize.height - offy;
-    
-    Vector<FiniteTimeAction *> moves;
-    auto in_tile_map = [&](Vec2 pos)->bool{
-        if (pos.x >= lowerx && pos.x <= upperx)
-            if (pos.y >= lowery && pos.y <= uppery)
-                return true;
-        return false;
-    };
-    
-    int curstep = _myplayer->_currentVelocity + basic_step;
-    
-    // UP, DOWN, LEFT, RIGHT
-    Vec2 delta_pos[4]{Vec2(0, curstep), Vec2(0, -curstep), Vec2(-curstep, 0), Vec2(curstep, 0)};
-    // 判断动作，调整step
-    // get exact direction and last move
-    for (int index = 0; index < 4; ++index) {
-        if (!_myplayer->_chara_move[index]) {
-            continue;
-        }
-        Vec2 cur_delta = delta_pos[index];
-        auto test_point = cur_delta;
-        if ( _myplayer->last_ops == index) {
-            test_point += _myplayer->last_move;
-            _myplayer->last_move += cur_delta;
-        } else {
-            _myplayer->last_move = cur_delta;
-            _myplayer->last_ops = static_cast<settings::directions>(index);
-        }
-        
-        bool walk(true);           // really move?
-        auto deltas = _myplayer->get_collection_point(index);
-        auto pos1 = deltas.first, pos2 = deltas.second;
-        if (!in_tile_map(pos1 + test_point) || !in_tile_map(pos2 + test_point)) {
-            _myplayer->last_move = {0,0};
-            break;
-        } else if (!accessAble(pos1 + test_point) || !accessAble(pos2 + test_point)) {
-            walk = false;
-        }
-        
-        if (hasBubble(tileCoordForPosition(pos1 + test_point + Vec2(0, -6))) || hasBubble(tileCoordForPosition(pos2 + test_point) + Vec2(0, -6))) {
-            walk = false;
-        }
-        if (walk) {
-            moves.pushBack(Sequence::create(MoveBy::create(dur, cur_delta), CallFuncN::create(
-                [&](Ref* sender) {
-                    _myplayer->last_move -= cur_delta;
-                }), NULL));
-        } else {
-            _myplayer->last_move = {0,0};
-        }
-        break;
-    }
-    if (moves.size())
-        _myplayer->runAction(cocos2d::Spawn::create(moves));
-}
 
 /****人物移动****/
 void GameScene::CharacterMove(character* chara) {
-   
     
     const static float dur = 0.1f;
     //TODO: 增加边界检测
@@ -362,7 +300,8 @@ void GameScene::setBubble() {
     auto mySpritePos = PositionForTileCoord(tileCoordForPosition(_myplayer->getPosition()));
 
     // DEBUG : not mySpritePos
-    if (accessAble(_myplayer->getPosition())) {
+    auto mypos = _myplayer->getPosition();
+    if (accessAble(mypos)) {
         // 调整精灵位置
         auto newBubble = Bubbles::create(_myplayer->_currentPower);
         newBubble->setAnchorPoint(Vec2::ZERO);
@@ -373,12 +312,7 @@ void GameScene::setBubble() {
         auto timeBoom = CallFuncN::create(CC_CALLBACK_1(GameScene::BubbleBoom, this));
         
         // 动画(是否可以抽象)
-        auto anime = getAnimationByName("Popo_", 0.25, bubble_frame_nums);
-        
-        auto animate = Animate::create(anime);
-        auto bubbleAction = RepeatForever::create(animate);
-        newBubble->runAction(bubbleAction);
-        
+        runAnimationByName(newBubble, "Popo_", 0.25, bubble_frame_nums);
         addChild(newBubble);
 
         _map_screen_bubbles[pos0] = newBubble;
@@ -394,6 +328,7 @@ void GameScene::BubbleBoom(Ref* sender) {
     auto *sprite = dynamic_cast<Bubbles*>(sender);
     auto beg_pos = sprite->getPosition();
     int power = sprite->get_power();
+    
     --_my_bubbles;
     this->removeChild(sprite);
     for (auto iter = _map_screen_bubbles.begin(); iter != _map_screen_bubbles.end(); ++iter) {
@@ -441,14 +376,17 @@ cocos2d::Vec2 GameScene::tileCoordForPosition(cocos2d::Vec2 pos) {
 /***
  检测是否可以到达
  in: cocos2d pos
- out: 是否与不可碰的发生碰撞
+ out: 是否与不可碰墙壁的发生碰撞
  ***/
 bool GameScene::accessAble(cocos2d::Vec2 pos) {
     Vec2 tileCoord = tileCoordForPosition(pos);
     // TODO: find out what was wrong
     if (tileCoord.x < 0 || tileCoord.y < 0)
         return false;
-    return hasCollisionInGridPos(tileCoord);
+    if (hasCollisionInGridPos(tileCoord) && !hasBubble(tileCoord))
+        return true;
+    return false;
+    
 }
 
 bool GameScene::hasCollisionInGridPos(Vec2 tileCoord) {
@@ -496,6 +434,7 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
     /*
      args: pos->position of sprite, power:power of bubble, vector:direction
      */
+//    log("boom_animate power: %d", power);
     auto tiled_position = tileCoordForPosition(pos);
     --tiled_position.y;
     static auto std_delta = Vec2(offx, offy);
@@ -510,29 +449,32 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
             if (!synb[j])
                 continue;
             // 获取下一个爆炸的位置
-            auto next_p = dirs[r_vec] * syn[j] + tiled_position;
+            auto next_p = dirs[r_vec] * syn[j] * i + tiled_position;
+//            log("%f %f", next_p.x, next_p.y);
             // 判断爆炸位置是否在地图中
             if (!in_map(next_p.x, next_p.y)) {
                 synb[j] = false;
                 continue;
             }
-            auto new_blaze = Sprite::create(boom_anime[r_vec]);
-            auto mySpritePos = _background->getPositionAt(next_p) * _tile_delta_rate + std_delta;
-            
             // 是否扩展
             bool ans(false);
             if (check_chain_boom(next_p)) {
                 // chain booming!!!
-                log("chain here");
+//                log("chain here");
             } else if (!hasCollisionInGridPos(next_p)) {
                 // have tile
                 // need delay time and broken animation
                 this->runAction(Sequence::create(DelayTime::create(0.2f), CallFuncN::create(
                       [=](Ref* sender) {
                           _meta->removeTileAt(next_p);
+                          if (prop_on_map[next_p.x][next_p.y] < GameItem::toolNumbers) {
+                              this->addItems(next_p, static_cast<GameItem::ItemTools>(prop_on_map[next_p.x][next_p.y]));
+                          }
                       }), NULL));
             } else {
                 // check if someone dead
+                auto new_blaze = Sprite::create(boom_anime[r_vec]);
+                auto mySpritePos = _background->getPositionAt(next_p) * _tile_delta_rate + std_delta;
                 for (auto &chara: _game_players) {
                     if (tileCoordForPosition(chara->getPosition()) == next_p) {
                         // chara was fired
@@ -578,24 +520,35 @@ Bubbles* GameScene::hasBubble(cocos2d::Vec2 tilePos) {
     return bubble;
 }
 
-void GameScene::addItems(cocos2d::Vec2 tiledPos) {
-    auto item_kind = GameItem::POPO;
+void GameScene::addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools item_kind) {
     auto pos = PositionForTileCoord(tiledPos);
-    auto item = GameItem::create(item_kind);
+    
+    auto item = GameItem::create(static_cast<GameItem::ItemTools>(prop_on_map[tiledPos.x][tiledPos.y]));
     item->setScale(_tile_delta_rate);
     item->setAnchorPoint(Vec2::ZERO);
     item->setPosition(pos);
+//    log("findItem:%d %d", tiledPos.x, tiledPos.y);
     // anime
     runAnimationByName(item, std::string(settings::Items::ItemNames[item_kind]) + "_", 0.2, 3);
     screenItems[tiledPos] = item;
-    SceneItems.pushBack(item);
+    
     this->addChild(item);
-}
-
-void GameScene::tileLoadProps() {
-    // 加载地图的对应的道具
     
 }
+
+
+void GameScene::tileLoadProps() {
+    static std::random_device rd;
+    static std::uniform_int_distribution<int> dist(0, GameItem::toolNumbers * 5 / 3);
+    // 加载地图的对应的道具
+    for (int x = 0; x < 15; ++x)
+        for (int y = 0; y < 15; ++y)
+            if (!hasCollisionInGridPos(Vec2(x, y))) {
+                prop_on_map[x][y] = dist(rd);
+            }
+    
+}
+
 
 void GameScene::checkGetItem(character* chara) {
     auto tiledCharaPos = tileCoordForPosition(chara->getPosition());

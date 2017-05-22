@@ -63,10 +63,15 @@ private:
     cocos2d::TMXLayer *_background;
     cocos2d::TMXObjectGroup *objects;
     cocos2d::TMXLayer *_meta;
-    void tileLoadProps();           // 给tile加载道具
+    void tileLoadProps();
+    // 瓦片地图上的道具们
+    std::array<std::array<int, 15>, 15> prop_on_map;
     
     /**** player的属性, 和自己的player的属性, 可以考虑fsm和vector ****/
     character* _myplayer;
+    cocos2d::Vector<character*> _game_players;
+    
+    int _my_bubbles;
     
     // 表示自己运动状况的量, true就开始运动, 共有四个方向
     enum _optionCode {
@@ -83,7 +88,6 @@ private:
     std::map<cocos2d::Vec2, Bubbles*> _map_screen_bubbles;
     // items on game scene
     std::map<cocos2d::Vec2, GameItem*> screenItems;
-    cocos2d::Vector<GameItem*> SceneItems;
     
     bool check_chain_boom(cocos2d::Vec2 coordPos);
     
@@ -95,13 +99,12 @@ private:
     
     /*** the function to clear the sprite */
     void add_and_clear_with_time(cocos2d::Sprite* sp, float dt, cocos2d::Vec2 pos);
-    void spriteMoveFinished(cocos2d::Object* psender);
+    void spriteMoveFinished(cocos2d::Ref* psender);
     void spriteToClear(cocos2d::Ref* psender);
     
     /*** add item to the game ***/
-    void addItems(cocos2d::Vec2 tiledPos);
+    void addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools tool);
     void checkGetItem(character* chara);         // update
-    
 };
 
 #endif /* GameTheme_hpp */

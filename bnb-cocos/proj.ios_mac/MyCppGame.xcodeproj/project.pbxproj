@@ -220,7 +220,7 @@
 		8222CA391EA5EE1400092E33 /* Bubbles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Bubbles.cpp; sourceTree = "<group>"; };
 		8222CA3A1EA5EE1400092E33 /* Bubbles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bubbles.h; sourceTree = "<group>"; };
 		8222CA451EA6426D00092E33 /* GameUI */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GameUI; sourceTree = "<group>"; };
-		8222CA481EA654A900092E33 /* PauseWithLabelLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PauseWithLabelLayer.cpp; sourceTree = "<group>"; };
+		8222CA481EA654A900092E33 /* PauseWithLabelLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PauseWithLabelLayer.cpp; sourceTree = "<group>"; wrapsLines = 1; };
 		8222CA491EA654A900092E33 /* PauseWithLabelLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PauseWithLabelLayer.h; sourceTree = "<group>"; };
 		8222CA601EA72E7100092E33 /* GameItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameItem.cpp; sourceTree = "<group>"; };
 		8222CA611EA72E7100092E33 /* GameItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameItem.h; sourceTree = "<group>"; };
@@ -349,12 +349,12 @@
 			isa = PBXGroup;
 			children = (
 				46880B8319C43A87006E1F66 /* Classes */,
-				46880B7519C43A67006E1F66 /* Resources */,
 				1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				080E96DDFE201D6D7F000001 /* ios */,
 				503AE10617EB990700D1A890 /* mac */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				46880B7519C43A67006E1F66 /* Resources */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";

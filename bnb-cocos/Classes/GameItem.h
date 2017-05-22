@@ -9,9 +9,11 @@
 
 class GameItem: public cocos2d::Sprite {
 public:
+    // 道具种类及其数量
     enum ItemTools {
         POPO, POWER, RUN
     };
+    constexpr static int toolNumbers = 3;
     
     bool initWithPlayerType(ItemTools type);
     static GameItem* create(ItemTools type);
