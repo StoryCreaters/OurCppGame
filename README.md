@@ -1,7 +1,7 @@
 # OurCppGame
 cocos2d cpp game(bnb)
 
-1.Socket 
+1.Socket</br>
 2.多线程
 
 游戏数据怎么处理还在构思。
