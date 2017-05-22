@@ -3,6 +3,8 @@
 
 #include "cocos2d.h"
 #include <utility>
+#include "Settings.h"
+#include <array>
 
 class character: public cocos2d::Sprite {
 public:
@@ -32,17 +34,16 @@ public:
     // 每个精灵对应的_spriteName
     std::string _spriteName;
     
+    // 之前的运动状态
+    cocos2d::Vec2 last_move;
+    settings::directions last_ops;
+    std::array<bool, 4> _chara_move;
     /*****碰撞点******/
     // 根据方向给出一对碰撞点
     std::pair<cocos2d::Vec2, cocos2d::Vec2> get_collection_point(int direction);
-    // 获取人物的碰撞点, l表示左, r表示右, d表示下, u表示上
-    
-private:
-    
-    // 人物的身材
-    int _sprite_width;
-    int _sprite_height;
-    
+    // 获取人物移动向量
+    cocos2d::Vec2 getMoveVector();
+    cocos2d::Vec2 getMoveVector(int index);
 };
 
 

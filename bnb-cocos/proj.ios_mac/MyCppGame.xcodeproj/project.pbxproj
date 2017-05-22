@@ -97,6 +97,16 @@
 		82F3DBF31EA267EB00C6DBDA /* music in Resources */ = {isa = PBXBuildFile; fileRef = 82F3DBF11EA267EB00C6DBDA /* music */; };
 		82F3DBF51EA26A2700C6DBDA /* BackGround in Resources */ = {isa = PBXBuildFile; fileRef = 82F3DBF41EA26A2700C6DBDA /* BackGround */; };
 		82F3DBF61EA26A2700C6DBDA /* BackGround in Resources */ = {isa = PBXBuildFile; fileRef = 82F3DBF41EA26A2700C6DBDA /* BackGround */; };
+		82FD4FC71ECF029800025573 /* CharacterFSM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FD4FC51ECF029800025573 /* CharacterFSM.cpp */; };
+		82FD4FC81ECF029800025573 /* CharacterFSM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FD4FC51ECF029800025573 /* CharacterFSM.cpp */; };
+		82FD4FCB1ECF056900025573 /* ControlLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FD4FC91ECF056900025573 /* ControlLayer.cpp */; };
+		82FD4FCC1ECF056900025573 /* ControlLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FD4FC91ECF056900025573 /* ControlLayer.cpp */; };
+		82FD4FCF1ECF057F00025573 /* GameMapLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FD4FCD1ECF057F00025573 /* GameMapLayer.cpp */; };
+		82FD4FD01ECF057F00025573 /* GameMapLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FD4FCD1ECF057F00025573 /* GameMapLayer.cpp */; };
+		82FD4FD31ECF15B500025573 /* CommonUse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FD4FD11ECF15B500025573 /* CommonUse.cpp */; };
+		82FD4FD41ECF15B500025573 /* CommonUse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FD4FD11ECF15B500025573 /* CommonUse.cpp */; };
+		82FD4FDE1ECF582A00025573 /* BaseFSM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FD4FDD1ECF582A00025573 /* BaseFSM.cpp */; };
+		82FD4FDF1ECF582A00025573 /* BaseFSM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FD4FDD1ECF582A00025573 /* BaseFSM.cpp */; };
 		82FFA9671EA9FA7C0061D94D /* GameBubble in Resources */ = {isa = PBXBuildFile; fileRef = 82FFA9641EA9FA7C0061D94D /* GameBubble */; };
 		82FFA9681EA9FA7C0061D94D /* GameBubble in Resources */ = {isa = PBXBuildFile; fileRef = 82FFA9641EA9FA7C0061D94D /* GameBubble */; };
 		82FFA96B1EA9FA7C0061D94D /* GamePlayer in Resources */ = {isa = PBXBuildFile; fileRef = 82FFA9661EA9FA7C0061D94D /* GamePlayer */; };
@@ -210,7 +220,7 @@
 		8222CA391EA5EE1400092E33 /* Bubbles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Bubbles.cpp; sourceTree = "<group>"; };
 		8222CA3A1EA5EE1400092E33 /* Bubbles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bubbles.h; sourceTree = "<group>"; };
 		8222CA451EA6426D00092E33 /* GameUI */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GameUI; sourceTree = "<group>"; };
-		8222CA481EA654A900092E33 /* PauseWithLabelLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PauseWithLabelLayer.cpp; sourceTree = "<group>"; };
+		8222CA481EA654A900092E33 /* PauseWithLabelLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PauseWithLabelLayer.cpp; sourceTree = "<group>"; wrapsLines = 1; };
 		8222CA491EA654A900092E33 /* PauseWithLabelLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PauseWithLabelLayer.h; sourceTree = "<group>"; };
 		8222CA601EA72E7100092E33 /* GameItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameItem.cpp; sourceTree = "<group>"; };
 		8222CA611EA72E7100092E33 /* GameItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameItem.h; sourceTree = "<group>"; };
@@ -234,6 +244,16 @@
 		82F3DBE41EA2633500C6DBDA /* MapScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapScene.h; sourceTree = "<group>"; };
 		82F3DBF11EA267EB00C6DBDA /* music */ = {isa = PBXFileReference; lastKnownFileType = folder; path = music; sourceTree = "<group>"; };
 		82F3DBF41EA26A2700C6DBDA /* BackGround */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BackGround; sourceTree = "<group>"; };
+		82FD4FC11ECEF56900025573 /* BaseFSM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseFSM.h; sourceTree = "<group>"; };
+		82FD4FC51ECF029800025573 /* CharacterFSM.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CharacterFSM.cpp; sourceTree = "<group>"; };
+		82FD4FC61ECF029800025573 /* CharacterFSM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CharacterFSM.h; sourceTree = "<group>"; };
+		82FD4FC91ECF056900025573 /* ControlLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ControlLayer.cpp; sourceTree = "<group>"; };
+		82FD4FCA1ECF056900025573 /* ControlLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlLayer.h; sourceTree = "<group>"; };
+		82FD4FCD1ECF057F00025573 /* GameMapLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameMapLayer.cpp; sourceTree = "<group>"; };
+		82FD4FCE1ECF057F00025573 /* GameMapLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameMapLayer.h; sourceTree = "<group>"; };
+		82FD4FD11ECF15B500025573 /* CommonUse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommonUse.cpp; sourceTree = "<group>"; };
+		82FD4FD21ECF15B500025573 /* CommonUse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonUse.h; sourceTree = "<group>"; };
+		82FD4FDD1ECF582A00025573 /* BaseFSM.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseFSM.cpp; sourceTree = "<group>"; };
 		82FFA9641EA9FA7C0061D94D /* GameBubble */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GameBubble; sourceTree = "<group>"; };
 		82FFA9661EA9FA7C0061D94D /* GamePlayer */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GamePlayer; sourceTree = "<group>"; };
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -329,12 +349,12 @@
 			isa = PBXGroup;
 			children = (
 				46880B8319C43A87006E1F66 /* Classes */,
-				46880B7519C43A67006E1F66 /* Resources */,
 				1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				080E96DDFE201D6D7F000001 /* ios */,
 				503AE10617EB990700D1A890 /* mac */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				46880B7519C43A67006E1F66 /* Resources */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -418,6 +438,16 @@
 				821EAAA61EBF6CBA009FBE14 /* PreLoadScene.h */,
 				828C87761ECB503E00D930A1 /* SettingScene.cpp */,
 				828C87771ECB503E00D930A1 /* SettingScene.h */,
+				82FD4FC11ECEF56900025573 /* BaseFSM.h */,
+				82FD4FDD1ECF582A00025573 /* BaseFSM.cpp */,
+				82FD4FC51ECF029800025573 /* CharacterFSM.cpp */,
+				82FD4FC61ECF029800025573 /* CharacterFSM.h */,
+				82FD4FC91ECF056900025573 /* ControlLayer.cpp */,
+				82FD4FCA1ECF056900025573 /* ControlLayer.h */,
+				82FD4FCD1ECF057F00025573 /* GameMapLayer.cpp */,
+				82FD4FCE1ECF057F00025573 /* GameMapLayer.h */,
+				82FD4FD11ECF15B500025573 /* CommonUse.cpp */,
+				82FD4FD21ECF15B500025573 /* CommonUse.h */,
 				82C45F691EC09B6C001BD822 /* Settings.h */,
 			);
 			name = Classes;
@@ -637,6 +667,7 @@
 			files = (
 				82F3DBDA1EA262B900C6DBDA /* OpenScene.cpp in Sources */,
 				82F3DBE51EA2633500C6DBDA /* MapScene.cpp in Sources */,
+				82FD4FCF1ECF057F00025573 /* GameMapLayer.cpp in Sources */,
 				820EB1F31EA7A65900C51921 /* SwallowTouch.cpp in Sources */,
 				821EAAA71EBF6CBA009FBE14 /* PreLoadScene.cpp in Sources */,
 				8222CA621EA72E7100092E33 /* GameItem.cpp in Sources */,
@@ -645,7 +676,11 @@
 				8222CA4A1EA654A900092E33 /* PauseWithLabelLayer.cpp in Sources */,
 				46880B8819C43A87006E1F66 /* AppDelegate.cpp in Sources */,
 				82F3DBE11EA262DF00C6DBDA /* Character.cpp in Sources */,
+				82FD4FC71ECF029800025573 /* CharacterFSM.cpp in Sources */,
 				46880B8A19C43A87006E1F66 /* HelloWorldScene.cpp in Sources */,
+				82FD4FDE1ECF582A00025573 /* BaseFSM.cpp in Sources */,
+				82FD4FD31ECF15B500025573 /* CommonUse.cpp in Sources */,
+				82FD4FCB1ECF056900025573 /* ControlLayer.cpp in Sources */,
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
 				827A69C21EA8FE9B0073F534 /* GameScene.cpp in Sources */,
@@ -663,15 +698,20 @@
 				46880B8919C43A87006E1F66 /* AppDelegate.cpp in Sources */,
 				503AE10517EB98FF00D1A890 /* main.cpp in Sources */,
 				827A69C31EA8FE9B0073F534 /* GameScene.cpp in Sources */,
+				82FD4FC81ECF029800025573 /* CharacterFSM.cpp in Sources */,
 				8222CA631EA72E7100092E33 /* GameItem.cpp in Sources */,
+				82FD4FD41ECF15B500025573 /* CommonUse.cpp in Sources */,
 				82F3DBDB1EA262B900C6DBDA /* OpenScene.cpp in Sources */,
+				82FD4FCC1ECF056900025573 /* ControlLayer.cpp in Sources */,
 				820EB1F91EA7B3BB00C51921 /* RoomChooseScene.cpp in Sources */,
 				8222CA3C1EA5EE1400092E33 /* Bubbles.cpp in Sources */,
 				82F3DBE21EA262DF00C6DBDA /* Character.cpp in Sources */,
 				820EB1F41EA7A65900C51921 /* SwallowTouch.cpp in Sources */,
+				82FD4FD01ECF057F00025573 /* GameMapLayer.cpp in Sources */,
 				8222CA4B1EA654A900092E33 /* PauseWithLabelLayer.cpp in Sources */,
 				827A69B51EA8E5E30073F534 /* ToStart.cpp in Sources */,
 				46880B8B19C43A87006E1F66 /* HelloWorldScene.cpp in Sources */,
+				82FD4FDF1ECF582A00025573 /* BaseFSM.cpp in Sources */,
 				82F3DBE61EA2633500C6DBDA /* MapScene.cpp in Sources */,
 				821EAAA81EBF6CBA009FBE14 /* PreLoadScene.cpp in Sources */,
 			);

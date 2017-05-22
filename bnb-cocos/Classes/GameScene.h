@@ -4,13 +4,18 @@
 #include "cocos2d.h"
 #include "Character.h"
 #include "Bubbles.h"
+#include "ControlLayer.h"
+#include "Settings.h"
 #include <array>
+#include "GameItem.h"
 
 class GameScene : public cocos2d::Layer
 {
 public:
+    friend class ControlLayer;
     using tilePosition = cocos2d::Vec2;
     
+    // 返回gameScene对象
     static cocos2d::Scene* createScene();
     
     virtual bool init();
@@ -31,6 +36,7 @@ public:
     // 需要不停移动的...
     // 注意补充下动画逻辑
     void mySpriteMove();
+    void CharacterMove(character* chara);
     
     void update(float dt) override;
     /*********碰撞检测*************/
@@ -45,24 +51,25 @@ public:
     /********泡泡释放*************/
     void setBubble();
     void BubbleBoom(Ref* sender);
+    Bubbles* hasBubble(cocos2d::Vec2 tilePos);
 private:
     // SIZE OF SCREEN
     cocos2d::Size visibleSize;
     float offx;
     float offy;
     
-    // 获取动画
-    cocos2d::Animation* getAnimationByName(std::string animName,float delay,int animNum);
-    
-    
-    /***** tilemap的大小变化率 TODO:可以放到配置文件 *****/
+    /***** tilemap的大小变化率*****/
     cocos2d::TMXTiledMap *_tileMap;
     cocos2d::TMXLayer *_background;
     cocos2d::TMXObjectGroup *objects;
     cocos2d::TMXLayer *_meta;
+    void tileLoadProps();
+    // 瓦片地图上的道具们
+    std::array<std::array<int, 15>, 15> prop_on_map;
     
     /**** player的属性, 和自己的player的属性, 可以考虑fsm和vector ****/
     character* _myplayer;
+    cocos2d::Vector<character*> _game_players;
     
     int _my_bubbles;
     
@@ -79,14 +86,25 @@ private:
     
     // stores positon of bubbles
     std::map<cocos2d::Vec2, Bubbles*> _map_screen_bubbles;
+    // items on game scene
+    std::map<cocos2d::Vec2, GameItem*> screenItems;
     
-    bool check_chain_boom(cocos2d::Vec2 pos);
+    bool check_chain_boom(cocos2d::Vec2 coordPos);
+    
+    
     // 爆炸，受下方两种爆炸方式调用
     void boom_animate(cocos2d::Vec2 pos, int power, int vector);
     void horizontal_boom(cocos2d::Vec2 pos, int power);
     void vertival_boom(cocos2d::Vec2 pos, int power);
+    
+    /*** the function to clear the sprite */
     void add_and_clear_with_time(cocos2d::Sprite* sp, float dt, cocos2d::Vec2 pos);
-    void spriteMoveFinished(cocos2d::Object* psender);
+    void spriteMoveFinished(cocos2d::Ref* psender);
+    void spriteToClear(cocos2d::Ref* psender);
+    
+    /*** add item to the game ***/
+    void addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools tool);
+    void checkGetItem(character* chara);         // update
 };
 
 #endif /* GameTheme_hpp */

@@ -27,10 +27,6 @@ bool PauseWithLabelLayer::init()
         return false;
     }
     
-//    _listener = cocos2d::EventListenerTouchOneByOne::create();
-//    _listener->setSwallowTouches(true);
-//    _eventDispatcher->addEventListenerWithSceneGraphPriority(_listener,this);
-    
     this->initWithColor(cocos2d::Color4B(162, 162, 162, 128));
     auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
     cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
