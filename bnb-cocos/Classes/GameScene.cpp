@@ -206,6 +206,8 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
     
     if (code == GO_CODE) {
         // no attention to move
+        _myplayer->last_ops = settings::DEFAULT;
+        _myplayer->last_move = {0, 0};
         _myplayer->_chara_move[key] = false;
         std::string next_direction(_myplayer->_spriteName + "_"+ std::string(direc_string[_direction]) +"_");
         auto tmp_f = SpriteFrameCache::getInstance()->getSpriteFrameByName(next_direction + "01.png");
@@ -282,7 +284,8 @@ void GameScene::mySpriteMove() {
 
 /****人物移动****/
 void GameScene::CharacterMove(character* chara) {
-    const static int basic_step = 2;
+   
+    
     const static float dur = 0.1f;
     //TODO: 增加边界检测
     // 获得x y 的上界 下界
@@ -297,6 +300,7 @@ void GameScene::CharacterMove(character* chara) {
         return false;
     };
     
+    const static int basic_step = 2;
     int curstep = chara->_currentVelocity + basic_step;
     
     // UP, DOWN, LEFT, RIGHT
@@ -307,6 +311,7 @@ void GameScene::CharacterMove(character* chara) {
         if (!chara->_chara_move[index]) {
             continue;
         }
+        log("%f %f %d", chara->last_move.x, chara->last_move.y, chara->last_ops);
         Vec2 cur_delta = delta_pos[index];
         auto test_point = cur_delta;
         if ( chara->last_ops == index) {
@@ -332,8 +337,9 @@ void GameScene::CharacterMove(character* chara) {
         }
         if (walk) {
             moves.pushBack(Sequence::create(MoveBy::create(dur, cur_delta), CallFuncN::create(
-                  [&](Ref* sender) {
-                       chara->last_move -= cur_delta;
+                  [=](Ref* sender) {
+                      log("index %d", index);
+                      chara->last_move -= chara->getMoveVector(index);
                   }), NULL));
         } else {
             chara->last_move = {0,0};
@@ -472,13 +478,15 @@ void GameScene::add_and_clear_with_time(cocos2d::Sprite* sp, float dt, Vec2 pos)
 //    sp->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     sp->setScale(_tile_delta_rate);
     this->addChild(sp);
-    sp->runAction(Sequence::create(DelayTime::create(dt), CallFuncN::create(CC_CALLBACK_1(GameScene::spriteMoveFinished, this)),NULL));
+    sp->runAction(Sequence::create(DelayTime::create(dt), CallFuncN::create(CC_CALLBACK_1(GameScene::spriteToClear, this)),NULL));
 }
 
-void GameScene::spriteMoveFinished(cocos2d::Object* psender) {
+
+void GameScene::spriteToClear(cocos2d::Ref* psender) {
     Sprite *sprite = dynamic_cast<Sprite*>(psender);
     this->removeChild(sprite);
 }
+
 
 static inline bool in_map(int x, int y) {
     if (x >= 0 && x < 15)

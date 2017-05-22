@@ -68,3 +68,25 @@ std::pair<cocos2d::Vec2, cocos2d::Vec2> character::get_collection_point(int dire
     }
 }
 
+cocos2d::Vec2 character::getMoveVector() {
+    using namespace cocos2d;
+    const static int basic_step = 2;
+    int curstep = _currentVelocity + basic_step;
+    Vec2 delta_pos[4] = {Vec2(0, curstep), Vec2(0, -curstep), Vec2(-curstep, 0), Vec2(curstep, 0)};
+    for (int i = 0; i < 4; ++i) {
+        if (_chara_move[i]) {
+            log("index :%d", i);
+            return delta_pos[i];
+        }
+    }
+    log("bug find in chara move");
+}
+
+cocos2d::Vec2 character::getMoveVector(int index) {
+    using namespace cocos2d;
+    const static int basic_step = 2;
+    int curstep = _currentVelocity + basic_step;
+    Vec2 delta_pos[4] = {Vec2(0, curstep), Vec2(0, -curstep), Vec2(-curstep, 0), Vec2(curstep, 0)};
+    return delta_pos[index];
+}
+

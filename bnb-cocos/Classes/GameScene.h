@@ -94,6 +94,7 @@ private:
     /*** the function to clear the sprite */
     void add_and_clear_with_time(cocos2d::Sprite* sp, float dt, cocos2d::Vec2 pos);
     void spriteMoveFinished(cocos2d::Object* psender);
+    void spriteToClear(cocos2d::Ref* psender);
 };
 
 #endif /* GameTheme_hpp */
