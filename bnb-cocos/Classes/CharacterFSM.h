@@ -18,6 +18,7 @@ public:
     void Stand();
     // 变成垂死的泡泡
     void ToDie();
+    void changeTo();
 };
 
 // the state shows move, have directions
@@ -25,6 +26,7 @@ class CharMoveState: public state{
 public:
     CharMoveState(settings::directions in_direc): direc(in_direc) {}
     void excute(cocos2d::Sprite* spr) override;
+//    void setAnime() override;
 private:
     settings::directions direc;
 };
@@ -32,11 +34,13 @@ private:
 class CharStandState: public state{
 public:
     void excute(cocos2d::Sprite* spr) override;
+//    void setAnime() override;
 };
 
 class CharToDieState: public state {
 public:
     void excute(cocos2d::Sprite* spr) override;
+//    void setAnime() override;
 };
 
 #endif /* characterFSM_hpp */

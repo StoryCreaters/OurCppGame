@@ -75,11 +75,9 @@ cocos2d::Vec2 character::getMoveVector() {
     Vec2 delta_pos[4] = {Vec2(0, curstep), Vec2(0, -curstep), Vec2(-curstep, 0), Vec2(curstep, 0)};
     for (int i = 0; i < 4; ++i) {
         if (_chara_move[i]) {
-            log("index :%d", i);
             return delta_pos[i];
         }
     }
-    log("bug find in chara move");
 }
 
 cocos2d::Vec2 character::getMoveVector(int index) {

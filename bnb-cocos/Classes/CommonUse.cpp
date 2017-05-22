@@ -18,3 +18,10 @@ cocos2d::Animation* getAnimationByName(std::string animName,float delay,int anim
     // 返回动画对象
     return animation;
 }
+
+void runAnimationByName(cocos2d::Sprite* spr,std::string animName,float delay,int animNum) {
+    auto anime = getAnimationByName(animName, delay, animNum);
+    auto animate = cocos2d::Animate::create(anime);
+    auto player_anime = cocos2d::RepeatForever::create(animate);
+    spr->runAction(player_anime);
+}

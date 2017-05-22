@@ -12,6 +12,7 @@ class BaseFsm;
 class state {
 public:
     virtual void excute(cocos2d::Sprite* spr) = 0;
+    virtual void setAnime() = 0;
 };
 
 /*** 注意nullptr 的情况  ***/

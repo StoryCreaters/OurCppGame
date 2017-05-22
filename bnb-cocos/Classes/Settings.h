@@ -91,13 +91,19 @@ namespace settings {
     
     namespace PreLoadScene {
         // 基础道具动画
-        constexpr char* gifts_animation = "PropResource/PropGifts.plist";
+        constexpr char* gifts_animation[] = {
+            "PropResource/PropGifts.plist"
+        };
         // 人物
-        constexpr char* person_animation[] = {"GamePlayer/player1_animation/player1.plist", "GamePlayer/player2_animation/player2.plist"};
+        constexpr char* person_animation[] = {
+            "GamePlayer/player1_animation/player1.plist",
+            "GamePlayer/player2_animation/player2.plist"
+        };
         // bubbles
         constexpr char* bubbles_animation = "BubbleImages/images/stable/bubble_bump.plist";
         
         constexpr char* to_load_music = "music/Temple of Time.mp3";
+        
         
         constexpr int delayFrame = 100;
         constexpr float delaytime = 0.5f;
@@ -110,6 +116,19 @@ namespace settings {
 	namespace SettingScene {
 		//temporary empty
 	}
+    
+    namespace Items {
+        // items and it resources
+        enum ItemTools {
+            POPO, POWER, RUN
+        };
+        // frame里面 不需要路径
+        constexpr char* ItemNames[] = {
+            "GiftPoPo",
+            "GiftPower",
+            "GiftRun"
+        };
+    }
     
     namespace FSM {
         

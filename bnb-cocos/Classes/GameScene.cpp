@@ -70,14 +70,14 @@ bool GameScene::init()
     float y = spawnPoint["y"].asFloat() * _tile_delta_rate;
     
     
-    /*** add sprite***/
+    /*** add character***/
     _myplayer = character::create(character::CHRIS);
     _myplayer->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     _myplayer->setPosition(offx + x, offy + y);
     addChild(_myplayer, 1);
     _game_players.pushBack(_myplayer);
     
-    
+    addItems(Vec2(10, 10));
     // basic bubbles
     _my_bubbles = 0;
     
@@ -168,10 +168,7 @@ void GameScene::myKeyboardOnL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
         
         // animation and direction
         std::string next_direction(_myplayer->_spriteName + "_"+ std::string(direc_string[code]) +"_");
-        auto anime = getAnimationByName(next_direction, 0.1f, _myplayer->_animation_frames);
-        auto animate = Animate::create(anime);
-        auto player_anime = RepeatForever::create(animate);
-        _myplayer->runAction(player_anime);
+        runAnimationByName(_myplayer, next_direction, 0.1f, _myplayer->_animation_frames);
     }
 }
 
@@ -311,7 +308,6 @@ void GameScene::CharacterMove(character* chara) {
         if (!chara->_chara_move[index]) {
             continue;
         }
-        log("%f %f %d", chara->last_move.x, chara->last_move.y, chara->last_ops);
         Vec2 cur_delta = delta_pos[index];
         auto test_point = cur_delta;
         if ( chara->last_ops == index) {
@@ -338,7 +334,6 @@ void GameScene::CharacterMove(character* chara) {
         if (walk) {
             moves.pushBack(Sequence::create(MoveBy::create(dur, cur_delta), CallFuncN::create(
                   [=](Ref* sender) {
-                      log("index %d", index);
                       chara->last_move -= chara->getMoveVector(index);
                   }), NULL));
         } else {
@@ -414,8 +409,10 @@ void GameScene::BubbleBoom(Ref* sender) {
 }
 
 void GameScene::update(float dt) {
-    CharacterMove(_myplayer);
-//    mySpriteMove();
+    for (auto chara : _game_players) {
+        CharacterMove(chara);
+        checkGetItem(chara);
+    }
 }
 
 /**** coord convert ****/
@@ -529,13 +526,11 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
                 log("chain here");
             } else if (!hasCollisionInGridPos(next_p)) {
                 // have tile
-                // need delay time
-                log("debug here");
-//                auto to_delete = _meta->getTileAt(next_p);
-//                to_delete->runAction(Sequence::create(DelayTime::create(0.3), CallFuncN::create(
-//                      [&](Ref* sender) {
-//                          _meta->removeTileAt(next_p);
-//                      }),NULL));
+                // need delay time and broken animation
+                this->runAction(Sequence::create(DelayTime::create(0.2f), CallFuncN::create(
+                      [=](Ref* sender) {
+                          _meta->removeTileAt(next_p);
+                      }), NULL));
             } else {
                 // check if someone dead
                 for (auto &chara: _game_players) {
@@ -583,3 +578,32 @@ Bubbles* GameScene::hasBubble(cocos2d::Vec2 tilePos) {
     return bubble;
 }
 
+void GameScene::addItems(cocos2d::Vec2 tiledPos) {
+    auto item_kind = GameItem::POPO;
+    auto pos = PositionForTileCoord(tiledPos);
+    auto item = GameItem::create(item_kind);
+    item->setScale(_tile_delta_rate);
+    item->setAnchorPoint(Vec2::ZERO);
+    item->setPosition(pos);
+    // anime
+    runAnimationByName(item, std::string(settings::Items::ItemNames[item_kind]) + "_", 0.2, 3);
+    screenItems[tiledPos] = item;
+    SceneItems.pushBack(item);
+    this->addChild(item);
+}
+
+void GameScene::tileLoadProps() {
+    // 加载地图的对应的道具
+    
+}
+
+void GameScene::checkGetItem(character* chara) {
+    auto tiledCharaPos = tileCoordForPosition(chara->getPosition());
+    auto itemIter = screenItems.find(tiledCharaPos);
+    if (itemIter != screenItems.end()) {
+        auto item = itemIter->second;
+        item->getItem(chara);
+        screenItems.erase(itemIter);
+        this->removeChild(item);
+    }
+}
