@@ -1,9 +1,9 @@
 # OurCppGame
 cocos2d cpp game(bnb)
 
-1.Socket</br>
-2.多线程
+1.Socket(finish)</br>
+2.多线程(finish)
 
-游戏数据怎么处理还在构思。
-先确定下需要传输哪些数据，才好进一步写。
+然后就是如何和游戏结合起来的问题了。
+
 
