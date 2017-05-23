@@ -1,50 +1,54 @@
-#pragma once
+ï»¿#pragma once
 #include<winsock2.h>
-#include <process.h>               //Ïß³Ì 
+#include <process.h>               //Cä¸­çš„çº¿ç¨‹ 
+#include<string>
+#include"cocos2d.h"
 #pragma comment(lib,"ws2_32.lib")
 
+/*
+Maybe:çº¿ç¨‹çš„éƒ¨åˆ†æˆ–è®¸ä¼šæ”¹ç”¨C++11çš„threadç±»æ¥å†™
+*/
 
-struct  BnbClientInformation           //Client Ïà¹ØĞÅÏ¢
+struct  BnbClientInformation           //Client ç›¸å…³ä¿¡æ¯
 {
-	SOCKET ServerSock;       //Ì×½Ó×Ö
+	SOCKET ClientSock;       //å¥—æ¥å­—
 	sockaddr_in Client;      //Clinet IP
-	int ID;                   //Server·ÖÅäµÄIDºÅÂë
-	DWORD RecvThreadID;        //Server·ÖÅä½ÓÊÕµÄÏß³ÌºÅ
-	DWORD SendThreadID;			//Server·ÖÅä·¢ËÍµÄÏß³ÌºÅ
-	bool Active;					
+	int ID;                   //Serveråˆ†é…çš„IDå·ç 
+	DWORD RecvThreadID;        //Serveråˆ†é…æ¥æ”¶çš„çº¿ç¨‹å·
+	DWORD SendThreadID;			//Serveråˆ†é…å‘é€çš„çº¿ç¨‹å·
+    bool Active;		 
 };
 
 class GameServer
 {
 private:
 	enum {
-		MAX_NUM = 3  //×î´óÉÏÏŞÈËÊı
+		MAX_NUM = 3  //æœ€å¤§ä¸Šé™äººæ•°
 	};
 public:
 	GameServer();
 	~GameServer();
 
-	int ProcessGameServer();    //Ïß³Ì´¦Àí
+	int ProcessGameServer();    //çº¿ç¨‹å¤„ç†
 
-	int SendMessageToOneClient(int ID, char *buf);  //ÏòÄ³Ò»¸öClient·ÅËÉĞÅÏ¢
+	int SendMessageToOneClient(int ID, const std::string & str);  //å‘æŸä¸€ä¸ªClientæ”¾æ¾ä¿¡æ¯
 
-	int CheckSocket();     //¼ì²âµ±Ç°¿ÉÓÃµÄIDºÅ
-	void CleanSocket(int ID); //Çå¿ÕIDºÅµÄÌ×½Ó×Ö
-	void SendMessageToAllClient(char *buf, int ID = -1); //ÏòËùÓĞClient·¢ËÍĞÅÏ¢
+	int CheckSocket();     //æ£€æµ‹å½“å‰å¯ç”¨çš„IDå·
+	void CleanSocket(int ID); //æ¸…ç©ºIDå·çš„å¥—æ¥å­—
+	void SendMessageToAllClient(const std::string & str, int ID = -1); //å‘æ‰€æœ‰Clientå‘é€ä¿¡æ¯
 
-	//Socket Ïà¹Ø
+	//Socket ç›¸å…³
 public:
-	static DWORD WINAPI ListenThread(void *data); //½ÓÊÜÏß³Ì
+	static DWORD WINAPI ListenThread(void *data); //æ¥å—çº¿ç¨‹
 
-	SOCKET ListenSocket;       //µÈ´ı½ÓÊÜÊı¾İµÄsocket
-	sockaddr_in Server;        //°ó¶¨µØÖ·
+	SOCKET ListenSocket;       //ç­‰å¾…æ¥å—æ•°æ®çš„socket
+	sockaddr_in Server;        //ç»‘å®šåœ°å€
 
-	BnbClientInformation AcceptSocket[MAX_NUM];  //ClientµÄÏà¹ØĞÅÏ¢
-	//¶ÔÍøÂçÊı¾İµÄ´¦Àí
+	BnbClientInformation AcceptSocket[MAX_NUM];  //Clientçš„ç›¸å…³ä¿¡æ¯
+	//å¯¹ç½‘ç»œæ•°æ®çš„å¤„ç†
+public:
 	/*
-	Áô¿Ó£¬¹ı»á¶ùÔÙÀ´
+	ç•™å‘ï¼Œè¿‡ä¼šå„¿å†æ¥
 	*/
-public:
-
 };
 
