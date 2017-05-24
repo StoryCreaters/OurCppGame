@@ -75,7 +75,7 @@ bool GameScene::init()
     _myplayer->setPosition(offx + x, offy + y);
     addChild(_myplayer, 1);
     _game_players.pushBack(_myplayer);
-    
+    _myplayer->chara_state = character::characterState::GO;
     _my_bubbles = 0;        // bubbles start from 0
     
     // test
@@ -161,7 +161,7 @@ void GameScene::myKeyboardOnL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
     }
     // DEBUG
     // TODO:走路可以用状态机实现
-    if (code != DEFAULT) {
+    if (code != DEFAULT && _myplayer->chara_state == character::characterState::GO) {
         for (auto &b : _myplayer->_chara_move)     b = false;
         _myplayer->_chara_move[code] = true;
         /*** DEBUG: direction is about animation */
@@ -202,7 +202,7 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
             break;
     }
     
-    if (code == GO_CODE) {
+    if (code == GO_CODE && _myplayer->chara_state == character::characterState::GO) {
         // no attention to move
         _myplayer->last_ops = settings::DEFAULT;
         _myplayer->last_move = {0, 0};
@@ -212,7 +212,7 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
         _myplayer->setSpriteFrame(tmp_f);
         _myplayer->stopAllActions();
     }
-    else if (code == BUBBLE_CODE) {
+    else if (code == BUBBLE_CODE && _myplayer->chara_state == character::characterState::GO) {
         setBubble();
     }
 }
@@ -345,8 +345,12 @@ void GameScene::BubbleBoom(Ref* sender) {
 
 void GameScene::update(float dt) {
     for (auto chara : _game_players) {
-        CharacterMove(chara);
-        checkGetItem(chara);
+        if (chara->chara_state == character::characterState::GO) {
+            CharacterMove(chara);
+            checkGetItem(chara);
+        } else if (chara->chara_state == character::characterState::STUCKED) {
+            checkCollisionWithOther(chara);
+        }
     }
 }
 
@@ -479,6 +483,15 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
                     if (tileCoordForPosition(chara->getPosition()) == next_p) {
                         // chara was fired
                         log("chara was fired");
+                        chara->chara_state = character::characterState::STUCKED;
+                        chara->stopAllActions();
+                        chara->playStuckedAnimation();
+                        chara->runAction(Sequence::create(DelayTime::create(3),CallFuncN::create(
+                               [=](Ref* sender) {
+                                   log("hey");
+                                   chara->stopAllActions();
+                                   this->RemoveCharacter(chara);
+                               }), NULL));
                     }
                 }
                 ans = true;
@@ -559,4 +572,33 @@ void GameScene::checkGetItem(character* chara) {
         screenItems.erase(itemIter);
         this->removeChild(item);
     }
+}
+
+void GameScene::RemoveCharacter(character* chara) {
+    _game_players.eraseObject(chara);
+    this->removeChild(chara);
+    // TODO:这里需要重新描述，注意修改
+    if (_game_players.size() == 0) {
+        // 游戏没有玩家
+        log("game over");
+    }
+    if (chara == _myplayer) {
+        // 移除所有的listen
+        _eventDispatcher->removeEventListenersForType(EventListener::Type::KEYBOARD);
+        _eventDispatcher->removeAllEventListeners();
+    }
+}
+
+bool GameScene::checkCollisionWithOther(character* chara) {
+    auto pos = tileCoordForPosition(chara->getPosition());
+    for (auto c: _game_players) {
+        if (c == chara) {
+            continue;
+        }
+        else if (tileCoordForPosition(c->getPosition()) == pos) {
+            // 正在碰撞
+            return true;
+        }
+    }
+    return false;
 }

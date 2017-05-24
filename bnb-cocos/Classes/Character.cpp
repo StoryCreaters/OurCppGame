@@ -1,5 +1,6 @@
 #include "Character.h"
 #include "Settings.h"
+#include "CommonUse.h"
 
 using namespace settings::Character;
 
@@ -88,3 +89,14 @@ cocos2d::Vec2 character::getMoveVector(int index) {
     return delta_pos[index];
 }
 
+
+void character::playStuckedAnimation() {
+    runAnimationByName(this, "stuck", 0.5, 4);
+}
+
+void character::playDieAnimation() {
+    runAnimationByName(this, "die", 0.5, 4);
+}
+void character::playAliveAnimation() {
+    runAnimationByName(this, "alive", 0.5, 4);
+}

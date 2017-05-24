@@ -16,6 +16,12 @@ public:
         SHADOWFOX
     };
     
+    enum characterState {
+        GO,
+        STUCKED,
+        DIE
+    } chara_state;
+    
     bool initWithPlayerType(characterType type);
     
     static character* create(characterType type);
@@ -44,6 +50,11 @@ public:
     // 获取人物移动向量
     cocos2d::Vec2 getMoveVector();
     cocos2d::Vec2 getMoveVector(int index);
+    
+    /*** animations ***/
+    void playStuckedAnimation();
+    void playDieAnimation();
+    void playAliveAnimation();
 };
 
 

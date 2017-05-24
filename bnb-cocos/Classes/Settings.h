@@ -97,7 +97,9 @@ namespace settings {
         // 人物
         constexpr char* person_animation[] = {
             "GamePlayer/player1_animation/player1.plist",
-            "GamePlayer/player2_animation/player2.plist"
+            "GamePlayer/player2_animation/player2.plist",
+            
+            "GamePlayer/CharaStucked.plist"
         };
         // bubbles
         constexpr char* bubbles_animation = "BubbleImages/images/stable/bubble_bump.plist";

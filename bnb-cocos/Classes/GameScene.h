@@ -46,7 +46,10 @@ public:
     cocos2d::Vec2 tileCoordForPosition(cocos2d::Vec2 pos);
     cocos2d::Vec2 PositionForTileCoord(cocos2d::Vec2 pos);
     bool hasCollisionInGridPos(cocos2d::Vec2 pos);
+    bool checkCollisionWithOther(character* chara);
     
+    /** clear a character **/
+    void RemoveCharacter(character* chara);
     
     /********泡泡释放*************/
     void setBubble();
@@ -101,6 +104,7 @@ private:
     void add_and_clear_with_time(cocos2d::Sprite* sp, float dt, cocos2d::Vec2 pos);
     void spriteMoveFinished(cocos2d::Ref* psender);
     void spriteToClear(cocos2d::Ref* psender);
+    
     
     /*** add item to the game ***/
     void addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools tool);
