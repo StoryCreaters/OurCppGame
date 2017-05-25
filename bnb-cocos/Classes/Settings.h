@@ -133,6 +133,11 @@ namespace settings {
     namespace FSM {
         
     }
+
+	//留坑
+	namespace SettingScene {
+
+	}
 }
 
 #endif /* Settings_h */

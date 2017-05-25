@@ -30,7 +30,6 @@ public:
 
     cocos2d::Menu* setLayOutL1();
     cocos2d::Menu* setMusicLine(const std::string &music_name);
-    void musicOnAndOff(cocos2d::Ref* pSender);
 
     CREATE_FUNC(OpenScene);
     
@@ -39,10 +38,13 @@ public:
     void ToStartGame(cocos2d::Ref* sender);
     void MenuSettingsItem(cocos2d::Ref* pSender);
     
+	void TurnOnMusic();
+
     // debug
     void sceneTest(Ref *sender);
 private:
 	Menu* UImenus = nullptr;
+	static int times;
 };
 
 

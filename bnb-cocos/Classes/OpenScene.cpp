@@ -7,6 +7,7 @@
 
 using namespace settings::OpenScene;
 
+int OpenScene::times = 0;
 Scene* OpenScene::createScene()
 {
 	// 'scene' is an autorelease object
@@ -22,21 +23,14 @@ Scene* OpenScene::createScene()
 	return scene;
 }
 
-void OpenScene::musicOnAndOff(cocos2d::Ref* pSender) {
-	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
-	static int times = 0;
-	if (times++ % 2 == 0) {
-		audio->pauseBackgroundMusic();
-	}
-	else
-		audio->resumeBackgroundMusic();
-}
+
 
 // on "init" you need to initialize your instance
 bool OpenScene::init()
 {
 	//////////////////////////////
 	// 1. super init first
+
 	if (!Layer::init())
 	{
 		return false;
@@ -47,26 +41,34 @@ bool OpenScene::init()
 	backGround->setPosition(cocos2d::Vec2(visibleSize.width / 2, visibleSize.height / 2));
 	this->addChild(backGround, 0);
 
-
 	auto menu_list = setLayOutL1();
 	addChild(menu_list);
 
 	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
-	audio->playBackgroundMusic("music/When The Morning Comes.mp3", true);
-	auto musicList = cocos2d::MenuItemToggle::createWithCallback(
-		CC_CALLBACK_1(OpenScene::musicOnAndOff, this),
-		cocos2d::MenuItemFont::create("Music On"), 
-		cocos2d::MenuItemFont::create("Music Off"), nullptr);
-	auto musicM = cocos2d::Menu::create(musicList, nullptr);
 
-	addChild(musicM);
-	musicM->setPosition(cocos2d::Vec2(visibleSize.width - 60, 20));
 
-	
-	
-
+	if (audio->isBackgroundMusicPlaying())
+		;
+	else
+	{
+		if(times == 0)
+			TurnOnMusic();
+		else if(GameSettings::MusicFlag == false && times > 0)
+			;
+		else
+			TurnOnMusic();
+	}
+		
+	times++;
 	return true;
 }
+
+void OpenScene::TurnOnMusic()
+{
+	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+	audio->playBackgroundMusic("music/When The Morning Comes.mp3", true);
+}
+
 
 cocos2d::Menu* OpenScene::setLayOutL1() {
     auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
@@ -116,6 +118,7 @@ void OpenScene::menuCloseCallback(Ref* pSender)
 
 
 }
+
 
 void OpenScene::SwitchToOpen(cocos2d::Ref *pSender) {
 	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();

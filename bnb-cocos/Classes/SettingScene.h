@@ -8,6 +8,8 @@
 class GameSettings : public cocos2d::Layer
 {
 public:
+	static bool MusicFlag;
+public:
 	static cocos2d::Scene* createScene();
 
 	virtual bool init();
@@ -16,9 +18,7 @@ public:
 	void menuOkCallback(cocos2d::Ref* pSender);
 	void menuSoundToggleCallback(cocos2d::Ref* pSender);
 	void menuMusicToggleCallback(cocos2d::Ref* pSender);
-	void menuQuickItemCallback(cocos2d::Ref* pSender);
-	void menuNormalItemCallback(cocos2d::Ref* pSender);
-	void menuSlowItemCallback(cocos2d::Ref* pSender);
+	
 	// implement the "static create()" method manually
 	CREATE_FUNC(GameSettings);
 };

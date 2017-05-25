@@ -7,13 +7,13 @@
 1.音效开关 （音效调节大小）
 2.音乐开关 （音乐调节大小）
 3.游戏键的设置（什么键用来移动，什么键用来放炮）
-4.游戏的进度（快 正常 慢）
 
 难度的选择还有人数的选择以及关卡的选择（甚至人物的选择） 留在 GameScene 界面
 */
 USING_NS_CC;
+using namespace settings::SettingScene;
 
-
+bool GameSettings::MusicFlag;
 Scene* GameSettings::createScene()
 {
 	// 'scene' is an autorelease object
@@ -25,6 +25,9 @@ Scene* GameSettings::createScene()
 	// add layer as a child to scene
 	scene->addChild(layer);
 
+	
+	
+	
 	// return the scene
 	return scene;
 }
@@ -56,7 +59,7 @@ bool GameSettings::init()
 	);
 	auto soundOffMenuItem = MenuItemImage::create(
 		"GameUI/off.png",
-		"GameUI/off,png"
+		"GameUI/off.png"
 	);
 
 	auto soundToggleMenuItem = MenuItemToggle::createWithCallback(
@@ -90,13 +93,36 @@ bool GameSettings::init()
 		"GameUI/off.png",
 		"GameUI/off.png"
 	);
-	auto musicToggleMenuItem = MenuItemToggle::createWithCallback(
-		CC_CALLBACK_1(GameSettings::menuMusicToggleCallback, this),
-		musicOnMenuItem,
-		musicOffMenuItem,
-		nullptr
-	);
 
+	//如果正在播放，就设定为true
+	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+
+	if (audio->isBackgroundMusicPlaying()) {
+		MusicFlag = true;
+	}
+	else
+		MusicFlag = false;
+
+	MenuItemToggle * musicToggleMenuItem;
+
+	if (MusicFlag == true)
+	{
+		musicToggleMenuItem = MenuItemToggle::createWithCallback(
+			CC_CALLBACK_1(GameSettings::menuMusicToggleCallback, this),
+			musicOnMenuItem,
+			musicOffMenuItem,
+			nullptr
+		);
+	}
+	else
+	{
+		musicToggleMenuItem = MenuItemToggle::createWithCallback(
+			CC_CALLBACK_1(GameSettings::menuMusicToggleCallback, this),
+			musicOffMenuItem,
+			musicOnMenuItem,
+			nullptr
+		);
+	}
 	musicToggleMenuItem->setPosition(Director::getInstance()->
 		convertToGL(Vec2(origin.x + visibleSize.width / 2,
 			origin.y + visibleSize.height / 3 + 100)));
@@ -115,44 +141,22 @@ bool GameSettings::init()
 	  2.放泡泡键
 	*/
 
-	//游戏进度快慢   
-	/*
-	TODO:
-	简单地说就是游戏的速度快慢，走得快，走得慢，可以通过这里调节。
-	*/
-	MenuItemFont * quickItem = MenuItemFont::create("Quick",
-		CC_CALLBACK_1(GameSettings::menuQuickItemCallback, this));
-	MenuItemFont * normalItem = MenuItemFont::create("Normal",
-		CC_CALLBACK_1(GameSettings::menuNormalItemCallback, this));
-	MenuItemFont * slowItem = MenuItemFont::create("Slow",
-		CC_CALLBACK_1(GameSettings::menuSlowItemCallback, this));
-	Menu * schedule = Menu::create(quickItem, normalItem,
-		slowItem, nullptr);
-	schedule->alignItemsVertically();
-	schedule->setPosition(Director::getInstance()->
-		convertToGL(Vec2(origin.x + visibleSize.width / 2 - 250,
-			origin.y + visibleSize.height / 3 + 100)));
-	this->addChild(schedule,0);
-		//文字提示
-	auto labelSchedule = Label::createWithTTF("Schedule", "fonts/GloriaHallelujah.ttf", 24);
-	labelSchedule->setPosition(Director::getInstance()->
-		convertToGL(Vec2(origin.x + visibleSize.width / 2 - 380,
-			origin.y + visibleSize.height / 3 + 100)));
-	this->addChild(labelSchedule);
 
 	//Ok按钮 ， 返回到主界面 
 	/*
 	解释：回到主界面
 	BUG:背景音乐会重新播放
 	*/
-	auto okMenuItem = MenuItemImage::create(
-		"GameUI/OK1.png",
-		"GameUI/OK2.png",
-		CC_CALLBACK_1(GameSettings::menuOkCallback, this)
-	);
+	MenuItemFont::setFontSize(48);
+	MenuItemFont * okMenuItem = MenuItemFont::create("OK",
+		CC_CALLBACK_1(GameSettings::menuOkCallback, this));
+	okMenuItem->setColor(Color3B(79 ,79 ,79));
+	okMenuItem->setFontName("fonts/GloriaHallelujah.ttf");//莫名没用，，默认的字体好丑啊
+	
 	okMenuItem->setPosition(Director::getInstance()->
 		convertToGL(Vec2(origin.x + visibleSize.width / 2,
 			origin.y + visibleSize.height / 3 + 400)));
+
 
 	Menu *mn = Menu::create(soundToggleMenuItem,
 		musicToggleMenuItem, okMenuItem, NULL);
@@ -165,28 +169,12 @@ bool GameSettings::init()
 
 void GameSettings::menuOkCallback(cocos2d::Ref* pSender)
 {
+	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+	if(MusicFlag == true)
+		audio->resumeBackgroundMusic();
 	auto sc = OpenScene::createScene();
 	auto reScene = TransitionSlideInL::create(0.618f, sc);
 	Director::getInstance()->replaceScene(reScene);
-}
-
-
-void GameSettings::menuQuickItemCallback(cocos2d::Ref* pSender)
-{
-	MenuItem * item = (MenuItem *)pSender;
-	log("Touch Start Menu Item %p", item);
-}
-
-void GameSettings::menuNormalItemCallback(cocos2d::Ref* pSender)
-{
-	MenuItem * item = (MenuItem *)pSender;
-	log("Touch Start Menu Item %p", item);
-}
-
-void GameSettings::menuSlowItemCallback(cocos2d::Ref* pSender)
-{
-	MenuItem * item = (MenuItem *)pSender;
-	log("Touch Start Menu Item %p", item);
 }
 
 /******待实现的开关部分******/
@@ -197,5 +185,15 @@ void GameSettings::menuSoundToggleCallback(cocos2d::Ref* pSender)
 
 void GameSettings::menuMusicToggleCallback(cocos2d::Ref* pSender)
 {
-
+	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+	
+	if (MusicFlag == true) {
+		audio->pauseBackgroundMusic();
+		MusicFlag = !MusicFlag;
+	}
+	else {
+		audio->resumeBackgroundMusic();
+		MusicFlag = !MusicFlag;
+	}
+		
 }
