@@ -1,5 +1,5 @@
 /*
- fsm & state
+ fsm & State
  move(4), stand(4), ToDie, Die
  */
 
@@ -21,26 +21,24 @@ public:
     void changeTo();
 };
 
-// the state shows move, have directions
-class CharMoveState: public state{
+
+
+class CharNormal : public State {
 public:
-    CharMoveState(settings::directions in_direc): direc(in_direc) {}
     void excute(cocos2d::Sprite* spr) override;
-//    void setAnime() override;
-private:
-    settings::directions direc;
+    void PreProcess(cocos2d::Sprite* spr) override {};
 };
 
-class CharStandState: public state{
+class CharStuck : public State {
 public:
     void excute(cocos2d::Sprite* spr) override;
-//    void setAnime() override;
+    void PreProcess(cocos2d::Sprite* spr) override;
 };
 
-class CharToDieState: public state {
+class CharDead : public State {
 public:
-    void excute(cocos2d::Sprite* spr) override;
-//    void setAnime() override;
+    void excute(cocos2d::Sprite* spr) override {}
+    void PreProcess(cocos2d::Sprite* spr) override;
 };
 
 #endif /* characterFSM_hpp */

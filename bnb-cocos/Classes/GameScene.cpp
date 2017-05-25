@@ -5,6 +5,7 @@
 #include "SimpleAudioEngine.h"
 #include "CommonUse.h"
 #include <random>
+#include "CharacterFSM.h"
 
 USING_NS_CC;
 using namespace settings::GameScene;
@@ -18,8 +19,8 @@ Scene* GameScene::createScene()
     // 'layer' is an autorelease object
     auto layer = GameScene::create();
     
-    // temporary set it zero
-    layer->setTag(1);
+    // temporary set it ten
+    layer->setTag(10);
     
     // add layer as a child to scene
     scene->addChild(layer);
@@ -73,9 +74,10 @@ bool GameScene::init()
     _myplayer = character::create(character::CHRIS);
     _myplayer->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     _myplayer->setPosition(offx + x, offy + y);
+    _myplayer->setTag(20);
     addChild(_myplayer, 1);
     _game_players.pushBack(_myplayer);
-    _myplayer->chara_state = character::characterState::GO;
+    _myplayer->changeState(std::make_shared<CharNormal>());
     _my_bubbles = 0;        // bubbles start from 0
     
     // test
@@ -161,7 +163,9 @@ void GameScene::myKeyboardOnL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
     }
     // DEBUG
     // TODO:走路可以用状态机实现
-    if (code != DEFAULT && _myplayer->chara_state == character::characterState::GO) {
+    // TODO: dispatch this
+    // if (code != DEFAULT && _myplayer->chara_state == character::characterState::GO)
+    if (code != DEFAULT) {
         for (auto &b : _myplayer->_chara_move)     b = false;
         _myplayer->_chara_move[code] = true;
         /*** DEBUG: direction is about animation */
@@ -202,7 +206,8 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
             break;
     }
     
-    if (code == GO_CODE && _myplayer->chara_state == character::characterState::GO) {
+    // TODO dispatch this;
+    if (code == GO_CODE) {
         // no attention to move
         _myplayer->last_ops = settings::DEFAULT;
         _myplayer->last_move = {0, 0};
@@ -212,7 +217,7 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
         _myplayer->setSpriteFrame(tmp_f);
         _myplayer->stopAllActions();
     }
-    else if (code == BUBBLE_CODE && _myplayer->chara_state == character::characterState::GO) {
+    else if (code == BUBBLE_CODE) {
         setBubble();
     }
 }
@@ -345,12 +350,7 @@ void GameScene::BubbleBoom(Ref* sender) {
 
 void GameScene::update(float dt) {
     for (auto chara : _game_players) {
-        if (chara->chara_state == character::characterState::GO) {
-            CharacterMove(chara);
-            checkGetItem(chara);
-        } else if (chara->chara_state == character::characterState::STUCKED) {
-            checkCollisionWithOther(chara);
-        }
+        chara->excute();
     }
 }
 
@@ -482,16 +482,8 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
                 for (auto &chara: _game_players) {
                     if (tileCoordForPosition(chara->getPosition()) == next_p) {
                         // chara was fired
-                        log("chara was fired");
-                        chara->chara_state = character::characterState::STUCKED;
-                        chara->stopAllActions();
-                        chara->playStuckedAnimation();
-                        chara->runAction(Sequence::create(DelayTime::create(3),CallFuncN::create(
-                               [=](Ref* sender) {
-                                   log("hey");
-                                   chara->stopAllActions();
-                                   this->RemoveCharacter(chara);
-                               }), NULL));
+                        // TODO: make sure if it is right
+                        chara->changeState(std::make_shared<CharStuck>());
                     }
                 }
                 ans = true;
@@ -540,7 +532,6 @@ void GameScene::addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools item_kind) 
     item->setScale(_tile_delta_rate);
     item->setAnchorPoint(Vec2::ZERO);
     item->setPosition(pos);
-//    log("findItem:%d %d", tiledPos.x, tiledPos.y);
     // anime
     runAnimationByName(item, std::string(settings::Items::ItemNames[item_kind]) + "_", 0.2, 3);
     screenItems[tiledPos] = item;
@@ -582,11 +573,6 @@ void GameScene::RemoveCharacter(character* chara) {
         // 游戏没有玩家
         log("game over");
     }
-    if (chara == _myplayer) {
-        // 移除所有的listen
-        _eventDispatcher->removeEventListenersForType(EventListener::Type::KEYBOARD);
-        _eventDispatcher->removeAllEventListeners();
-    }
 }
 
 bool GameScene::checkCollisionWithOther(character* chara) {
@@ -602,3 +588,4 @@ bool GameScene::checkCollisionWithOther(character* chara) {
     }
     return false;
 }
+

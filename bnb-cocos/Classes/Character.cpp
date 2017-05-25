@@ -100,3 +100,12 @@ void character::playDieAnimation() {
 void character::playAliveAnimation() {
     runAnimationByName(this, "alive", 0.5, 4);
 }
+
+void character::excute() {
+    this->mCurState->excute(this);
+}
+
+void character::changeState(std::shared_ptr<State> next_state) {
+    this->mCurState = next_state;
+    this->mCurState->PreProcess(this);
+}

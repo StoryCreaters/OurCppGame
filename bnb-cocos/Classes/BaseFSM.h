@@ -9,10 +9,10 @@
 
 class BaseFsm;
 
-class state {
+class State {
 public:
     virtual void excute(cocos2d::Sprite* spr) = 0;
-    virtual void setAnime() = 0;
+    virtual void PreProcess(cocos2d::Sprite* spr) = 0;
 };
 
 /*** 注意nullptr 的情况  ***/
@@ -21,10 +21,10 @@ public:
     CREATE_FUNC(BaseFsm);
     virtual bool init();
     
-    void changeState(std::shared_ptr<state> newstate) {_mCurState = newstate;}
+    void changeState(std::shared_ptr<State> newstate) {_mCurState = newstate;}
     void update(float dt) override {if(_mCurState) _mCurState->excute(spr);}
 private:
-    std::shared_ptr<state> _mCurState;
+    std::shared_ptr<State> _mCurState;
     cocos2d::Sprite* spr;
 };
 

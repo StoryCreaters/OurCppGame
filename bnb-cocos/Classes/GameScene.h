@@ -12,7 +12,7 @@
 class GameScene : public cocos2d::Layer
 {
 public:
-    friend class ControlLayer;
+    friend class CharStuck;
     using tilePosition = cocos2d::Vec2;
     
     // 返回gameScene对象
@@ -36,7 +36,7 @@ public:
     // 需要不停移动的...
     // 注意补充下动画逻辑
     void mySpriteMove();
-    void CharacterMove(character* chara);
+    
     
     void update(float dt) override;
     /*********碰撞检测*************/
@@ -46,7 +46,7 @@ public:
     cocos2d::Vec2 tileCoordForPosition(cocos2d::Vec2 pos);
     cocos2d::Vec2 PositionForTileCoord(cocos2d::Vec2 pos);
     bool hasCollisionInGridPos(cocos2d::Vec2 pos);
-    bool checkCollisionWithOther(character* chara);
+    
     
     /** clear a character **/
     void RemoveCharacter(character* chara);
@@ -55,11 +55,19 @@ public:
     void setBubble();
     void BubbleBoom(Ref* sender);
     Bubbles* hasBubble(cocos2d::Vec2 tilePos);
+    
+    // normal
+    void checkGetItem(character* chara);         // update
+    bool checkCollisionWithOther(character* chara);
+    void CharacterMove(character* chara);
+    
 private:
     // SIZE OF SCREEN
     cocos2d::Size visibleSize;
     float offx;
     float offy;
+    
+    
     
     /***** tilemap的大小变化率*****/
     cocos2d::TMXTiledMap *_tileMap;
@@ -108,7 +116,7 @@ private:
     
     /*** add item to the game ***/
     void addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools tool);
-    void checkGetItem(character* chara);         // update
+    
 };
 
 #endif /* GameTheme_hpp */

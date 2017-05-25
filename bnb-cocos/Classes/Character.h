@@ -5,6 +5,9 @@
 #include <utility>
 #include "Settings.h"
 #include <array>
+#include "BaseFSM.h"
+
+class State;
 
 class character: public cocos2d::Sprite {
 public:
@@ -16,16 +19,16 @@ public:
         SHADOWFOX
     };
     
-    enum characterState {
-        GO,
-        STUCKED,
-        DIE
-    } chara_state;
     
     bool initWithPlayerType(characterType type);
     
     static character* create(characterType type);
-
+    
+    // fsm of character
+    std::shared_ptr<State> mCurState;
+    void excute();
+    void changeState(std::shared_ptr<State> next_state);
+    
     /*************人物属性，基本属性可以尽量写在配置类里面***************/
     int _maxVelocity;
     int _currentVelocity;
