@@ -192,7 +192,7 @@ void GameSettings::menuSlowItemCallback(cocos2d::Ref* pSender)
 /******待实现的开关部分******/
 void GameSettings::menuSoundToggleCallback(cocos2d::Ref* pSender)
 {
-
+	log("hello world");
 }
 
 void GameSettings::menuMusicToggleCallback(cocos2d::Ref* pSender)
