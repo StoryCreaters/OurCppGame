@@ -2,11 +2,12 @@
 #include "PauseWithLabelLayer.h"
 #include "ToStart.h"
 #include "GameScene.h"
-#include "SettingScene.h"
-#include "Settings.h"
+#include "MusicSetting.h"
 
-using namespace settings::OpenScene;
-
+USING_NS_CC;
+using namespace ui;
+using namespace CocosDenshion;
+//float Volume=1.0;
 Scene* OpenScene::createScene()
 {
 	// 'scene' is an autorelease object
@@ -50,55 +51,51 @@ bool OpenScene::init()
 
 	auto menu_list = setLayOutL1();
 	addChild(menu_list);
-
 	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+	float volume = UserDefault::getInstance()->getFloatForKey("musicPercent");
+	audio->setBackgroundMusicVolume(volume);
 	audio->playBackgroundMusic("music/When The Morning Comes.mp3", true);
-	auto musicList = cocos2d::MenuItemToggle::createWithCallback(
-		CC_CALLBACK_1(OpenScene::musicOnAndOff, this),
-		cocos2d::MenuItemFont::create("Music On"), 
-		cocos2d::MenuItemFont::create("Music Off"), nullptr);
-	auto musicM = cocos2d::Menu::create(musicList, nullptr);
+	//auto musicList = cocos2d::MenuItemToggle::createWithCallback(CC_CALLBACK_1(OpenScene::musicOnAndOff, this), cocos2d::MenuItemFont::create("Music On"), cocos2d::MenuItemFont::create("Music Off"), nullptr);
+	//auto musicM = cocos2d::Menu::create(musicList, nullptr);
 
-	addChild(musicM);
-	musicM->setPosition(cocos2d::Vec2(visibleSize.width - 60, 20));
+	//addChild(musicM);
+	//musicM->setPosition(cocos2d::Vec2(visibleSize.width - 60, 20));
 
-	
-	
 
 	return true;
 }
 
 cocos2d::Menu* OpenScene::setLayOutL1() {
-    auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-    
-    cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
-    
-    cocos2d::Vector<cocos2d::MenuItem*> vecs;
-    
-//    std::string UiNames[] = {
-//        "GameUI/ProjectName",
-//        "GameUI/PlayMyself",
-//        "GameUI/PlayOnInternet",
-//        "GameUI/Settings",
-//        "GameUI/Help",
-//        "GameUI/Quit"
-//    };
-    ccMenuCallback Uifuncs[] = {nullptr,CC_CALLBACK_1(OpenScene::ToStartGame, this), nullptr,CC_CALLBACK_1(OpenScene::MenuSettingsItem,this),CC_CALLBACK_1(OpenScene::OnTouchPause, this),CC_CALLBACK_1(OpenScene::menuCloseCallback, this)};
-    for (int i = 0; i < 6; ++i) {
-        auto menuI = cocos2d::MenuItemImage::create(std::string(UiNames[i]) + ".png", std::string(UiNames[i])+ "Selected.png",Uifuncs[i]);
-        if (i != 0)
-            menuI->setScale(0.8, 0.6);
-        vecs.pushBack(menuI);
-    }
-    
-    UImenus = cocos2d::Menu::createWithArray(vecs);
-    UImenus->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
-    UImenus->alignItemsVertically();
-    return UImenus;
+	auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
+
+	cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
+
+	cocos2d::Vector<cocos2d::MenuItem*> vecs;
+
+	std::string UiNames[] = { "GameUI/ProjectName", "GameUI/PlayMyself", "GameUI/PlayOnInternet", "GameUI/Help","GameUI/Setting","GameUI/Quit" };
+	ccMenuCallback Uifuncs[] = { nullptr,CC_CALLBACK_1(OpenScene::ToStartGame, this), nullptr,CC_CALLBACK_1(OpenScene::OnTouchPause, this),CC_CALLBACK_1(OpenScene::GameSetting, this),CC_CALLBACK_1(OpenScene::menuCloseCallback, this) };
+	for (int i = 0; i < 6; ++i) {
+		auto menuI = cocos2d::MenuItemImage::create(UiNames[i] + ".png", UiNames[i] + "Selected.png", Uifuncs[i]);
+		if (i != 0)
+			menuI->setScale(0.8, 0.6);
+		vecs.pushBack(menuI);
+	}
+
+	UImenus = cocos2d::Menu::createWithArray(vecs);
+	UImenus->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+	UImenus->alignItemsVertically();
+	return UImenus;
 }
 
 
 
+//cocos2d::Menu* HelloWorld::setMusicLine(const std::string &music_name) {
+//    auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+//    audio->playBackgroundMusic(music_name.c_str(), true);
+//    auto musicList = MenuItemToggle::createWithCallback(CC_CALLBACK_1(HelloWorld::musicOnAndOff, this), MenuItemFont::create("Music On"),   MenuItemFont::create("Music Off"), nullptr);
+//    auto musicM = Menu::create(musicList, nullptr);
+//    return musicM;
+////}
 
 void OpenScene::menuCloseCallback(Ref* pSender)
 {
@@ -117,6 +114,7 @@ void OpenScene::menuCloseCallback(Ref* pSender)
 
 }
 
+
 void OpenScene::SwitchToOpen(cocos2d::Ref *pSender) {
 	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
 	audio->stopBackgroundMusic();
@@ -125,10 +123,17 @@ void OpenScene::SwitchToOpen(cocos2d::Ref *pSender) {
 	dir->replaceScene(HelloWorld::createScene());
 }
 
+void OpenScene::GameSetting(cocos2d::Ref* pSender) {
+	Director::getInstance()->pushScene(Settings::createScene());
+}
 
 void OpenScene::OnTouchPause(cocos2d::Ref* pSender) {
 	auto layer = PauseWithLabelLayer::create();
 
+	static std::string helps[] = { "Hi, this is a bnb game", "made by maplewind, Chris and shadowfox",
+		"use up\\down\\left\\right to control your charactor",
+		"and you can press \"help\" to get some information",
+		"have fun~" };
 
 	for (int i = 0; i < 5; ++i) {
 		auto label = MenuItemLabel::create(Label::create(helps[i], "fonts/GloriaHallelujah.ttf", 35));
@@ -152,18 +157,5 @@ void OpenScene::OnTouchResume() {
 }
 
 void OpenScene::ToStartGame(Ref *sender) {
-	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
-	audio->stopBackgroundMusic();
-	audio->playBackgroundMusic("music/MEGALOVANIA.mp3");
-
-	auto sc = GameScene::createScene();
-	auto reScene = TransitionSlideInR::create(0.618f, sc); // 0.618f 控制速度
-	Director::getInstance()->replaceScene(reScene);
-}
-
-void OpenScene::MenuSettingsItem(cocos2d::Ref* pSender)
-{
-	auto sc = GameSettings::createScene();
-	auto reScene = TransitionSlideInR::create(0.618f, sc);
-	Director::getInstance()->replaceScene(reScene);
+	Director::getInstance()->replaceScene(GameScene::createScene());
 }
