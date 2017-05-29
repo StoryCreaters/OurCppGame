@@ -209,8 +209,6 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
     // TODO dispatch this;
     if (code == GO_CODE) {
         // no attention to move
-        _myplayer->last_ops = settings::DEFAULT;
-        _myplayer->last_move = {0, 0};
         _myplayer->_chara_move[key] = false;
         std::string next_direction(_myplayer->_spriteName + "_"+ std::string(direc_string[_direction]) +"_");
         auto tmp_f = SpriteFrameCache::getInstance()->getSpriteFrameByName(next_direction + "01.png");
@@ -247,6 +245,7 @@ void GameScene::CharacterMove(character* chara) {
     Vec2 delta_pos[4]{Vec2(0, curstep), Vec2(0, -curstep), Vec2(-curstep, 0), Vec2(curstep, 0)};
     // 判断动作，调整step
     // get exact direction and last move
+    
     for (int index = 0; index < 4; ++index) {
         if (!chara->_chara_move[index]) {
             continue;

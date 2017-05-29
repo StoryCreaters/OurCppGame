@@ -39,13 +39,13 @@ public:
     int _maxBubbles;
     int _currentBubbles;
     
+    int curSetBubbles;
+    
     int _animation_frames;
     // 每个精灵对应的_spriteName
     std::string _spriteName;
     
-    // 之前的运动状态
-    cocos2d::Vec2 last_move;
-    settings::directions last_ops;
+    
     std::array<bool, 4> _chara_move;
     /*****碰撞点******/
     // 根据方向给出一对碰撞点

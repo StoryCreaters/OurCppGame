@@ -13,6 +13,7 @@
 #include "SimpleAudioEngine.h"
 #include "ui/CocosGUI.h"
 #include "HelloWorldScene.h"
+#include "network/WebSocket.h"
 
 using namespace cocos2d;
 
@@ -41,6 +42,7 @@ public:
     
     // debug
     void sceneTest(Ref *sender);
+    void websocketTest();
 private:
 	Menu* UImenus = nullptr;
 };

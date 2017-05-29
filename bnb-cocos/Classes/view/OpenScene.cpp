@@ -5,6 +5,7 @@
 #include "SettingScene.h"
 #include "Settings.h"
 
+
 using namespace settings::OpenScene;
 
 Scene* OpenScene::createScene()
@@ -167,3 +168,4 @@ void OpenScene::MenuSettingsItem(cocos2d::Ref* pSender)
 	auto reScene = TransitionSlideInR::create(0.618f, sc);
 	Director::getInstance()->replaceScene(reScene);
 }
+

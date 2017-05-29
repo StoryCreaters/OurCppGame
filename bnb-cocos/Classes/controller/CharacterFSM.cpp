@@ -2,7 +2,7 @@
 #include "CommonUse.h"
 #include "GameScene.h"
 #include "Character.h"
-
+class GameScene;
 USING_NS_CC;
 
 static inline GameScene* getGameScene() {

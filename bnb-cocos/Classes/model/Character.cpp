@@ -1,6 +1,7 @@
 #include "Character.h"
 #include "Settings.h"
 #include "CommonUse.h"
+#include "CharacterFSM.h"
 
 using namespace settings::Character;
 
@@ -27,10 +28,6 @@ bool character::initWithPlayerType(characterType type)
     // TODO: 更新人物和属性
     using namespace settings::Character;
     
-    // 初始化运动状态
-    last_move = {0, 0};
-    last_ops = settings::DEFAULT;
-    
     // 属性设置
     _spriteName = sprite_names[type];
     
@@ -40,9 +37,9 @@ bool character::initWithPlayerType(characterType type)
     _maxPower = max_powers[type];
     _currentVelocity = start_velocity[type];
     _maxVelocity = max_velocity[type];
-    
+    mCurState = std::make_shared<CharNormal>();
     _animation_frames = animation_frames[type];
-    
+    curSetBubbles = 0;
     // 记住加入png
     this->initWithSpriteFrameName("player" + std::to_string(type + 1) + "_down_01.png");
     this->initWithFile(sprite_paths[type]);
