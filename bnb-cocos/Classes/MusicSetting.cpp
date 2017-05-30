@@ -1,12 +1,4 @@
-﻿//
-//  GameSetScene.cpp
-//  AirfightGame
-//
-//  Created by Jason on 14-5-8.
-//
-//
-
-#include "MusicSetting.h"
+﻿#include "MusicSetting.h"
 #include "ui/CocosGUI.h"
 #include "SimpleAudioEngine.h"
 USING_NS_CC;
@@ -32,7 +24,9 @@ bool Settings::init() {
 	}
 	// 获得设备可见视图大小
 	Size visibleSize = Director::getInstance()->getVisibleSize();
-
+	auto backGround = cocos2d::Sprite::create("BackGround/Gray World.jpg");
+	backGround->setPosition(cocos2d::Vec2(visibleSize.width / 2, visibleSize.height / 2));
+	this->addChild(backGround, 0);
 	/***********************背景音乐标签和滑动条设计**************************/
 	// 创建“背景音乐”文本并添加为当前层的子节点
 	auto music_text = Text::create("BackgroundMusic", "Arial", 32);

@@ -157,5 +157,5 @@ void OpenScene::OnTouchResume() {
 }
 
 void OpenScene::ToStartGame(Ref *sender) {
-	Director::getInstance()->replaceScene(GameScene::createScene());
+	Director::getInstance()->replaceScene(Players::createScene());
 }
