@@ -1,7 +1,8 @@
 ﻿#pragma once
-#include<winsock2.h>
+#include <winsock2.h>
 #include <process.h>               //C中的线程 
-#include<string>
+#include <string>
+#include <fstream>
 #include"cocos2d.h"
 #pragma comment(lib,"ws2_32.lib")
 
@@ -21,17 +22,19 @@ struct  BnbClientInformation           //Client 相关信息
 
 class GameServer
 {
-private:
+protected:
 	enum {
 		MAX_NUM = 3  //最大上限人数
 	};
+	std::ofstream outfile;
 public:
-	GameServer();
-	~GameServer();
+	bool virtual init();
+
+	bool virtual clear();
 
 	int ProcessGameServer();    //线程处理
 
-	int SendMessageToOneClient(int ID, const std::string & str);  //向某一个Client放松信息
+	int SendMessageToOneClient(int ID, const std::string & str);  //向某一个Client发送信息
 
 	int CheckSocket();     //检测当前可用的ID号
 	void CleanSocket(int ID); //清空ID号的套接字
@@ -41,14 +44,14 @@ public:
 public:
 	static DWORD WINAPI ListenThread(void *data); //接受线程
 
-	SOCKET ListenSocket;       //等待接受数据的socket
+	
+protected:
+	SOCKET ListenSocket;       //等待接受数据的socket,此为真·Server
+	BnbClientInformation AcceptSocket[MAX_NUM];  //Client的相关信息，此为真·Clients
 	sockaddr_in Server;        //绑定地址
 
-	BnbClientInformation AcceptSocket[MAX_NUM];  //Client的相关信息
 	//对网络数据的处理
 public:
-	/*
-	留坑，过会儿再来
-	*/
+	
 };
 
