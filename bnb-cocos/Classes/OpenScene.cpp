@@ -3,6 +3,7 @@
 #include "ToStart.h"
 #include "GameScene.h"
 #include "MusicSetting.h"
+#include "RoomChooseScene.h"
 
 USING_NS_CC;
 using namespace ui;
@@ -55,12 +56,6 @@ bool OpenScene::init()
 	float volume = UserDefault::getInstance()->getFloatForKey("musicPercent");
 	audio->setBackgroundMusicVolume(volume);
 	audio->playBackgroundMusic("music/When The Morning Comes.mp3", true);
-	//auto musicList = cocos2d::MenuItemToggle::createWithCallback(CC_CALLBACK_1(OpenScene::musicOnAndOff, this), cocos2d::MenuItemFont::create("Music On"), cocos2d::MenuItemFont::create("Music Off"), nullptr);
-	//auto musicM = cocos2d::Menu::create(musicList, nullptr);
-
-	//addChild(musicM);
-	//musicM->setPosition(cocos2d::Vec2(visibleSize.width - 60, 20));
-
 
 	return true;
 }
@@ -73,7 +68,7 @@ cocos2d::Menu* OpenScene::setLayOutL1() {
 	cocos2d::Vector<cocos2d::MenuItem*> vecs;
 
 	std::string UiNames[] = { "GameUI/ProjectName", "GameUI/PlayMyself", "GameUI/PlayOnInternet", "GameUI/Help","GameUI/Setting","GameUI/Quit" };
-	ccMenuCallback Uifuncs[] = { nullptr,CC_CALLBACK_1(OpenScene::ToStartGame, this), nullptr,CC_CALLBACK_1(OpenScene::OnTouchPause, this),CC_CALLBACK_1(OpenScene::GameSetting, this),CC_CALLBACK_1(OpenScene::menuCloseCallback, this) };
+	ccMenuCallback Uifuncs[] = { nullptr,CC_CALLBACK_1(OpenScene::ToStartGame, this), CC_CALLBACK_1(OpenScene::ToStartInGame, this),CC_CALLBACK_1(OpenScene::OnTouchPause, this),CC_CALLBACK_1(OpenScene::GameSetting, this),CC_CALLBACK_1(OpenScene::menuCloseCallback, this) };
 	for (int i = 0; i < 6; ++i) {
 		auto menuI = cocos2d::MenuItemImage::create(UiNames[i] + ".png", UiNames[i] + "Selected.png", Uifuncs[i]);
 		if (i != 0)
@@ -87,15 +82,6 @@ cocos2d::Menu* OpenScene::setLayOutL1() {
 	return UImenus;
 }
 
-
-
-//cocos2d::Menu* HelloWorld::setMusicLine(const std::string &music_name) {
-//    auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
-//    audio->playBackgroundMusic(music_name.c_str(), true);
-//    auto musicList = MenuItemToggle::createWithCallback(CC_CALLBACK_1(HelloWorld::musicOnAndOff, this), MenuItemFont::create("Music On"),   MenuItemFont::create("Music Off"), nullptr);
-//    auto musicM = Menu::create(musicList, nullptr);
-//    return musicM;
-////}
 
 void OpenScene::menuCloseCallback(Ref* pSender)
 {
@@ -158,4 +144,8 @@ void OpenScene::OnTouchResume() {
 
 void OpenScene::ToStartGame(Ref *sender) {
 	Director::getInstance()->replaceScene(Players::createScene());
+}
+
+void OpenScene::ToStartInGame(Ref *sender) {
+	Director::getInstance()->replaceScene(RoomChoose::createScene());
 }

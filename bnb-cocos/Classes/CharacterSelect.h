@@ -3,8 +3,6 @@
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
 #include "HelloWorldScene.h"
-#include "CharacterSelect.h"
-#include "character.h"
 
 using namespace cocos2d;
 class Players : public cocos2d::Layer

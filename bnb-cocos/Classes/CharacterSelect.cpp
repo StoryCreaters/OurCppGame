@@ -35,9 +35,11 @@ bool Players::init() {
 	first_button->addTouchEventListener([](Ref* pSender, Widget::TouchEventType type) {
 		if (type == Widget::TouchEventType::ENDED) {
 			// 切换到GameScene场景
+			UserDefault::getInstance()->setIntegerForKey("PLAYER", 1);
+			int i = UserDefault::getInstance()->getIntegerForKey("PLAYER");
+			log("*integer is %d", i);
 			auto transition = TransitionFadeBL::create(2.0, GameScene::createScene());
 			Director::getInstance()->replaceScene(transition);
-			UserDefault::getInstance()->setIntegerForKey("PLAYER", 1);
 		}
 	});
 	this->addChild(first_button);
@@ -47,13 +49,15 @@ bool Players::init() {
 	second_button->setTitleText("Player 2");
 	second_button->setTitleFontName("微软雅黑");
 	second_button->setTitleFontSize(16);
-	second_button->setPosition(Vec2(visibleSize.width / 2, visibleSize.height*0.55));
+	second_button->setPosition(Vec2(visibleSize.width / 2, visibleSize.height*0.50));
 	second_button->addTouchEventListener([](Ref* pSender, Widget::TouchEventType type) {
 		if (type == Widget::TouchEventType::ENDED) {
 			// 切换到GameScene场景
-			auto transition = TransitionFadeBL::create(2.0, GameScene::createScene());
-			Director::getInstance()->replaceScene(transition);
 			UserDefault::getInstance()->setIntegerForKey("PLAYER", 2);
+			int i = UserDefault::getInstance()->getIntegerForKey("PLAYER");
+			log("**integer is %d", i);
+			auto transition = TransitionFadeBL::create(2.0, GameScene::createScene());			
+			Director::getInstance()->replaceScene(transition);
 		}
 	});
 	this->addChild(second_button);
@@ -63,13 +67,15 @@ bool Players::init() {
 	third_button->setTitleText("Player 3");
 	third_button->setTitleFontName("微软雅黑");
 	third_button->setTitleFontSize(16);
-	third_button->setPosition(Vec2(visibleSize.width / 2, visibleSize.height*0.4));
+	third_button->setPosition(Vec2(visibleSize.width / 2, visibleSize.height*0.30));
 	third_button->addTouchEventListener([](Ref* pSender, Widget::TouchEventType type) {
 		if (type == Widget::TouchEventType::ENDED) {
 			// 切换到GameScene场景
+			UserDefault::getInstance()->setIntegerForKey("PLAYER", 3);
+			int i = UserDefault::getInstance()->getIntegerForKey("PLAYER");
+			log("***integer is %d", i);
 			auto transition = TransitionFadeBL::create(2.0, GameScene::createScene());
 			Director::getInstance()->replaceScene(transition);
-			UserDefault::getInstance()->setIntegerForKey("PLAYER", 3);
 		}
 	});
 	this->addChild(third_button);
