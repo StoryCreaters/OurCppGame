@@ -15,9 +15,8 @@ using std::endl;
 */
 bool GameServer::init()
 {
-	//把所有的后台信息写入一个文件，方便调试
-	
-	outfile.open("e:\\log.txt");
+	//把所有的后台信息写入log文件，方便调试
+	std::ofstream outfile("e:\\log.txt");
 	if (!outfile.is_open())
 	{
 		return false;
@@ -39,7 +38,6 @@ bool GameServer::init()
 		return false;
 	}
 
-	
 	int port = 1235;
 	
 	//设置服务器的信息
@@ -56,24 +54,24 @@ bool GameServer::init()
 		Server.sin_port = htons(port);
 		int retval = bind(ListenSocket, (LPSOCKADDR)&Server, sizeof(Server));
 		outfile << "绑定错误，错误号10048\n";
+
 	}
-	outfile << port << endl;
-	outfile << "GG_1\n";
+	outfile << "服务器的IP为:"<< Server.sin_addr.S_un.S_addr
+		<< " 端口号为: " << port << endl;
+
 	//监听   有listen就有accept
 	if (listen(ListenSocket, 5) == SOCKET_ERROR)
 	{
 		outfile<<"监听出错，错误号："<< WSAGetLastError() << endl;
 		return false;
 	}
-	outfile << "GG_2\n";
+
 	//将所有信息初始化
 	for (int i = 0; i < MAX_NUM; i++)
 		AcceptSocket[i].ClientSock = NULL;
-	outfile << "GG_3\n";
-	/*
-	此处要在后台上显示：
-	“网络初始化成功”
-	*/
+
+	outfile << "网络初始化成功\n";
+	outfile.close();
 	return true;
 }
 
@@ -86,8 +84,6 @@ bool GameServer::clear()
 	if (ListenSocket != NULL)
 		closesocket(ListenSocket);
 	WSACleanup();
-	outfile << "GG_8\n";
-	outfile.close();
 	return true;
 }
 
@@ -113,22 +109,21 @@ int GameServer::CheckSocket()
 */
 int GameServer::ProcessGameServer()
 {
-	std::ofstream ofile("e:\\log2.txt");
-	ofile << "nice\n";
+	std::ofstream ofile("e:\\log.txt",std::ios::app);
+	ofile << "Enter PrecessGameServer()\n";
 	while (true)
 	{
-		ofile << "1\n";
 		int index = CheckSocket();
 		sockaddr_in Client;
-		ofile << "2\n";
+
 		int ClntLen = sizeof(Client);
 
 		if (index != -1) //玩家未满
 		{
-			ofile << "3\n";
-			//对应前面的listen，这里是对应操作accept
-
 			
+			//对应前面的listen，这里是对应操作accept
+		
+			ofile << "即将执行Accept()\n";
 			AcceptSocket[index].ClientSock = accept(
 				ListenSocket, 
 				(struct sockaddr*)&AcceptSocket[index].Client,
@@ -136,47 +131,39 @@ int GameServer::ProcessGameServer()
 
 			AcceptSocket[index].ID = index;       //记录这个Client的ID啊，以后要寻找它
 			AcceptSocket[index].Active = false;
-			ofile << "GG_6\n";
+			
 			if (AcceptSocket[index].ClientSock == INVALID_SOCKET)
 			{
-				ofile << "连接出错,错误号：" << WSAGetLastError() << endl;
+				ofile << "连接错误\n";
 				break;
 			}
-			ofile << "GG_7\n";
-
+			
+			ofile << "连接成功\n";
 			
 			//至此client与server连接成功,欢呼
 
-			/*
-			此处要在后台上显示：
-			“新玩家加入，IP地址为%d，端口号为%d”
-			inet_ntoa(AcceptSocket[index].Client.sin_addr
-			ntohs(AcceptSocket[index].Client.sin_port
-			*/
-
+			ofile << "新玩家加入，IP地址为：" << inet_ntoa(AcceptSocket[index].Client.sin_addr)
+				  << "  端口号为：" << ntohs(AcceptSocket[index].Client.sin_port) << endl;
+	
 			//创建接受者线程 
 			int ThreadID;     //线程ID
 
 			//把刚刚连接成功的Client建立一个新的线程
-			ThreadID =(int)CreateThread(NULL,0,
-				(LPTHREAD_START_ROUTINE)(GameServer::ListenThread),
-				(void*)&AcceptSocket[index],0,
-				&AcceptSocket[index].RecvThreadID
+			ThreadID =(int)CreateThread(NULL,0, 
+				(LPTHREAD_START_ROUTINE)(GameServer::ListenThread), //线程点函数
+				(LPVOID)&AcceptSocket[index],0,              //参数
+				&AcceptSocket[index].RecvThreadID          //系统分配的ID
 			);
 
 			if (!ThreadID)
 			{
-				ofile << "创建线程失败\n";
+				ofile << "创建线程错误\n";
 				ExitThread(AcceptSocket[index].RecvThreadID);
 			}
 
 			//至此，新的线程创建成功，可以传输数据了
 
-			/*
-			此处要在后台上显示：
-			“新玩家ID%d的接收线程创建成功”
-			index
-			*/
+			ofile << "新玩家" << index << "的接受线程创建成功\n";
 
 		}
 		else   //玩家已满
@@ -186,27 +173,23 @@ int GameServer::ProcessGameServer()
 
 			if (Accept == INVALID_SOCKET)
 			{
-				ofile << "连接出错，错误号：" << WSAGetLastError() << endl;
+				ofile << "连接错误\n";
 				break;
 			}
 
-			/*
-			此处要在后台上显示：
-			“非法请求的玩家IP地址为%d，端口号为%d”
-			inet_ntoa(Client.sin_addr),
-			ntohs(Client.sin_port)
-			*/
+
+			ofile << "非法请求的玩家的IP的地址为:" << inet_ntoa(Client.sin_addr)
+				<< " 端口号为 :" << ntohs(Client.sin_port) << endl;
 
 			send(Accept, "当前用户已满", strlen("当前用户已满") + sizeof(char), 0);
 
 			closesocket(Accept);
 
-			/*
-			此处要在后台上显示：
-			“非法连接玩家已断开”
-			*/
+			ofile << "非法连接玩家已断开\n";
+			break;
 		}
 	}
+	ofile.close();
 	return 0;
 }
 
@@ -282,7 +265,6 @@ int GameServer::SendMessageToOneClient(int ID, const string & str)
 
 	if (oneSend == SOCKET_ERROR)
 	{
-		outfile << "发送错误\n";
 		AcceptSocket[ID].ClientSock = NULL;
 	}
 	return 1;

@@ -24,9 +24,8 @@ class GameServer
 {
 protected:
 	enum {
-		MAX_NUM = 3  //最大上限人数
+		MAX_NUM = 1  //最大上限人数   //我就先做一个的demo，需要改的话自己加就行了
 	};
-	std::ofstream outfile;
 public:
 	bool virtual init();
 
