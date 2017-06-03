@@ -30,11 +30,11 @@ public:
 
 	int ProcessGameServer();    //线程处理
 
-	int SendMessageToOneClient(int ID, const std::string & str);  //向某一个Client发送信息
+	static int SendMessageToOneClient(int ID, const std::string  str);  //向某一个Client发送信息
 
 	int CheckSocket();     //检测当前可用的ID号
 	void CleanSocket(int ID); //清空ID号的套接字
-	void SendMessageToAllClient(const std::string & str, int ID = -1); //向所有Client发送信息
+	static void SendMessageToAllClient(const std::string  str, int ID = -1); //向所有Client发送信息
 
 	//Socket 相关
 public:
@@ -43,7 +43,7 @@ public:
 	
 protected:
 	SOCKET ListenSocket;       //等待接受数据的socket,此为真·Server
-	BnbClientInformation AcceptSocket[MAX_NUM];  //Client的相关信息，此为真·Clients
+	static BnbClientInformation AcceptSocket[MAX_NUM];  //Client的相关信息，此为真·Clients
 	sockaddr_in Server;        //绑定地址
 
 	//对网络数据的处理
