@@ -2,22 +2,16 @@
 #define PlayerController_hpp
 
 #include "cocos2d.h"
+#include "BaseController.h"
 
 using namespace cocos2d;
 
-class PlayerController: public Layer {
+class PlayerController: public BaseController {
 public:
-    virtual bool init();
-    
-    // implement the "static create()" method manually
     CREATE_FUNC(PlayerController);
 private:
-    /*
-     * LISTEN keyboard up, down, left, right
-     */
-    void initListenner();
-    void myKeyboardPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
-    void myKeyboardOff(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
+    void myKeyboardPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) override;
+    void myKeyboardOff(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) override;
 };
 
 

@@ -9,6 +9,7 @@
 #include "Character.h"
 #include "../controller/WebClient.h"
 #include "../controller/PlayerController.h"
+#include "BubbleController.h"
 
 USING_NS_CC;
 using namespace settings::GameScene;
@@ -99,14 +100,12 @@ bool GameScene::init()
     
     
     
-    // 键盘监听
+    // add controller
     auto playerController = PlayerController::create();
     addChild(playerController);
-    
-//    auto listener = EventListenerKeyboard::create();
-//    listener->onKeyPressed = CC_CALLBACK_2(GameScene::myKeyboardOnL, this);
-//    listener->onKeyReleased = CC_CALLBACK_2(GameScene::myKeyboardOffL, this);
-//    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+    auto bubbleController = BubbleController::create();
+    addChild(bubbleController);
+
     
     this->scheduleUpdate();
     
@@ -159,85 +158,6 @@ void GameScene::addCloseMenu() {
     closeMenu->setPosition(Vec2::ZERO);
     this->addChild(closeMenu, 1);
 }
-
-/*****键盘监听*****/
-void GameScene::myKeyboardOnL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
-    GameScene::_optionCode code = DEFAULT;
-    switch (keyCode) {
-        case cocos2d::EventKeyboard::KeyCode::KEY_UP_ARROW:
-            code = _optionCode::GO_UP;
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_DOWN_ARROW:
-            code = _optionCode::GO_DOWN;
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_LEFT_ARROW:
-            code = _optionCode::GO_LEFT;
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
-            code = _optionCode::GO_RIGHT;
-            break;
-        default:
-            break;
-    }
-    // DEBUG
-    // TODO:走路可以用状态机实现
-    // TODO: dispatch this
-    // if (code != DEFAULT && _myplayer->chara_state == character::characterState::GO)
-    if (code != DEFAULT) {
-        for (auto &b : _myplayer->_chara_move)     b = false;
-        _myplayer->_chara_move[code] = true;
-        /*** DEBUG: direction is about animation */
-        _direction = code;
-        
-        // animation and direction
-        std::string next_direction(_myplayer->_spriteName + "_"+ std::string(direc_string[code]) +"_");
-        runAnimationByName(_myplayer, next_direction, 0.1f, _myplayer->_animation_frames);
-    }
-}
-
-
-
-void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
-    GameScene::_optionCode key;
-    enum T {
-        GO_CODE, BUBBLE_CODE
-    } code;
-    code = GO_CODE;     //默认为go_code
-    
-    switch (keyCode) {
-        case cocos2d::EventKeyboard::KeyCode::KEY_UP_ARROW:
-            key = _optionCode::GO_UP;
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_DOWN_ARROW:
-            key = _optionCode::GO_DOWN;
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_LEFT_ARROW:
-            key = _optionCode::GO_LEFT;
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
-            key = _optionCode::GO_RIGHT;
-            break;
-        case cocos2d::EventKeyboard::KeyCode::KEY_SPACE:
-            code = BUBBLE_CODE;
-            break;
-        default:
-            break;
-    }
-    
-    // TODO dispatch this;
-    if (code == GO_CODE) {
-        // no attention to move
-        _myplayer->_chara_move[key] = false;
-        std::string next_direction(_myplayer->_spriteName + "_"+ std::string(direc_string[_direction]) +"_");
-        auto tmp_f = SpriteFrameCache::getInstance()->getSpriteFrameByName(next_direction + "01.png");
-        _myplayer->setSpriteFrame(tmp_f);
-        _myplayer->stopAllActions();
-    }
-    else if (code == BUBBLE_CODE) {
-        setBubble(_myplayer);
-    }
-}
-
 
 /****人物移动****/
 void GameScene::CharacterMove(character* chara) {
@@ -492,9 +412,10 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
                 for (auto &chara: _game_players) {
                     if (tileCoordForPosition(chara->getPosition()) == next_p) {
                         // chara was fired
-                        if (typeid(*(chara->mCurState)).hash_code() == typeid(CharNormal).hash_code())
+                        auto cur_code = typeid(*(chara->mCurState)).hash_code();
+                        if (cur_code == typeid(CharStand).hash_code() || cur_code == typeid(CharMove).hash_code())
                             chara->changeState(std::make_shared<CharStuck>());
-                        else if(typeid(chara->mCurState).hash_code() == typeid(CharOnRiding).hash_code())
+                        else if(cur_code == typeid(CharOnRiding).hash_code())
                             chara->changeState(std::make_shared<CharNormal>());
                     }
                 }

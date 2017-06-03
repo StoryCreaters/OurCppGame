@@ -279,7 +279,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "57"
             endingLineNumber = "57"
-            landmarkName = "PlayerController::myKeyboardPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event)"
+            landmarkName = "PlayerController::myKeyboardOff(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -294,9 +294,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "89"
-            endingLineNumber = "89"
-            landmarkName = "PlayerController::myKeyboardOff(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event)"
-            landmarkType = "7">
+            endingLineNumber = "89">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -6,34 +6,11 @@
 
 USING_NS_CC;
 
-static inline character* getMyplayer() {
+inline character* getMyplayer() {
     auto scene = GameScene::getCurrentMap();
     return dynamic_cast<character*>(scene->getChildByName("myplayer"));
 }
 
-// on "init" you need to initialize your instance
-bool PlayerController::init()
-{
-    //////////////////////////////
-    // 1. super init first
-    if ( !Layer::init() )
-    {
-        return false;
-    }
-    
-    // add listenner
-    initListenner();
-    
-    
-    return true;
-}
-
-void PlayerController::initListenner() {
-    auto listener = EventListenerKeyboard::create();
-    listener->onKeyPressed = CC_CALLBACK_2(PlayerController::myKeyboardPressed, this);
-    listener->onKeyReleased = CC_CALLBACK_2(PlayerController::myKeyboardOff, this);
-    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
-}
 
 void PlayerController::myKeyboardPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
     GameScene::_optionCode code = GameScene::_optionCode::DEFAULT;
@@ -76,7 +53,7 @@ void PlayerController::myKeyboardOff(cocos2d::EventKeyboard::KeyCode keyCode, co
             key = GameScene::_optionCode::GO_RIGHT;
             break;
         default:
-            break;
+            return;
     }
     if (typeid(*(mychara->mCurState)).hash_code() == typeid(CharMove).hash_code()) {
         
