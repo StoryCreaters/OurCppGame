@@ -29,8 +29,8 @@ namespace settings {
     // 人物属性设定
     namespace Character {
         // 与delta_rate(1.15) 相关， 考虑修改
-        constexpr float grid_size = 43 * 1.15;
-        constexpr float little_grid_size = 32;
+        constexpr float grid_size = 40 * 1.15;
+        constexpr float little_grid_size = 36;
         
         // 人物的x, y
         constexpr float character_x[] = {46, 44, 54};
@@ -97,7 +97,9 @@ namespace settings {
         // 人物
         constexpr char* person_animation[] = {
             "GamePlayer/player1_animation/player1.plist",
-            "GamePlayer/player2_animation/player2.plist"
+            "GamePlayer/player2_animation/player2.plist",
+            
+            "GamePlayer/CharaStucked.plist"
         };
         // bubbles
         constexpr char* bubbles_animation = "BubbleImages/images/stable/bubble_bump.plist";

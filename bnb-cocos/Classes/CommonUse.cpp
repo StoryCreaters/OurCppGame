@@ -25,3 +25,4 @@ void runAnimationByName(cocos2d::Sprite* spr,std::string animName,float delay,in
     auto player_anime = cocos2d::RepeatForever::create(animate);
     spr->runAction(player_anime);
 }
+
