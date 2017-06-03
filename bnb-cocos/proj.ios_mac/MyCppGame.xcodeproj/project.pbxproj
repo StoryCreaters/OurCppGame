@@ -58,6 +58,10 @@
 		521A8EA919F11F5000D177D7 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 521A8EA819F11F5000D177D7 /* fonts */; };
 		521A8EAA19F11F5000D177D7 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 521A8EA819F11F5000D177D7 /* fonts */; };
 		52B47A471A53D09C004E4C60 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52B47A461A53D09B004E4C60 /* Security.framework */; };
+		82174F871EE2CBFB00A6B4E6 /* MusicSetting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82174F851EE2CBFB00A6B4E6 /* MusicSetting.cpp */; };
+		82174F881EE2CBFB00A6B4E6 /* MusicSetting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82174F851EE2CBFB00A6B4E6 /* MusicSetting.cpp */; };
+		82174F8C1EE2CCAE00A6B4E6 /* CharacterSelect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82174F8A1EE2CCAE00A6B4E6 /* CharacterSelect.cpp */; };
+		82174F8D1EE2CCAE00A6B4E6 /* CharacterSelect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82174F8A1EE2CCAE00A6B4E6 /* CharacterSelect.cpp */; };
 		8220AF491EE28D2200161461 /* PlayerController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8220AF451EE28D2200161461 /* PlayerController.cpp */; };
 		8220AF4A1EE28D2200161461 /* PlayerController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8220AF451EE28D2200161461 /* PlayerController.cpp */; };
 		8220AF4B1EE28D2200161461 /* PropController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8220AF471EE28D2200161461 /* PropController.cpp */; };
@@ -69,6 +73,8 @@
 		8222CA461EA6426D00092E33 /* GameUI in Resources */ = {isa = PBXBuildFile; fileRef = 8222CA451EA6426D00092E33 /* GameUI */; };
 		8222CA471EA6426D00092E33 /* GameUI in Resources */ = {isa = PBXBuildFile; fileRef = 8222CA451EA6426D00092E33 /* GameUI */; };
 		8262943E1AAF051F00CB7CF7 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8262943D1AAF051F00CB7CF7 /* Security.framework */; };
+		8265DC491EE2E9C10018C6DD /* PropLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8265DC471EE2E9C10018C6DD /* PropLayer.cpp */; };
+		8265DC4A1EE2E9C10018C6DD /* PropLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8265DC471EE2E9C10018C6DD /* PropLayer.cpp */; };
 		82666F4F1EDC1D800025F456 /* WebClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82666F4D1EDC1D800025F456 /* WebClient.cpp */; };
 		82666F501EDC1D800025F456 /* WebClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82666F4D1EDC1D800025F456 /* WebClient.cpp */; };
 		827A69BE1EA8FE750073F534 /* gameStart in Resources */ = {isa = PBXBuildFile; fileRef = 827A69BD1EA8FE750073F534 /* gameStart */; };
@@ -219,6 +225,10 @@
 		521A8E6319F0C34300D177D7 /* Default-736h@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-736h@3x.png"; sourceTree = "<group>"; };
 		521A8EA819F11F5000D177D7 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		52B47A461A53D09B004E4C60 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
+		82174F851EE2CBFB00A6B4E6 /* MusicSetting.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MusicSetting.cpp; path = view/MusicSetting.cpp; sourceTree = "<group>"; };
+		82174F861EE2CBFB00A6B4E6 /* MusicSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MusicSetting.h; path = view/MusicSetting.h; sourceTree = "<group>"; };
+		82174F8A1EE2CCAE00A6B4E6 /* CharacterSelect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CharacterSelect.cpp; path = view/CharacterSelect.cpp; sourceTree = "<group>"; };
+		82174F8B1EE2CCAE00A6B4E6 /* CharacterSelect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CharacterSelect.h; path = view/CharacterSelect.h; sourceTree = "<group>"; };
 		8220AF451EE28D2200161461 /* PlayerController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PlayerController.cpp; path = controller/PlayerController.cpp; sourceTree = "<group>"; };
 		8220AF461EE28D2200161461 /* PlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerController.h; path = controller/PlayerController.h; sourceTree = "<group>"; };
 		8220AF471EE28D2200161461 /* PropController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PropController.cpp; path = controller/PropController.cpp; sourceTree = "<group>"; };
@@ -229,6 +239,8 @@
 		8220AF5B1EE29F1200161461 /* BaseController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseController.h; path = controller/BaseController.h; sourceTree = "<group>"; };
 		8222CA451EA6426D00092E33 /* GameUI */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GameUI; sourceTree = "<group>"; };
 		8262943D1AAF051F00CB7CF7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		8265DC471EE2E9C10018C6DD /* PropLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PropLayer.cpp; sourceTree = "<group>"; };
+		8265DC481EE2E9C10018C6DD /* PropLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PropLayer.h; sourceTree = "<group>"; };
 		82666F4D1EDC1D800025F456 /* WebClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WebClient.cpp; path = controller/WebClient.cpp; sourceTree = "<group>"; };
 		82666F4E1EDC1D800025F456 /* WebClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebClient.h; path = controller/WebClient.h; sourceTree = "<group>"; };
 		827A69BD1EA8FE750073F534 /* gameStart */ = {isa = PBXFileReference; lastKnownFileType = folder; path = gameStart; sourceTree = "<group>"; };
@@ -491,6 +503,10 @@
 		82E9FEE21ED80A3E007C3AC0 /* view */ = {
 			isa = PBXGroup;
 			children = (
+				82174F8A1EE2CCAE00A6B4E6 /* CharacterSelect.cpp */,
+				82174F8B1EE2CCAE00A6B4E6 /* CharacterSelect.h */,
+				82174F851EE2CBFB00A6B4E6 /* MusicSetting.cpp */,
+				82174F861EE2CBFB00A6B4E6 /* MusicSetting.h */,
 				82E9FEE31ED80A9C007C3AC0 /* GameMapLayer.cpp */,
 				82E9FEE41ED80A9C007C3AC0 /* GameMapLayer.h */,
 				82E9FEE51ED80A9C007C3AC0 /* GameScene.cpp */,
@@ -511,6 +527,8 @@
 				82E9FEF41ED80A9C007C3AC0 /* SwallowTouch.h */,
 				82E9FEF51ED80A9C007C3AC0 /* ToStart.cpp */,
 				82E9FEF61ED80A9C007C3AC0 /* ToStart.h */,
+				8265DC471EE2E9C10018C6DD /* PropLayer.cpp */,
+				8265DC481EE2E9C10018C6DD /* PropLayer.h */,
 			);
 			name = view;
 			sourceTree = "<group>";
@@ -721,6 +739,7 @@
 				8220AF5C1EE29F1200161461 /* BaseController.cpp in Sources */,
 				82E9FF051ED80A9C007C3AC0 /* SettingScene.cpp in Sources */,
 				82E9FEF91ED80A9C007C3AC0 /* GameScene.cpp in Sources */,
+				8265DC491EE2E9C10018C6DD /* PropLayer.cpp in Sources */,
 				82E9FEF71ED80A9C007C3AC0 /* GameMapLayer.cpp in Sources */,
 				8220AF4B1EE28D2200161461 /* PropController.cpp in Sources */,
 				82E9FF071ED80A9C007C3AC0 /* SwallowTouch.cpp in Sources */,
@@ -730,8 +749,10 @@
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
 				82E9FF1D1ED80C65007C3AC0 /* BaseFSM.cpp in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
+				82174F8C1EE2CCAE00A6B4E6 /* CharacterSelect.cpp in Sources */,
 				82E9FEFB1ED80A9C007C3AC0 /* MapScene.cpp in Sources */,
 				8220AF571EE29EF100161461 /* BubbleController.cpp in Sources */,
+				82174F871EE2CBFB00A6B4E6 /* MusicSetting.cpp in Sources */,
 				82E9FEFD1ED80A9C007C3AC0 /* OpenScene.cpp in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
 				82E9FF171ED80C47007C3AC0 /* GameItem.cpp in Sources */,
@@ -751,6 +772,8 @@
 				8220AF5D1EE29F1200161461 /* BaseController.cpp in Sources */,
 				82E9FF141ED80C47007C3AC0 /* Bubbles.cpp in Sources */,
 				82E9FF201ED80C65007C3AC0 /* CharacterFSM.cpp in Sources */,
+				82174F881EE2CBFB00A6B4E6 /* MusicSetting.cpp in Sources */,
+				8265DC4A1EE2E9C10018C6DD /* PropLayer.cpp in Sources */,
 				8220AF4A1EE28D2200161461 /* PlayerController.cpp in Sources */,
 				82E9FF161ED80C47007C3AC0 /* Character.cpp in Sources */,
 				46880B8919C43A87006E1F66 /* AppDelegate.cpp in Sources */,
@@ -766,6 +789,7 @@
 				82FD4FD41ECF15B500025573 /* CommonUse.cpp in Sources */,
 				82E9FF181ED80C47007C3AC0 /* GameItem.cpp in Sources */,
 				82E9FF0A1ED80A9C007C3AC0 /* ToStart.cpp in Sources */,
+				82174F8D1EE2CCAE00A6B4E6 /* CharacterSelect.cpp in Sources */,
 				82E9FEFA1ED80A9C007C3AC0 /* GameScene.cpp in Sources */,
 				82E9FEFE1ED80A9C007C3AC0 /* OpenScene.cpp in Sources */,
 				82E9FF1E1ED80C65007C3AC0 /* BaseFSM.cpp in Sources */,

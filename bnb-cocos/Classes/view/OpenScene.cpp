@@ -4,6 +4,7 @@
 #include "GameScene.h"
 #include "MusicSetting.h"
 #include "RoomChooseScene.h"
+#include "CharacterSelect.h"
 
 USING_NS_CC;
 using namespace ui;

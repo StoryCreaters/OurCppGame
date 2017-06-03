@@ -2,6 +2,19 @@
 #include "Settings.h"
 #include <string>
 
+GameItem* GameItem::createWithType(GameItem::ItemTools type) {
+    if (static_cast<int>(type) < 4) {
+        // 是基础的道具，可以直接写逻辑
+        return GameItem::create(type);
+    } else if (static_cast<int>(type) < 7) {
+        // 是prop, 需要和PropLayer Controller交互
+        return PropItem::create(type);
+    } else {
+        // 是骑宠0.0
+        
+    }
+}
+
 GameItem* GameItem::create(GameItem::ItemTools type)
 {
     GameItem* player = new GameItem();
@@ -39,5 +52,7 @@ void GameItem::getItem(character* chara) {
         if (chara->_currentVelocity != chara->_maxVelocity) {
             ++(chara->_currentVelocity);
         }
+    } else if (type == GameItem::MAXPOWER) {
+        chara->_currentPower = chara->_maxPower;
     }
 }

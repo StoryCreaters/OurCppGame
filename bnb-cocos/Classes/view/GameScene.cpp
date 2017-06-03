@@ -238,15 +238,13 @@ void GameScene::setBubble(character* chara) {
         
         // 动画(是否可以抽象)
         runAnimationByName(newBubble, "Popo_", 0.25, bubble_frame_nums);
-        addChild(newBubble);
-
-        
-        
-        ++chara->curSetBubbles;
         newBubble->runAction(Sequence::create(DelayTime::create(0.3),CallFuncN::create(
-        [=](Ref* sender) {
-            _map_screen_bubbles[pos0] = newBubble;
-        }), DelayTime::create(2.7), timeBoom, NULL));
+                            [=](Ref* sender) {
+                                _map_screen_bubbles[pos0] = newBubble;
+                            }), DelayTime::create(2.7), timeBoom, NULL));
+        addChild(newBubble);
+        ++chara->curSetBubbles;
+        
     }
 }
 
@@ -465,8 +463,8 @@ void GameScene::addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools item_kind) 
     item->setScale(_tile_delta_rate);
     item->setAnchorPoint(Vec2::ZERO);
     item->setPosition(pos);
-    // anime
-    runAnimationByName(item, std::string(settings::Items::ItemNames[item_kind]) + "_", 0.2, 3);
+    // DEBUG: NOT SET ANIME HERE
+//    runAnimationByName(item, std::string(settings::Items::ItemNames[item_kind]) + "_", 0.2, 3);
     screenItems[tiledPos] = item;
     
     this->addChild(item);
