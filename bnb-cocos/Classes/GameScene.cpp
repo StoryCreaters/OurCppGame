@@ -5,7 +5,11 @@
 #include "SimpleAudioEngine.h"
 #include "CommonUse.h"
 #include <random>
+#include "CharacterFSM.h"
 #include "WebGameScene.h"
+#include "Character.h"
+#include "PlayerController.h"
+#include "BubbleController.h"
 USING_NS_CC;
 using namespace settings::GameScene;
 
@@ -93,6 +97,12 @@ bool GameScene::init()
 
 
 	return true;
+}
+
+// static function, GET CURRENT GAME SCENE
+GameScene* GameScene::getCurrentMap() {
+	auto currentScene = Director::getInstance()->getRunningScene();
+	return dynamic_cast<GameScene*>(currentScene->getChildByName("GameScene"));
 }
 
 bool GameScene::addCharacter(float x, float y, character::characterType Type)
@@ -469,6 +479,7 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec,int n) {
 				continue;
 			// 获取下一个爆炸的位置
 			auto next_p = dirs[r_vec] * syn[j] * i + tiled_position;
+			next_ps = { 0,0 };
 			//            log("%f %f", next_p.x, next_p.y);
 			// 判断爆炸位置是否在地图中
 			if (!in_map(next_p.x, next_p.y)) {
@@ -487,6 +498,7 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec,int n) {
 				this->runAction(Sequence::create(DelayTime::create(0.2f), CallFuncN::create(
 					[=](Ref* sender) {
 					_meta->removeTileAt(next_p);
+					next_ps = next_p; //为了传数据啊
 					if (prop_on_map[next_p.x][next_p.y] < GameItem::toolNumbers) {
 						this->addItems(next_p, static_cast<GameItem::ItemTools>(prop_on_map[next_p.x][next_p.y]));
 					}

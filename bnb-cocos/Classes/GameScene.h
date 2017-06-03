@@ -18,6 +18,7 @@ public:
 	bool addCharacter(float x, float y, character::characterType Type);
 	// 返回gameScene对象
 	static cocos2d::Scene* createScene();
+	static GameScene* getCurrentMap();
 
 	virtual bool init();
 
@@ -56,26 +57,30 @@ public:
 	} _direction;
 	GameScene::_optionCode key;
 	std::array<bool, 4> _my_sprite_move;
-
+	cocos2d::Vec2 next_ps;   //为了传递 next_p这个局部变量，，不得不开个public来传递
 	/********泡泡释放*************/
 	void setBubble(character* chara,int n);
 	void BubbleBoom(Ref* sender,int n);
 	Bubbles* hasBubble(cocos2d::Vec2 tilePos);
-protected:
-	// SIZE OF SCREEN
-	cocos2d::Size visibleSize;
-	float offx;
-	float offy;
 
 	/***** tilemap的大小变化率*****/
 	cocos2d::TMXTiledMap *_tileMap;
 	cocos2d::TMXLayer *_background;
 	cocos2d::TMXObjectGroup *objects;
 	cocos2d::TMXLayer *_meta;
+protected:
+	// SIZE OF SCREEN
+	cocos2d::Size visibleSize;
+	float offx;
+	float offy;
+
+
+	
 	void tileLoadProps();
 	// 瓦片地图上的道具们
 	std::array<std::array<int, 15>, 15> prop_on_map;
 
+	
 	/**** player的属性, 和自己的player的属性, 可以考虑fsm和vector ****/
 	
 	
