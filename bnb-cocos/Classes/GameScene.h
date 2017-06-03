@@ -8,6 +8,7 @@
 #include "Settings.h"
 #include <array>
 #include "GameItem.h"
+#include <vector>
 
 class GameScene : public cocos2d::Layer
 {
@@ -48,10 +49,17 @@ public:
 	bool hasCollisionInGridPos(cocos2d::Vec2 pos);
 
 	cocos2d::Vector<character*> _game_players;
+	std::vector <int> _player_bubbles;
+	// 表示自己运动状况的量, true就开始运动, 共有四个方向
+	enum _optionCode {
+		GO_UP, GO_DOWN, GO_LEFT, GO_RIGHT, BUBBLE, DEFAULT
+	} _direction;
+	GameScene::_optionCode key;
+	std::array<bool, 4> _my_sprite_move;
 
 	/********泡泡释放*************/
-	void setBubble();
-	void BubbleBoom(Ref* sender);
+	void setBubble(character* chara,int n);
+	void BubbleBoom(Ref* sender,int n);
 	Bubbles* hasBubble(cocos2d::Vec2 tilePos);
 protected:
 	// SIZE OF SCREEN
@@ -73,11 +81,7 @@ protected:
 	
 	
 
-	// 表示自己运动状况的量, true就开始运动, 共有四个方向
-	enum _optionCode {
-		GO_UP, GO_DOWN, GO_LEFT, GO_RIGHT, DEFAULT
-	} _direction;
-	std::array<bool, 4> _my_sprite_move;
+
 
 	/**** 爆炸相关 ****/
 	enum boom_vec {
@@ -89,13 +93,13 @@ protected:
 	// items on game scene
 	std::map<cocos2d::Vec2, GameItem*> screenItems;
 
-	bool check_chain_boom(cocos2d::Vec2 coordPos);
+	bool check_chain_boom(cocos2d::Vec2 coordPos,int n);
 
 
 	// 爆炸，受下方两种爆炸方式调用
-	void boom_animate(cocos2d::Vec2 pos, int power, int vector);
-	void horizontal_boom(cocos2d::Vec2 pos, int power);
-	void vertival_boom(cocos2d::Vec2 pos, int power);
+	void boom_animate(cocos2d::Vec2 pos, int power, int vector,int n);
+	void horizontal_boom(cocos2d::Vec2 pos, int power,int n);
+	void vertival_boom(cocos2d::Vec2 pos, int power,int n);
 
 	/*** the function to clear the sprite */
 	void add_and_clear_with_time(cocos2d::Sprite* sp, float dt, cocos2d::Vec2 pos);
@@ -105,8 +109,8 @@ protected:
 	/*** add item to the game ***/
 	void addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools tool);
 	void checkGetItem(character* chara);         // update
-	character * _myplayer;
-	int _my_bubbles;
+
+
 
 };
 
