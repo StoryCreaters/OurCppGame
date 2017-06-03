@@ -13,7 +13,6 @@
 #include "SimpleAudioEngine.h"
 #include "ui/CocosGUI.h"
 #include "HelloWorldScene.h"
-#include "network/WebSocket.h"
 
 using namespace cocos2d;
 

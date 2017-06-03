@@ -7,6 +7,7 @@ using namespace cocos2d::network;
 using namespace cocos2d;
 
 class GameScene;
+class character;
 
 class WebClient: public cocos2d::Layer, public WebSocket::Delegate //WebSocket委托
 {
@@ -15,6 +16,7 @@ public:
     static cocos2d::Scene* createScene();
     // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
     virtual bool init();
+    void update(float dt) override;
     CREATE_FUNC(WebClient);
 private:
     //这些虚函数WebSocket的回调
@@ -26,6 +28,7 @@ private:
     //WebSocket实例化
     WebSocket* m_pWebSocket;
     GameScene* runningGameScene;
+    character* mychara;
 };
 
 #endif /* WebClient_hpp */

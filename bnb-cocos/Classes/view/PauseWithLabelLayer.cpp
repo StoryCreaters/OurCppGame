@@ -53,6 +53,5 @@ void PauseWithLabelLayer::addUI() {
 void PauseWithLabelLayer::back(cocos2d::Ref* obj)
 {
     _eventDispatcher->removeEventListener(_listener);
-    auto main = (cocos2d::Scene*)this->getParent();
     this->removeFromParentAndCleanup(true);
 }

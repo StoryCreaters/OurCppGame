@@ -10,7 +10,9 @@
 #include "BaseFSM.h"
 #include "Settings.h"
 
-
+// preProcess : set animation
+// excute: excute per second
+// States : Stuck Dead OnRiding Move Stand
 
 class CharacterFSM: public BaseFsm {
 public:
@@ -41,4 +43,29 @@ public:
     void PreProcess(cocos2d::Sprite* spr) override;
 };
 
+// the Rider character
+class CharOnRiding : public State {
+public:
+    void excute(cocos2d::Sprite* spr) override;
+    void PreProcess(cocos2d::Sprite* spr) override;
+};
+
+// the moving character
+class CharMove: public CharNormal {
+public:
+    friend class PlayerController;
+    CharMove() = delete;
+    CharMove(int dir): direction(dir) {}
+    void PreProcess(cocos2d::Sprite* spr) override;
+private:
+    // GET DIRECTION
+    int direction;
+};
+
+// the standing and normal character
+class CharStand: public State {
+public:
+    void excute(cocos2d::Sprite* spr) override {}
+    void PreProcess(cocos2d::Sprite* spr) override;
+};
 #endif /* characterFSM_hpp */

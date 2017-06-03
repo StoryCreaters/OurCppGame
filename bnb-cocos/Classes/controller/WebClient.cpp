@@ -1,5 +1,11 @@
 #include "WebClient.h"
-#include "view/GameScene.h"
+#include "../view/GameScene.h"
+#include "Character.h"
+
+static inline GameScene* getGameScene() {
+    auto scene = Director::getInstance()->getRunningScene();
+    return dynamic_cast<GameScene*>(scene->getChildByTag(10));
+}
 
 bool WebClient::init() {
     if ( !Layer::init() )
@@ -9,9 +15,7 @@ bool WebClient::init() {
     m_pWebSocket = new WebSocket();
     m_pWebSocket->init(*this, "ws://127.0.0.1:9000");
     
-    auto running_scene = Director::getInstance()->getRunningScene();
-    runningGameScene = dynamic_cast<GameScene*>(running_scene->getChildByTag(10));
-    
+    scheduleUpdate();
     return true;
 }
 
@@ -23,7 +27,7 @@ void WebClient::onOpen(WebSocket * ws)
 void WebClient::onMessage(WebSocket * ws, const WebSocket::Data & data)
 {
     std::string textStr = data.bytes;
-    CCLOG(textStr.c_str());
+    log(textStr.c_str());
 }
 
 void WebClient::onClose(WebSocket * ws)
@@ -44,4 +48,26 @@ void WebClient::onError(WebSocket * ws, const WebSocket::ErrorCode & error)
         sprintf(buf, "an error was fired, code: %d", error);
     }
     CCLOG("Error was fired, error code: %d", error);
+}
+
+void WebClient::update(float dt) {
+    if (!runningGameScene) {
+        runningGameScene = getGameScene();
+        if (runningGameScene == nullptr) {
+            return;
+        } else {
+            mychara = dynamic_cast<character*>(runningGameScene->getChildByTag(20));
+        }
+    }
+    char my_direct[2];
+    int i;
+    for (i = 0; i < 4; ++i) {
+        if (mychara->_chara_move[i])
+            break;
+    }
+    if (i == 4) return;
+    
+    sprintf(my_direct, "%d", i);
+    log(my_direct);
+    m_pWebSocket->send(my_direct);
 }

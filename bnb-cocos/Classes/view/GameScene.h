@@ -13,12 +13,13 @@ class GameItem;
 class GameScene : public cocos2d::Layer
 {
 public:
+    friend class PlayerController;
     friend class CharStuck;
     using tilePosition = cocos2d::Vec2;
     
     // 返回gameScene对象
     static cocos2d::Scene* createScene();
-    
+    static GameScene* getCurrentMap();
     virtual bool init();
     
     // a selector callback

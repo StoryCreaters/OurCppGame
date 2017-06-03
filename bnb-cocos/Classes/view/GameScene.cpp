@@ -7,6 +7,8 @@
 #include <random>
 #include "CharacterFSM.h"
 #include "Character.h"
+#include "../controller/WebClient.h"
+#include "../controller/PlayerController.h"
 
 USING_NS_CC;
 using namespace settings::GameScene;
@@ -18,19 +20,27 @@ Scene* GameScene::createScene()
     auto scene = Scene::create();
     
     // 'layer' is an autorelease object
-    auto layer = GameScene::create();
+    auto game_layer = GameScene::create();
+    
     
     // temporary set it ten
-    layer->setTag(10);
+    game_layer->setName("GameScene");
+    game_layer->setTag(10);
     
     // add layer as a child to scene
-    scene->addChild(layer);
+    scene->addChild(game_layer);
+    
     
     // return the scene
     return scene;
 }
 
-// on "init" you need to initialize your instance
+// static function, GET CURRENT GAME SCENE
+GameScene* GameScene::getCurrentMap() {
+    auto currentScene = Director::getInstance()->getRunningScene();
+    return dynamic_cast<GameScene*>(currentScene->getChildByName("GameScene"));
+}
+
 bool GameScene::init()
 {
     if ( !Layer::init() )
@@ -43,6 +53,9 @@ bool GameScene::init()
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     
     addCloseMenu();
+    //
+//    auto web_layer = WebClient::create();
+//    this->addChild(web_layer);
     
     // a temporary background
     auto backG = Sprite::create(backGroundPicture);
@@ -76,6 +89,7 @@ bool GameScene::init()
     _myplayer->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     _myplayer->setPosition(offx + x, offy + y);
     _myplayer->setTag(20);
+    _myplayer->setName("myplayer");
     addChild(_myplayer, 1);
     _game_players.pushBack(_myplayer);
     _my_bubbles = 0;        // bubbles start from 0
@@ -84,11 +98,15 @@ bool GameScene::init()
 //    addItems(Vec2(10, 10));
     
     
+    
     // 键盘监听
-    auto listener = EventListenerKeyboard::create();
-    listener->onKeyPressed = CC_CALLBACK_2(GameScene::myKeyboardOnL, this);
-    listener->onKeyReleased = CC_CALLBACK_2(GameScene::myKeyboardOffL, this);
-    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+    auto playerController = PlayerController::create();
+    addChild(playerController);
+    
+//    auto listener = EventListenerKeyboard::create();
+//    listener->onKeyPressed = CC_CALLBACK_2(GameScene::myKeyboardOnL, this);
+//    listener->onKeyReleased = CC_CALLBACK_2(GameScene::myKeyboardOffL, this);
+//    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
     
     this->scheduleUpdate();
     
@@ -223,8 +241,6 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 
 /****人物移动****/
 void GameScene::CharacterMove(character* chara) {
-    
-    const static float dur = 0.1f;
     //TODO: 增加边界检测
     // 获得x y 的上界 下界
     const static float lowerx = offx + 3, upperx = visibleSize.width - offx;
@@ -476,8 +492,10 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
                 for (auto &chara: _game_players) {
                     if (tileCoordForPosition(chara->getPosition()) == next_p) {
                         // chara was fired
-                        // TODO: make sure if it is right
-                        chara->changeState(std::make_shared<CharStuck>());
+                        if (typeid(*(chara->mCurState)).hash_code() == typeid(CharNormal).hash_code())
+                            chara->changeState(std::make_shared<CharStuck>());
+                        else if(typeid(chara->mCurState).hash_code() == typeid(CharOnRiding).hash_code())
+                            chara->changeState(std::make_shared<CharNormal>());
                     }
                 }
                 ans = true;

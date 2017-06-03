@@ -13,7 +13,6 @@ bool SwallowTouch::init()
 {
     if(!LayerColor::initWithColor(Color4B(100,100,100,50)))
         return false;
-    auto visible = Director::getInstance()->getVisibleSize();
     
     auto callback = [](Touch * ,Event *)
     {

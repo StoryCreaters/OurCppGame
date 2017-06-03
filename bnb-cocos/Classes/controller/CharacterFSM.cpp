@@ -54,3 +54,40 @@ void CharStuck::PreProcess(cocos2d::Sprite *spr) {
                             chara->changeState(std::make_shared<CharDead>());
                         }), NULL));
 }
+
+void CharOnRiding::excute(cocos2d::Sprite *spr) {
+    static auto scene = Director::getInstance()->getRunningScene();
+    static auto gameScene =  dynamic_cast<GameScene*>(scene->getChildByTag(10));
+    if (gameScene == nullptr) {
+        // get it again
+        gameScene =  dynamic_cast<GameScene*>(scene->getChildByTag(10));
+        return;
+    }
+    auto chara = dynamic_cast<character*>(spr);
+    gameScene->CharacterMove(chara);
+    gameScene->checkGetItem(chara);
+}
+
+void CharOnRiding::PreProcess(cocos2d::Sprite *spr) {
+    
+}
+
+
+void CharMove::PreProcess(cocos2d::Sprite* spr) {
+    auto player = dynamic_cast<character*>(spr);
+    player->stopAllActions();
+    for (int i = 0; i < 4; ++i) {
+        player->_chara_move[i] = false;
+    }
+    player->_chara_move[direction] = true;
+    std::string next_direction(player->_spriteName + "_"+ std::string(settings::GameScene::direc_string[direction]) +"_");
+    auto tmp_f = SpriteFrameCache::getInstance()->getSpriteFrameByName(next_direction + "01.png");
+    player->setSpriteFrame(tmp_f);
+    runAnimationByName(player, next_direction, 0.1f, player->_animation_frames);
+}
+
+
+void CharStand::PreProcess(cocos2d::Sprite* spr) {
+    spr->stopAllActions();
+}
+

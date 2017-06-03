@@ -63,9 +63,6 @@ bool OpenScene::init()
 	addChild(musicM);
 	musicM->setPosition(cocos2d::Vec2(visibleSize.width - 60, 20));
 
-	
-	
-
 	return true;
 }
 
