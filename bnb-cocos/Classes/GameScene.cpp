@@ -72,16 +72,18 @@ bool GameScene::init()
 	float x = spawnPoint["x"].asFloat() * _tile_delta_rate;
 	float y = spawnPoint["y"].asFloat() * _tile_delta_rate;
 
-	tileLoadProps();
+
+
+
 
 	/*** add character***/
-	addCharacter(x, y, character::CHRIS);
+	addCharacter(x, y, character::CHRIS);//##############改动###############
 
 
 
 							// test
 							//    addItems(Vec2(10, 10));
-	addCharacter(x, y, character::CHRIS);
+	addCharacter(x, y, character::CHRIS);//##############改动###############
 
 							// 键盘监听
 	auto listener = EventListenerKeyboard::create();
@@ -89,8 +91,10 @@ bool GameScene::init()
 	listener->onKeyReleased = CC_CALLBACK_2(GameScene::myKeyboardOffL, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
-	auto web_layer = WebGameScene::create();
-	this->addChild(web_layer);
+	auto web_layer = WebGameScene::create();    //##############改动###############
+	this->addChild(web_layer);				 //##############改动###############
+	
+	//tileLoadProps();
 
 	this->scheduleUpdate();
 
@@ -105,7 +109,7 @@ GameScene* GameScene::getCurrentMap() {
 	return dynamic_cast<GameScene*>(currentScene->getChildByName("GameScene"));
 }
 
-bool GameScene::addCharacter(float x, float y, character::characterType Type)
+bool GameScene::addCharacter(float x, float y, character::characterType Type)//##############改动###############
 {
 	character* temp = character::create(Type);
 	temp->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
@@ -197,7 +201,7 @@ void GameScene::myKeyboardOnL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
 }
 
 
-
+//##############改动###############
 void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
 	
 	enum T {
@@ -219,7 +223,7 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 		key = _optionCode::GO_RIGHT;
 		break;
 	case cocos2d::EventKeyboard::KeyCode::KEY_SPACE:
-		key = BUBBLE;
+		key = BUBBLE;	//##############改动###############
 		code = BUBBLE_CODE;
 		break;
 	default:
@@ -236,9 +240,8 @@ void GameScene::myKeyboardOffL(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 		_game_players.at(0)->setSpriteFrame(tmp_f);
 		_game_players.at(0)->stopAllActions();
 	}
-	else if (key == BUBBLE) {
-		key == DEFAULT;
-		setBubble(_game_players.at(0),0);
+	else if (key == BUBBLE) {//##############改动###############
+		setBubble(_game_players.at(0),0);//##############改动###############
 	}
 }
 
@@ -314,7 +317,7 @@ void GameScene::CharacterMove(character* chara) {
 
 // bubble应该设置在tilemap的grid上
 // bubble渲染问题
-void GameScene::setBubble(character* chara,int n) {
+void GameScene::setBubble(character* chara,int n) {//##############改动（函数参数）###############
 	if (_player_bubbles[n] >= chara->_currentBubbles) {
 		return;
 	}
@@ -353,7 +356,7 @@ void GameScene::setBubble(character* chara,int n) {
 
 
 // 泡泡爆炸, 可以添加逻辑
-void GameScene::BubbleBoom(Ref* sender,int n) {
+void GameScene::BubbleBoom(Ref* sender,int n) {//##############改动（函数参数）###############
 	auto *sprite = dynamic_cast<Bubbles*>(sender);
 	auto beg_pos = sprite->getPosition();
 	int power = sprite->get_power();
@@ -459,6 +462,7 @@ static inline bool in_map(int x, int y) {
 	return false;
 }
 
+//##############改动（函数参数）###############
 void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec,int n) {
 	/*
 	args: pos->position of sprite, power:power of bubble, vector:direction
@@ -498,7 +502,7 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec,int n) {
 				this->runAction(Sequence::create(DelayTime::create(0.2f), CallFuncN::create(
 					[=](Ref* sender) {
 					_meta->removeTileAt(next_p);
-					next_ps = next_p; //为了传数据啊
+					next_ps = next_p; //为了传数据啊//##############改动###############
 					if (prop_on_map[next_p.x][next_p.y] < GameItem::toolNumbers) {
 						this->addItems(next_p, static_cast<GameItem::ItemTools>(prop_on_map[next_p.x][next_p.y]));
 					}
@@ -522,15 +526,16 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec,int n) {
 	}
 }
 
+//##############改动（函数参数）###############
 void GameScene::horizontal_boom(cocos2d::Vec2 pos, int power,int n) {
 	boom_animate(pos, power, 1,n);
 }
-
+//##############改动（函数参数）###############
 void GameScene::vertival_boom(cocos2d::Vec2 pos, int power,int n) {
 	boom_animate(pos, power, 0,n);
 }
 
-
+//##############改动（函数参数）###############
 bool GameScene::check_chain_boom(cocos2d::Vec2 blaze_pos,int n) {
 	auto bubbleIter = _map_screen_bubbles.find(blaze_pos);
 	if (bubbleIter != _map_screen_bubbles.end()) {
@@ -569,18 +574,14 @@ void GameScene::addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools item_kind) 
 
 }
 
-
+/*
 void GameScene::tileLoadProps() {
-	static std::random_device rd;
-	static std::uniform_int_distribution<int> dist(0, GameItem::toolNumbers * 5 / 3);
-	// 加载地图的对应的道具
-	for (int x = 0; x < 15; ++x)
-		for (int y = 0; y < 15; ++y)
-			if (!hasCollisionInGridPos(Vec2(x, y))) {
-				prop_on_map[x][y] = dist(rd);
-			}
+	char *prop;
+	
 
-}
+
+	
+}*/
 
 
 void GameScene::checkGetItem(character* chara) {

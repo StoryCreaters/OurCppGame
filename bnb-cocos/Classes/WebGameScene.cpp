@@ -23,6 +23,7 @@ bool WebGameScene::init()
 	//初始化服务端
 	client.init();
 
+	
 
 	this->scheduleUpdate();
 
@@ -32,18 +33,23 @@ bool WebGameScene::init()
 }
 
 void WebGameScene::update(float dt) {
-
+	static bool flag = false;
 	std::ofstream outfile;
-	outfile.open("e:\\log3.txt", std::ios::app);
+	
 	if (!runningGameScene) {
 		runningGameScene = getGameScene();
 		if (runningGameScene == nullptr) {
-			outfile << "return\n";
-			outfile.close();
 			return;
 		}
 	}
+	if (flag == false)
+	{
+		acceptProps();
+		flag = true;
+	}
+	
 
+	outfile.open("e:\\log3.txt", std::ios::app);
 	outfile << "多少个players：" << runningGameScene->_game_players.size() << std::endl;
 	/*
 	############以下代码仅供测试，测试完毕后将会封装到BnbGameClient中############
@@ -113,7 +119,6 @@ void WebGameScene::update(float dt) {
 				//接收格式（同上） 
 				sscanf(recvData, "%f %f %d %d %f %f", &Pos.x, &Pos.y,
 					&direct_2, &put_bubble_2, &broken_tile.x, &broken_tile.y);
-			outfile << Pos.x << " " << Pos.y << " " << direct_2 << std::endl;
 
 			if (broken_tile.x != 0 || broken_tile.y != 0)
 			{
@@ -133,3 +138,52 @@ void WebGameScene::update(float dt) {
 	outfile.close();
 }
 
+
+
+void WebGameScene::acceptProps()
+{
+
+	const int MAX = 2 * (sizeof(int) * 15 * 15 + 10 * sizeof(int));
+	prop = new char[MAX + 1];
+	ZeroMemory(prop, sizeof(prop));
+	int ret = recv(client.ClientSocket, prop, MAX, 0);
+	prop[ret] = '\0';
+
+	std::array<std::array<int, 15>, 15> dist;
+	for (int i = 0; i < 15; i++)
+		for (int j = 0; j < 15; j++)
+			sscanf(prop + 2 * (i * 15 + j), "%d ", &dist[i][j]);
+
+
+	while (!runningGameScene) {
+		runningGameScene = getGameScene();
+		if (runningGameScene == nullptr) {
+			continue;
+		}
+	}
+
+	
+
+	// 加载地图的对应的道具
+	for (int x = 0; x < 15; ++x)
+		for (int y = 0; y < 15; ++y)
+			if (!runningGameScene->hasCollisionInGridPos(Vec2(x, y))) {
+				runningGameScene->prop_on_map[x][y] = dist[x][y] - 1;
+			}
+
+	std::ofstream outfile2;
+	outfile2.open("e:\\log4.txt", std::ios::app);
+	outfile2 << "-------------------------------\n";
+	for (int i = 0; i < 15; i++)
+	{
+		for (int j = 0; j < 15; j++)
+			outfile2 << runningGameScene->prop_on_map[i][j] << " ";
+		outfile2 << "\n";
+	}
+	outfile2.close();
+}
+
+WebGameScene::~WebGameScene()
+{
+	delete[] prop;
+}

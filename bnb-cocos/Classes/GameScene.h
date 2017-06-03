@@ -68,6 +68,7 @@ public:
 	cocos2d::TMXLayer *_background;
 	cocos2d::TMXObjectGroup *objects;
 	cocos2d::TMXLayer *_meta;
+	std::array<std::array<int, 15>, 15> prop_on_map;
 protected:
 	// SIZE OF SCREEN
 	cocos2d::Size visibleSize;
@@ -78,7 +79,7 @@ protected:
 	
 	void tileLoadProps();
 	// 瓦片地图上的道具们
-	std::array<std::array<int, 15>, 15> prop_on_map;
+
 
 	
 	/**** player的属性, 和自己的player的属性, 可以考虑fsm和vector ****/
