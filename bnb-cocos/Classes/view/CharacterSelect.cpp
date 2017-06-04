@@ -36,8 +36,8 @@ bool Players::init() {
 		if (type == Widget::TouchEventType::ENDED) {
 			// 切换到GameScene场景
 			UserDefault::getInstance()->setIntegerForKey("PLAYER", 1);
-			int i = UserDefault::getInstance()->getIntegerForKey("PLAYER");
-			log("*integer is %d", i);
+//			int i = UserDefault::getInstance()->getIntegerForKey("PLAYER");
+//			log("*integer is %d", i);
 			auto transition = TransitionFadeBL::create(2.0, GameScene::createScene());
 			Director::getInstance()->replaceScene(transition);
 		}
@@ -54,9 +54,9 @@ bool Players::init() {
 		if (type == Widget::TouchEventType::ENDED) {
 			// 切换到GameScene场景
 			UserDefault::getInstance()->setIntegerForKey("PLAYER", 2);
-			int i = UserDefault::getInstance()->getIntegerForKey("PLAYER");
-			log("**integer is %d", i);
-			auto transition = TransitionFadeBL::create(2.0, GameScene::createScene());			
+//			int i = UserDefault::getInstance()->getIntegerForKey("PLAYER");
+//			log("**integer is %d", i);
+			auto transition = TransitionFadeBL::create(2.0, GameScene::createScene());
 			Director::getInstance()->replaceScene(transition);
 		}
 	});
@@ -72,8 +72,8 @@ bool Players::init() {
 		if (type == Widget::TouchEventType::ENDED) {
 			// 切换到GameScene场景
 			UserDefault::getInstance()->setIntegerForKey("PLAYER", 3);
-			int i = UserDefault::getInstance()->getIntegerForKey("PLAYER");
-			log("***integer is %d", i);
+//			int i = UserDefault::getInstance()->getIntegerForKey("PLAYER");
+//			log("***integer is %d", i);
 			auto transition = TransitionFadeBL::create(2.0, GameScene::createScene());
 			Director::getInstance()->replaceScene(transition);
 		}

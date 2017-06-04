@@ -10,6 +10,7 @@
 #include "../controller/WebClient.h"
 #include "../controller/PlayerController.h"
 #include "BubbleController.h"
+#include "PropLayer.h"
 
 USING_NS_CC;
 using namespace settings::GameScene;
@@ -105,7 +106,10 @@ bool GameScene::init()
     addChild(playerController);
     auto bubbleController = BubbleController::create();
     addChild(bubbleController);
-
+    
+    // add prop layer
+    auto propLayer = PropLayer::create();
+    addChild(propLayer);
     
     this->scheduleUpdate();
     

@@ -120,8 +120,8 @@ namespace settings {
         constexpr char* bubbles_file = "BubbleImages/images/stable/Popo_01.png";
     }
 
-	namespace SettingScene {
-		//temporary empty
+	namespace PropLayer {
+		constexpr char* gridBkg = "riding/PropBkg.jpg";
 	}
     
     namespace Items {
