@@ -10,6 +10,7 @@
 #include "../controller/WebClient.h"
 #include "../controller/PlayerController.h"
 #include "BubbleController.h"
+#include "CharacterSelect.h"
 
 USING_NS_CC;
 using namespace settings::GameScene;
@@ -86,7 +87,21 @@ bool GameScene::init()
     tileLoadProps();
     
     /*** add character***/
-    _myplayer = character::create(character::CHRIS);
+	character::characterType TYPE;
+	/*int i = UserDefault::getInstance()->getIntegerForKey("PLAYER");
+	log("integer is %d", i);*/
+	switch (i) {
+	case 1:
+		TYPE = character::MAPLE_WISH;
+		break;
+	case 2:
+		TYPE = character::CHRIS;
+		break;
+	case 3:
+		TYPE = character::SHADOWFOX;
+		break;
+	}
+	_myplayer = character::create(TYPE);
     _myplayer->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     _myplayer->setPosition(offx + x, offy + y);
     _myplayer->setTag(20);

@@ -49,14 +49,18 @@ bool RoomChoose::init() {
 }
 
 void RoomChoose::ToRoomOne(Ref *sender) {
+	UserDefault::getInstance()->setIntegerForKey("Room", 1);
 	Director::getInstance()->replaceScene(Players::createScene());
 }
 void RoomChoose::ToRoomTwo(Ref *sender) {
+	UserDefault::getInstance()->setIntegerForKey("Room", 2);
 	Director::getInstance()->replaceScene(Players::createScene());
 }
 void RoomChoose::ToRoomThree(Ref *sender) {
+	UserDefault::getInstance()->setIntegerForKey("Room", 3);
 	Director::getInstance()->replaceScene(Players::createScene());
 }
 void RoomChoose::ToRoomFour(Ref *sender) {
+	UserDefault::getInstance()->setIntegerForKey("Room", 4);
 	Director::getInstance()->replaceScene(Players::createScene());
 }
