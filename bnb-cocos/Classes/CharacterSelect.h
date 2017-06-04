@@ -18,7 +18,6 @@ public:
 	* 注意：init函数在Cocos2d-x中返回bool值，而不是返回Cocos2d-iPhone中的“id”
 	*/
 	virtual bool init();
-
 	/**
 	* 使用CREATE_FUNC宏创建当前类的对象，返回的对象将会由自动释放池管理内存的释放
 	*/

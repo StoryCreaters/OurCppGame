@@ -88,8 +88,8 @@ bool GameScene::init()
     
     /*** add character***/
 	character::characterType TYPE;
-	/*int i = UserDefault::getInstance()->getIntegerForKey("PLAYER");
-	log("integer is %d", i);*/
+	int i = UserDefault::getInstance()->getIntegerForKey("PLAYER");
+	log("integer is %d", i);
 	switch (i) {
 	case 1:
 		TYPE = character::MAPLE_WISH;
