@@ -108,15 +108,32 @@ void CharGuard::PreProcess(cocos2d::Sprite* spr) {
     guard_sprite->setName("guard");
     guard_sprite->setAnchorPoint(Vec2(0.15, -0.2));
     spr->addChild(guard_sprite);
-    spr->runAction(Sequence::create(DelayTime::create(2.5), CallFuncN::create([=](Ref* sender){
-        // DEBUG: fsm not change
-        log("used here");
-        spr->removeChildByName("guard");
-        auto chara = dynamic_cast<character*>(spr);
-        chara->changeState(std::make_shared<CharNormal>());
-    }), NULL));
+    spr->runAction(Sequence::create(DelayTime::create(2.5), CallFuncN::create(
+        [=](Ref* sender){
+            // DEBUG: fsm not change
+            log("used here");
+            spr->removeChildByName("guard");
+            auto chara = dynamic_cast<character*>(spr);
+            chara->changeState(std::make_shared<CharNormal>());
+        }), NULL));
 }
 
 void CharGuard::excute(cocos2d::Sprite *spr) {
-    
+    // DEBUG
+    log("excute_guard");
+}
+
+
+// check the state of the character
+bool checkStateFireAble(character* chara) {
+    auto state_chara = typeid(*(chara->mCurState)).hash_code();
+    if (state_chara == typeid(CharNormal).hash_code() || state_chara == typeid(CharOnRiding).hash_code())
+        return true;
+    return false;
+}
+bool checkStateWalkAble(character* chara) {
+    auto state_chara = typeid(*(chara->mCurState)).hash_code();
+    if (checkStateFireAble(chara) || state_chara == typeid(CharGuard).hash_code())
+        return true;
+    return false;
 }

@@ -95,7 +95,7 @@ bool GameScene::init()
     _myplayer->setTag(20);
     _myplayer->setName("myplayer");
     // test
-    _myplayer->changeState(std::make_shared<CharGuard>());
+//    _myplayer->changeState(std::make_shared<CharGuard>());
     addChild(_myplayer, 1);
     _game_players.pushBack(_myplayer);
     _my_bubbles = 0;        // bubbles start from 0
@@ -281,6 +281,10 @@ void GameScene::BubbleBoom(Ref* sender) {
     /***爆炸逻辑***/
     auto pos = tileCoordForPosition(beg_pos);
     for (auto chara: _game_players) {
+        // pay attention the guard
+        if (typeid(*(chara->mCurState)) == typeid(CharGuard)) {
+            continue;
+        }
         auto chara_pos = tileCoordForPosition(chara->getPosition());
         chara_pos.y += 1;
         if (chara_pos == pos)
@@ -419,6 +423,9 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
                 auto new_blaze = Sprite::create(boom_anime[r_vec]);
                 auto mySpritePos = _background->getPositionAt(next_p) * _tile_delta_rate + std_delta;
                 for (auto &chara: _game_players) {
+                    if (typeid(*(chara->mCurState)) == typeid(CharGuard)) {
+                        continue;
+                    }
                     if (tileCoordForPosition(chara->getPosition()) == next_p) {
                         // chara was fired
                         auto cur_code = typeid(*(chara->mCurState)).hash_code();

@@ -109,6 +109,8 @@ private:
     void boom_animate(cocos2d::Vec2 pos, int power, int vector);
     void horizontal_boom(cocos2d::Vec2 pos, int power);
     void vertival_boom(cocos2d::Vec2 pos, int power);
+    // TODO:对爆炸位置判断是否被波及
+    void checkIfCharaFired(Vec2 position);
     
     /*** the function to clear the sprite */
     void add_and_clear_with_time(cocos2d::Sprite* sp, float dt, cocos2d::Vec2 pos);

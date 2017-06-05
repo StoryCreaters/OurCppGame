@@ -75,4 +75,6 @@ public:
     void PreProcess(cocos2d::Sprite* spr) override;
 };
 
+bool checkStateFireAble(character* chara);
+bool checkStateWalkAble(character* chara);
 #endif /* characterFSM_hpp */

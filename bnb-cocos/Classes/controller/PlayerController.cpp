@@ -56,7 +56,7 @@ void PlayerController::myKeyboardOff(cocos2d::EventKeyboard::KeyCode keyCode, co
             return;
     }
     if (typeid(*(mychara->mCurState)).hash_code() == typeid(CharMove).hash_code()) {
-        
+
         auto realState = dynamic_pointer_cast<CharMove>(mychara->mCurState);
         if (realState->direction == static_cast<int>(key)) {
             // the same direction :stop
