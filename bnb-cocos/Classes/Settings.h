@@ -92,15 +92,20 @@ namespace settings {
     namespace PreLoadScene {
         // 基础道具动画
         constexpr char* gifts_animation[] = {
-            "PropResource/PropGifts.plist"
+            "PropResource/PropGifts.plist",
+            "PropResource/PropItems.plist",
+            "PropResource/Gift_Rowl.plist",
+            "PropResource/Gift_Mpower.plist"
         };
+        
         // 人物
         constexpr char* person_animation[] = {
             "GamePlayer/player1_animation/player1.plist",
             "GamePlayer/player2_animation/player2.plist",
-            
+            "GamePlayer/player3_animation/player3.plist",
             "GamePlayer/CharaStucked.plist"
         };
+        
         // bubbles
         constexpr char* bubbles_animation = "BubbleImages/images/stable/bubble_bump.plist";
         
@@ -115,8 +120,8 @@ namespace settings {
         constexpr char* bubbles_file = "BubbleImages/images/stable/Popo_01.png";
     }
 
-	namespace SettingScene {
-		//temporary empty
+	namespace PropLayer {
+		constexpr char* gridBkg = "riding/PropBkg.jpg";
 	}
     
     namespace Items {
@@ -128,7 +133,12 @@ namespace settings {
         constexpr char* ItemNames[] = {
             "GiftPoPo",
             "GiftPower",
-            "GiftRun"
+            "GiftRun",
+            "Gift_Mpower",
+            "Gift_RspeedUp",
+            "Gift_needle",
+            "Gift_guard",
+            "Gift_upper"
         };
     }
     

@@ -66,7 +66,9 @@ void PreLoadScene::loadSpriteFrame() {
 	using namespace settings::PreLoadScene;
 	// 道具动画
 	auto sprite_frame_cache = SpriteFrameCache::getInstance();
-	sprite_frame_cache->addSpriteFramesWithFile(gifts_animation);
+    for (auto s: gifts_animation) {
+        sprite_frame_cache->addSpriteFramesWithFile(s);
+    }
 	for (auto s : person_animation) {
 		sprite_frame_cache->addSpriteFramesWithFile(s);
 	}

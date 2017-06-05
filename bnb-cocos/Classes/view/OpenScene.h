@@ -30,7 +30,7 @@ public:
 	void OnTouchPause(cocos2d::Ref* pSender);
 	void OnTouchResume();
 	void ToStartGame(cocos2d::Ref* sender);
-
+    void ToStartInGame(cocos2d::Ref* sender);
 	// debug
 	void sceneTest(Ref *sender);
 private:
