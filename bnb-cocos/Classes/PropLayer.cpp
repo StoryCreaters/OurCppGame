@@ -1,6 +1,11 @@
 #include "PropLayer.h"
 #include "GameItem.h"
 #include "Settings.h"
+#include "GameScene.h"
+
+Layer* PropLayer::getPropLayer() {
+    return dynamic_cast<Layer*>(GameScene::getCurrentMap()->getChildByName("PropLayer"));
+}
 
 constexpr char* res[] = {
     "Gift_RspeedUp",

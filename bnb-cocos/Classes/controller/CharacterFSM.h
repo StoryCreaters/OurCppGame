@@ -68,4 +68,11 @@ public:
     void excute(cocos2d::Sprite* spr) override {}
     void PreProcess(cocos2d::Sprite* spr) override;
 };
+
+class CharGuard: public State {
+public:
+    void excute(cocos2d::Sprite* spr) override;
+    void PreProcess(cocos2d::Sprite* spr) override;
+};
+
 #endif /* characterFSM_hpp */

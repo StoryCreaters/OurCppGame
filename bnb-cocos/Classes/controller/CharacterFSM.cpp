@@ -2,8 +2,15 @@
 #include "CommonUse.h"
 #include "GameScene.h"
 #include "Character.h"
+#include "CommonUse.h"
+
 class GameScene;
 USING_NS_CC;
+
+inline character* getMyplayer() {
+    auto scene = GameScene::getCurrentMap();
+    return dynamic_cast<character*>(scene->getChildByName("myplayer"));
+}
 
 static inline GameScene* getGameScene() {
     auto scene = Director::getInstance()->getRunningScene();
@@ -91,3 +98,25 @@ void CharStand::PreProcess(cocos2d::Sprite* spr) {
     spr->stopAllActions();
 }
 
+
+//TODO : move guard time to
+void CharGuard::PreProcess(cocos2d::Sprite* spr) {
+    // 护盾模式, 增添护盾动画
+    auto guard_sprite = Sprite::createWithSpriteFrameName("unit_guard_01.png");
+    runAnimationByName(guard_sprite, "unit_guard_", 0.3, 4);
+    guard_sprite->setScale(1.15f);
+    guard_sprite->setName("guard");
+    guard_sprite->setAnchorPoint(Vec2(0.15, -0.2));
+    spr->addChild(guard_sprite);
+    spr->runAction(Sequence::create(DelayTime::create(2.5), CallFuncN::create([=](Ref* sender){
+        // DEBUG: fsm not change
+        log("used here");
+        spr->removeChildByName("guard");
+        auto chara = dynamic_cast<character*>(spr);
+        chara->changeState(std::make_shared<CharNormal>());
+    }), NULL));
+}
+
+void CharGuard::excute(cocos2d::Sprite *spr) {
+    
+}

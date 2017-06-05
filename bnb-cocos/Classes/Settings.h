@@ -95,6 +95,7 @@ namespace settings {
             "PropResource/PropGifts.plist",
             "PropResource/PropItems.plist",
             "PropResource/Gift_Rowl.plist",
+            "GamePlayer/unit_guard.plist",
             "PropResource/Gift_Mpower.plist"
         };
         

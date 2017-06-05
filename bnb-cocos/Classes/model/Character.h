@@ -19,7 +19,6 @@ public:
         SHADOWFOX
     };
     
-    
     bool initWithPlayerType(characterType type);
     
     static character* create(characterType type);

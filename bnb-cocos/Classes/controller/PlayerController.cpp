@@ -6,11 +6,11 @@
 
 USING_NS_CC;
 
+
 inline character* getMyplayer() {
     auto scene = GameScene::getCurrentMap();
     return dynamic_cast<character*>(scene->getChildByName("myplayer"));
 }
-
 
 void PlayerController::myKeyboardPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
     GameScene::_optionCode code = GameScene::_optionCode::DEFAULT;

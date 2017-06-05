@@ -11,6 +11,8 @@
 #include "../controller/PlayerController.h"
 #include "BubbleController.h"
 #include "PropLayer.h"
+#include "PropController.h"
+
 
 USING_NS_CC;
 using namespace settings::GameScene;
@@ -92,6 +94,8 @@ bool GameScene::init()
     _myplayer->setPosition(offx + x, offy + y);
     _myplayer->setTag(20);
     _myplayer->setName("myplayer");
+    // test
+    _myplayer->changeState(std::make_shared<CharGuard>());
     addChild(_myplayer, 1);
     _game_players.pushBack(_myplayer);
     _my_bubbles = 0;        // bubbles start from 0
@@ -109,7 +113,10 @@ bool GameScene::init()
     
     // add prop layer
     auto propLayer = PropLayer::create();
+    propLayer->setName("PropLayer");
     addChild(propLayer);
+    auto propController = PropController::create();
+    addChild(propController);
     
     this->scheduleUpdate();
     
