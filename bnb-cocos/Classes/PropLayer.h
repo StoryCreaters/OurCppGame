@@ -20,6 +20,7 @@ public:
 		ALLPOWER, NEEDLE, RSPEED, GUARD
 	};
 	static constexpr int prop_nums = 4;
+	static Layer* getPropLayer();
 
 	virtual bool init();
 	// implement the "static create()" method manually
