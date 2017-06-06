@@ -69,9 +69,6 @@ void PreLoadScene::loadSpriteFrame() {
 	for (auto s : gifts_animation) {
 		sprite_frame_cache->addSpriteFramesWithFile(s);
 	}
-	for (auto s : items_animation) {
-		sprite_frame_cache->addSpriteFramesWithFile(s);
-	}
 	for (auto s : person_animation) {
 		sprite_frame_cache->addSpriteFramesWithFile(s);
 	}
