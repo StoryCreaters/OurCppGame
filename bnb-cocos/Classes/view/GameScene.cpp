@@ -123,12 +123,12 @@ bool GameScene::init()
 	addChild(playerController);
 	auto bubbleController = BubbleController::create();
 	addChild(bubbleController);
-	//add prop layer
-	//auto propLayer = PropLayer::create();
-	//propLayer->setName("PropLayer");
-	//addChild(propLayer);
-	//auto propController = PropController::create();
-	//addChild(propController);
+	// add prop layer
+	log("CameScene_prop111");
+	auto propLayer = PropLayer::create();
+	propLayer->setName("PropLayer");
+	addChild(propLayer);
+	log("CameScene_prop");
 
 	this->scheduleUpdate();
 
@@ -532,6 +532,7 @@ void GameScene::RemoveCharacter(character* chara) {
 		// 游戏没有玩家
 		log("game over");
 	}
+	GameScene::Win(_myplayer);
 }
 
 bool GameScene::checkCollisionWithOther(character* chara) {
@@ -549,17 +550,17 @@ bool GameScene::checkCollisionWithOther(character* chara) {
 }
 
 void GameScene::Win(character* chara) {
-	gameOver("重新开始");
+	gameOver("Play Again");
 }
 
 void GameScene::Lose(character* chara) {
-	gameOver("游戏胜利");
+	gameOver("Game Win");
 }
 // 游戏结束
 void GameScene::gameOver(std::string message) {
 	// 获得设备可见视图大小
 	Size visibleSize = Director::getInstance()->getVisibleSize();
-	auto backGround = cocos2d::Sprite::create("BackGround/GameOver.png");
+	auto backGround = cocos2d::Sprite::create("BackGround/temple of times.png");
 	backGround->setPosition(cocos2d::Vec2(visibleSize.width / 2, visibleSize.height / 2));
 	this->addChild(backGround, 0);
 	// “重新开始”按钮
@@ -580,7 +581,7 @@ void GameScene::gameOver(std::string message) {
 	// “返回主菜单”按钮
 	auto back_button = Button::create("GameUI/button.png");
 	back_button->setScale(2);
-	back_button->setTitleText("返回主菜单");
+	back_button->setTitleText("Return Menu");
 	back_button->setTitleFontName("微软雅黑");
 	back_button->setTitleFontSize(16);
 	back_button->setPosition(Vec2(visibleSize.width / 2, visibleSize.height *0.4));
