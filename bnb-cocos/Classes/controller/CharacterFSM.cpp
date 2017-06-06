@@ -127,7 +127,8 @@ void CharGuard::excute(cocos2d::Sprite *spr) {
 // check the state of the character
 bool checkStateFireAble(character* chara) {
     auto state_chara = typeid(*(chara->mCurState)).hash_code();
-    if (state_chara == typeid(CharNormal).hash_code() || state_chara == typeid(CharOnRiding).hash_code())
+    if (state_chara == typeid(CharNormal).hash_code() || state_chara == typeid(CharOnRiding).hash_code() ||
+        state_chara == typeid(CharMove).hash_code() || state_chara == typeid(CharStand).hash_code())
         return true;
     return false;
 }
