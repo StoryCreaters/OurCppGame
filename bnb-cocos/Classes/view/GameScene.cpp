@@ -426,6 +426,7 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
 				this->runAction(Sequence::create(DelayTime::create(0.2f), CallFuncN::create(
 					[=](Ref* sender) {
 					_meta->removeTileAt(next_p);
+                    log("Item type:%d", prop_on_map[next_p.x][next_p.y]);
 					if (prop_on_map[next_p.x][next_p.y] < GameItem::toolNumbers) {
 						this->addItems(next_p, static_cast<GameItem::ItemTools>(prop_on_map[next_p.x][next_p.y]));
 					}

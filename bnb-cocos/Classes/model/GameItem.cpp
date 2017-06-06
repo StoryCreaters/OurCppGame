@@ -33,6 +33,9 @@ bool GameItem::initWithPlayerType(GameItem::ItemTools type)
 {
     using namespace settings::Items;
     // 记住加入png
+    // DEBUG: log name
+    
+    log("str name :%s", (std::string(settings::Items::ItemNames[type]) + "_01.png").c_str());
     this->initWithSpriteFrameName(std::string(settings::Items::ItemNames[type]) + "_01.png");
     this->type = type;
     return true;
