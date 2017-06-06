@@ -26,21 +26,36 @@ public:
     
     // 人物得到道具 对不同道具有不同的效果
     virtual void getItem(character* chara);
-private:
+protected:
     ItemTools type;
 };
 
-// 可使用的道具
-class PropItem : public GameItem {
-public:
-    void getItem(character* chara) override {log("got prop");}
-};
-
-// 骑宠
-class RideItem: public GameItem {
-public:
-    void getItem(character* chara) override {log("got RIDE");}
-};
-
+//// 可使用的道具
+//class PropItem : public GameItem {
+//public:
+//    // CREATE 需要override 一份新的指针
+////    static PropItem* create(GameItem::ItemTools type);
+//    void getItem(character* chara) override;
+//};
+//
+//// 骑宠
+//class RideItem: public GameItem {
+//public:
+//    void getItem(character* chara) override {log("got RIDE");}
+//};
+//
+//GameItem* ItemFactory(GameItem::ItemTools type) {;
+//    if (static_cast<int>(type) < 4) {
+//        // 是基础的道具，可以直接写逻辑
+//        return GameItem::create(type);
+//    } else if (static_cast<int>(type) < 7) {
+//        // 是prop, 需要和PropLayer Controller交互
+//        log("xxd");
+//        return PropItem::create(type);
+//    } else {
+//        // 是骑宠0.0
+//        
+//    }
+//}
 
 #endif /* GameItem_hpp */

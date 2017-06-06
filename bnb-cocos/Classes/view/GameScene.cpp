@@ -477,7 +477,7 @@ Bubbles* GameScene::hasBubble(cocos2d::Vec2 tilePos) {
 void GameScene::addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools item_kind) {
     auto pos = PositionForTileCoord(tiledPos);
     
-    auto item = GameItem::create(static_cast<GameItem::ItemTools>(prop_on_map[tiledPos.x][tiledPos.y]));
+    auto item = GameItem::createWithType(item_kind);
     item->setScale(_tile_delta_rate);
     item->setAnchorPoint(Vec2::ZERO);
     item->setPosition(pos);

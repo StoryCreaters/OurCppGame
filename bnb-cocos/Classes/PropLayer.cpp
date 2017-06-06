@@ -4,6 +4,7 @@
 #include "GameScene.h"
 using namespace ui;
 using namespace std;
+// find out the rule of lambda
 Layer* PropLayer::getPropLayer() {
     return dynamic_cast<Layer*>(GameScene::getCurrentMap()->getChildByName("PropLayer"));
 }
@@ -34,22 +35,29 @@ bool PropLayer::init()
         propitems->setPosition(Vec2(x + buttonSize.width*0.5, y + buttonSize.height*0.5));
         cur_button->addChild(propitems, 0);
         LabelTTF* label;
-        label = LabelTTF::create("1", "Marker Felt", 32);
+        label = LabelTTF::create("0", "Marker Felt", 32);
         label->setPosition(cocos2d::Vec2(x + buttonSize.width*0.15, y + buttonSize.height*0.85));
-        cur_button->addChild(label, 3, i);
-        addChild(cur_button, 1, i);
+        label->setName("label");
+        cur_button->addChild(label);
+        cur_button->setTag(i);
+//        cur_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
+//            if (type == Widget::TouchEventType::ENDED) {
+//                propMinus(i, this);
+//            }
+//        });
+        addChild(cur_button);
     }
     auto button0 = (Button*)this->getChildByTag(0);
     button0->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
         if (type == Widget::TouchEventType::ENDED) {
-            propPlus(0, this);
+            propMinus(0, this);
             
         }
     });
     auto button1 = (Button*)this->getChildByTag(1);
     button1->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
         if (type == Widget::TouchEventType::ENDED) {
-            propPlus(1, this);
+            propMinus(1, this);
             
         }
     });
@@ -67,41 +75,56 @@ bool PropLayer::init()
             
         }
     });
-    log("prop~~~~~~~~~~~~~~");
+//    log("prop~~~~~~~~~~~~~~");
     return true;
 }
 //改变道具数量的函数
 void PropLayer::propPlus(int i, Ref *sender)
 {
-    auto button=(Button*)this->getChildByTag(i);
-    auto scorelabel = (LabelTTF*)button->getChildByTag(i);
-    auto s = scorelabel->getString();
-    int num = atoi(s.c_str());
-    log("num=%d", num);
-    if (num >= 1) {
-        auto width = scorelabel->getPosition().x;
-        auto height = scorelabel->getPosition().y;
-        button->removeChildByTag(i);
-        string s2;
-        s2 = to_string(num - 1);
-        LabelTTF* label = LabelTTF::create(s2, "Marker Felt", 32);
-        label->setPosition(cocos2d::Vec2(width, height));
-        button->addChild(label, 1, i);
-    }
+    addProp(i);
 }
 
 void PropLayer::propMinus(int i, Ref *sender) {
-    auto button = (Button*)this->getChildByTag(i);
-    auto scorelabel = (LabelTTF*)button->getChildByTag(i);
+    useProp(i);
+}
+
+void PropLayer::addProp(int index) {
+//    log("index %d", index);
+    ++currentProps[index];
+    auto button = this->getChildByTag(index);
+    auto scorelabel = (LabelTTF*)(button->getChildByName("label"));
     auto s = scorelabel->getString();
     int num = atoi(s.c_str());
-    log("num=%d", num);
+//    log("num=%d", num);
     auto width = scorelabel->getPosition().x;
     auto height = scorelabel->getPosition().y;
-    button->removeChildByTag(i);
+    button->removeChildByName("label");
     string s2;
     s2 = to_string(num + 1);
     LabelTTF* label = LabelTTF::create(s2, "Marker Felt", 32);
     label->setPosition(cocos2d::Vec2(width, height));
-    button->addChild(label, 1, i);
+    label->setName("label");
+    button->addChild(label);
+    
+}
+
+void PropLayer::useProp(int index) {
+//    log("index %d", index);
+    --currentProps[index];
+    auto button = this->getChildByTag(index);
+    auto scorelabel = (LabelTTF*)(button->getChildByName("label"));
+    auto s = scorelabel->getString();
+    int num = atoi(s.c_str());
+    if (num >= 1) {
+        auto width = scorelabel->getPosition().x;
+        auto height = scorelabel->getPosition().y;
+        button->removeChildByName("label");
+        string s2;
+        s2 = to_string(num - 1);
+//        log("%d", num - 1);
+        LabelTTF* label = LabelTTF::create(s2, "Marker Felt", 32);
+        label->setPosition(cocos2d::Vec2(width, height));
+        label->setName("label");
+        button->addChild(label);
+    }
 }

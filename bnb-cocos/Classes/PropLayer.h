@@ -15,6 +15,8 @@ class character;
 class PropLayer : public cocos2d::Layer
 {
 public:
+    friend class PropItem;
+    friend class GameItem;
     // 道具相关的枚举
     enum PropType {
         ALLPOWER, NEEDLE, RSPEED, GUARD
@@ -32,12 +34,18 @@ public:
     //改变道具上的数字
     void propPlus(int, Ref *sender);
     void propMinus(int, Ref *sender);
+    // 判断道具是否可用
+    bool isUseable(int index) {
+        return currentProps[index];}
 private:
     // 根据myProps重写道具数目，改变string
     void AlignProps();
     // to store and show the Items
+//    std::vector<int> currentProps(4,0);
     std::array<int, prop_nums> currentProps;
-    std::array<cocos2d::ui::Button*, prop_nums> show_buttons;
+    cocos2d::Vector<cocos2d::ui::Button*> show_buttons;
+    void addProp(int index);
+    void useProp(int index);
 };
 
 #endif /* PropLayer_hpp */

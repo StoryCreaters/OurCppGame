@@ -1,18 +1,23 @@
 #include "GameItem.h"
 #include "Settings.h"
 #include <string>
-
+#include "PropLayer.h"
+#include "GameScene.h"
+// TODO : figure out how to deal with derived create
 GameItem* GameItem::createWithType(GameItem::ItemTools type) {
-    if (static_cast<int>(type) < 4) {
-        // 是基础的道具，可以直接写逻辑
-        return GameItem::create(type);
-    } else if (static_cast<int>(type) < 7) {
-        // 是prop, 需要和PropLayer Controller交互
-        return PropItem::create(type);
-    } else {
-        // 是骑宠0.0
-        
-    }
+    log("%d type digit", type);
+    return GameItem::create(type);
+//    if (static_cast<int>(type) < 4) {
+//        // 是基础的道具，可以直接写逻辑
+//        return GameItem::create(type);
+//    } else if (static_cast<int>(type) < 7) {
+//        // 是prop, 需要和PropLayer Controller交互
+//        log("xxd");
+//        return PropItem::create(type);
+//    } else {
+//        // 是骑宠0.0
+//        
+//    }
 }
 
 GameItem* GameItem::create(GameItem::ItemTools type)
@@ -28,6 +33,19 @@ GameItem* GameItem::create(GameItem::ItemTools type)
     }
     return player;
 }
+
+//PropItem* create(GameItem::ItemTools type) {
+//    auto player = new PropItem();
+//    if(player && player->initWithPlayerType(type))
+//    {
+//        player->autorelease();
+//    }
+//    else
+//    {
+//        CC_SAFE_DELETE(player);
+//    }
+//    return player;
+//}
 
 bool GameItem::initWithPlayerType(GameItem::ItemTools type)
 {
@@ -54,5 +72,12 @@ void GameItem::getItem(character* chara) {
         }
     } else if (type == GameItem::MAXPOWER) {
         chara->_currentPower = chara->_maxPower;
+    } else {
+        auto prop_layer = dynamic_cast<PropLayer*>(GameScene::getCurrentMap()->getChildByName("PropLayer"));
+        prop_layer->addProp(static_cast<int>(type) - 4);
     }
 }
+
+
+
+
