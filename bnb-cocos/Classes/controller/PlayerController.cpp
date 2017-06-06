@@ -6,11 +6,11 @@
 
 USING_NS_CC;
 
+
 inline character* getMyplayer() {
     auto scene = GameScene::getCurrentMap();
     return dynamic_cast<character*>(scene->getChildByName("myplayer"));
 }
-
 
 void PlayerController::myKeyboardPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
     GameScene::_optionCode code = GameScene::_optionCode::DEFAULT;
@@ -56,7 +56,7 @@ void PlayerController::myKeyboardOff(cocos2d::EventKeyboard::KeyCode keyCode, co
             return;
     }
     if (typeid(*(mychara->mCurState)).hash_code() == typeid(CharMove).hash_code()) {
-        
+
         auto realState = dynamic_pointer_cast<CharMove>(mychara->mCurState);
         if (realState->direction == static_cast<int>(key)) {
             // the same direction :stop

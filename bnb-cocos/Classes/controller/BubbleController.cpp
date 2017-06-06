@@ -1,6 +1,7 @@
 #include "BubbleController.h"
 #include "Character.h"
 #include "GameScene.h"
+#include "CharacterFSM.h"
 
 USING_NS_CC;
 
@@ -14,5 +15,6 @@ void BubbleController::myKeyboardOff(cocos2d::EventKeyboard::KeyCode keyCode, co
         return;
     auto gameLayer = GameScene::getCurrentMap();
     auto mychara = dynamic_cast<character*>(gameLayer->getChildByName("myplayer"));
-    gameLayer->setBubble(mychara);
+    if (checkStateWalkAble(mychara))
+        gameLayer->setBubble(mychara);
 }
