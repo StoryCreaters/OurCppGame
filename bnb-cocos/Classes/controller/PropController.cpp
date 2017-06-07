@@ -20,11 +20,9 @@ void PropController::myKeyboardPressed(cocos2d::EventKeyboard::KeyCode keyCode, 
             break;
         case cocos2d::EventKeyboard::KeyCode::KEY_3:
             // DEBUG
-            log("use needle");
             propLayer->useProp(reallIndex[2]);
             break;
         case cocos2d::EventKeyboard::KeyCode::KEY_4:
-            
             propLayer->useProp(reallIndex[3]);
             break;
         default:

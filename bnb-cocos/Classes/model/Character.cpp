@@ -3,7 +3,8 @@
 #include "CommonUse.h"
 #include "CharacterFSM.h"
 #include "GameScene.h"
-#include "BaseController.h"
+#include "BubbleController.h"
+#include "PlayerController.h"
 
 using namespace settings::Character;
 character* character::getMychara() {
@@ -121,12 +122,10 @@ void character::setGuard() {
     guard_sprite->setName("guard");
     guard_sprite->setAnchorPoint(Vec2(0.15, -0.2));
     this->addChild(guard_sprite);
-    this->runAction(Sequence::create(DelayTime::create(2.5), CallFuncN::create(
+    // 使用guard的动作, 而不是sprite的
+    guard_sprite->runAction(Sequence::create(DelayTime::create(2.5), CallFuncN::create(
             [=](Ref* sender){
-                log("hey guys");
-                // DEBUG: fsm not change
-                this->removeChildByName("guard");
-                auto chara = dynamic_cast<character*>(this);
+                guard_sprite->removeFromParent();
                 this->_guard = false;
              }), NULL));
 }
@@ -155,8 +154,6 @@ bool character::isRiding() {
 
 
 bool character::isStucked() {
-    log("judge");
-    log("%f %f",typeid(CharStuck).hash_code(), typeid(*mCurState).hash_code());
     return typeid(CharStuck).hash_code() == typeid(*mCurState).hash_code();
 }
 
@@ -164,11 +161,19 @@ void character::UseNeedle() {
     if (isStucked()) {
         /** resume controller **/
         auto game_scene = GameScene::getCurrentMap();
-        auto controller1 = dynamic_cast<BaseController*>(game_scene->getChildByName("PlayerController"));
-        auto controller2 = dynamic_cast<BaseController*>(game_scene->getChildByName("BubbleController"));
-        controller1->ControllerSetAbled();
-        controller2->ControllerSetAbled();
-        changeState(std::make_shared<CharNormal>());
+        // TODO: Change a better way
+//        auto controller1 = dynamic_cast<BaseController*>(game_scene->getChildByName("PlayerController"));
+//        auto controller2 = dynamic_cast<BaseController*>(game_scene->getChildByName("BubbleController"));
+//        controller1->ControllerSetAbled();
+//        controller2->ControllerSetAbled();
+        auto playerController = PlayerController::create();
+        playerController->setName("PlayerController");
+        addChild(playerController);
+        auto bubbleController = BubbleController::create();
+        bubbleController->setName("BubbleController");
+        addChild(bubbleController);
+        setSpriteFrame(_spriteName + "_down_01.png");
+        changeState(std::make_shared<CharStand>());
     }
     
 }

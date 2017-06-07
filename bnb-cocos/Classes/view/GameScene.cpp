@@ -100,12 +100,19 @@ bool GameScene::init()
     _game_players.pushBack(_myplayer);
     _my_bubbles = 0;        // bubbles start from 0
     
-    // test
-//    addItems(Vec2(10, 10));
+//    // add prop layer
+//    auto propLayer = PropLayer::create();
+//    propLayer->setName("PropLayer");
+//    auto propController = PropController::create();
+//    propLayer->setName("PropController");
+//    // add controller
+//    auto playerController = PlayerController::create();
+//    playerController->setName("PlayerController");
+//    
+//    auto bubbleController = BubbleController::create();
+//    bubbleController->setName("BubbleController");
     
-    
-    
-    // add controller
+    /*** debug ***/
     auto playerController = PlayerController::create();
     playerController->setName("PlayerController");
     addChild(playerController);
@@ -118,9 +125,12 @@ bool GameScene::init()
     propLayer->setName("PropLayer");
     addChild(propLayer);
     auto propController = PropController::create();
-    propLayer->setName("PropController");
     addChild(propController);
     
+//    addChild(propController);
+//    addChild(propLayer);
+//    addChild(bubbleController);
+//    addChild(playerController);
     this->scheduleUpdate();
     
     return true;
@@ -285,7 +295,7 @@ void GameScene::BubbleBoom(Ref* sender) {
     auto pos = tileCoordForPosition(beg_pos);
     for (auto chara: _game_players) {
         // pay attention the guard
-        if (typeid(*(chara->mCurState)) == typeid(CharGuard)) {
+        if (chara->isGuard()) {
             continue;
         }
         auto chara_pos = tileCoordForPosition(chara->getPosition());
@@ -432,10 +442,12 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
                     if (tileCoordForPosition(chara->getPosition()) == next_p) {
                         // chara was fired
                         auto cur_code = typeid(*(chara->mCurState)).hash_code();
-                        if (cur_code == typeid(CharStand).hash_code() || cur_code == typeid(CharMove).hash_code())
-                            chara->changeState(std::make_shared<CharStuck>());
-                        else if(cur_code == typeid(CharOnRiding).hash_code())
-                            chara->changeState(std::make_shared<CharNormal>());
+                        if (!chara->isGuard()) {
+                            if (cur_code == typeid(CharStand).hash_code() || cur_code == typeid(CharMove).hash_code())
+                                chara->changeState(std::make_shared<CharStuck>());
+                            else if(cur_code == typeid(CharOnRiding).hash_code())
+                                chara->changeState(std::make_shared<CharNormal>());
+                        }   
                     }
                 }
                 ans = true;

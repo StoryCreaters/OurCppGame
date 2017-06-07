@@ -14,7 +14,6 @@ bool BaseController::init()
     // add listenner
     initListenner();
     
-    
     return true;
 }
 
