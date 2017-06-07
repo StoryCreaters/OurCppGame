@@ -5,7 +5,6 @@
 #include "GameScene.h"
 // TODO : figure out how to deal with derived create
 GameItem* GameItem::createWithType(GameItem::ItemTools type) {
-    log("%d type digit", type);
     return GameItem::create(type);
 //    if (static_cast<int>(type) < 4) {
 //        // 是基础的道具，可以直接写逻辑
@@ -74,6 +73,9 @@ void GameItem::getItem(character* chara) {
         chara->_currentPower = chara->_maxPower;
     } else {
         auto prop_layer = dynamic_cast<PropLayer*>(GameScene::getCurrentMap()->getChildByName("PropLayer"));
+        if (prop_layer == nullptr) {
+            log("呜呜呜");
+        }
         prop_layer->addProp(static_cast<int>(type) - 4);
     }
 }

@@ -24,3 +24,10 @@ void BaseController::initListenner() {
     listener->onKeyReleased = CC_CALLBACK_2(BaseController::myKeyboardOff, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 }
+
+void BaseController::ControllerSetEnabled() {
+    this->_eventDispatcher->setEnabled(false);
+}
+void BaseController::ControllerSetAbled() {
+    this->_eventDispatcher->setEnabled(true);
+}

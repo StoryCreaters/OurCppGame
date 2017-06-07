@@ -3,9 +3,12 @@
 #include "GameScene.h"
 #include "Character.h"
 #include "CommonUse.h"
+#include "BaseController.h"
 
 class GameScene;
 USING_NS_CC;
+// for Stuck Controller, set enabled
+
 
 inline character* getMyplayer() {
     auto scene = GameScene::getCurrentMap();
@@ -52,7 +55,11 @@ void CharStuck::PreProcess(cocos2d::Sprite *spr) {
     auto game_scene = getGameScene();
     auto chara = dynamic_cast<character*>(spr);
     if (chara == dynamic_cast<character*>(game_scene->getChildByTag(20))) {
-        game_scene->_eventDispatcher->removeEventListenersForType(EventListener::Type::KEYBOARD);
+//        game_scene->_eventDispatcher->removeEventListenersForType(EventListener::Type::KEYBOARD);
+        auto controller1 = dynamic_cast<BaseController*>(game_scene->getChildByName("PlayerController"));
+        auto controller2 = dynamic_cast<BaseController*>(game_scene->getChildByName("BubbleController"));
+        controller1->ControllerSetEnabled();
+        controller2->ControllerSetEnabled();
     }
     chara->stopAllActions();
     chara->playStuckedAnimation();

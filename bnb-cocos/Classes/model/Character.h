@@ -22,6 +22,7 @@ public:
     bool initWithPlayerType(characterType type);
     
     static character* create(characterType type);
+    static character* getMychara();
     
     // fsm of character
     std::shared_ptr<State> mCurState;
@@ -57,6 +58,21 @@ public:
     void playStuckedAnimation();
     void playDieAnimation();
     void playAliveAnimation();
+    
+    /*** state of guard and ride***/
+    std::string basicFrameName;     // frame的基本名称
+    void setGuard();         // 道具-护盾
+    bool isGuard();
+    void powerup();         // 道具-人参果
+    void RideOn();
+    bool isRiding();
+    bool isStucked();
+    void UseNeedle();
+    void rideSpeedUp();
+private:
+    int _type_index;
+    bool _isRiding;
+    bool _guard = false;
 };
 
 

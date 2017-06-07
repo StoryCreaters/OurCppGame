@@ -2,8 +2,13 @@
 #include "Settings.h"
 #include "CommonUse.h"
 #include "CharacterFSM.h"
+#include "GameScene.h"
+#include "BaseController.h"
 
 using namespace settings::Character;
+character* character::getMychara() {
+    return dynamic_cast<character*>(GameScene::getCurrentMap()->getChildByName("myplayer"));
+}
 
 character* character::create(characterType type)
 {
@@ -105,4 +110,69 @@ void character::excute() {
 void character::changeState(std::shared_ptr<State> next_state) {
     this->mCurState = next_state;
     this->mCurState->PreProcess(this);
+}
+
+// motiable state of character
+void character::setGuard() {
+    this->_guard = true;
+    auto guard_sprite = Sprite::createWithSpriteFrameName("unit_guard_01.png");
+    runAnimationByName(guard_sprite, "unit_guard_", 0.3, 4);
+    guard_sprite->setScale(1.15f);
+    guard_sprite->setName("guard");
+    guard_sprite->setAnchorPoint(Vec2(0.15, -0.2));
+    this->addChild(guard_sprite);
+    this->runAction(Sequence::create(DelayTime::create(2.5), CallFuncN::create(
+            [=](Ref* sender){
+                log("hey guys");
+                // DEBUG: fsm not change
+                this->removeChildByName("guard");
+                auto chara = dynamic_cast<character*>(this);
+                this->_guard = false;
+             }), NULL));
+}
+
+bool character::isGuard() {return _guard;}
+
+void character::powerup() {
+    this->runAction(Sequence::create(CallFuncN::create(
+          [=](Ref* sender){
+              _currentPower = _currentVelocity = _currentBubbles = 8;
+          }),
+          DelayTime::create(30),
+          CallFuncN::create([=](Ref* sender) {
+              _currentPower = _maxPower   ,
+              _currentVelocity = _maxVelocity,
+              _currentBubbles = _maxBubbles;
+          }),NULL));
+}// 道具-人参果
+
+void character::RideOn() {
+    
+}
+bool character::isRiding() {
+    return _isRiding;
+}
+
+
+bool character::isStucked() {
+    log("judge");
+    log("%f %f",typeid(CharStuck).hash_code(), typeid(*mCurState).hash_code());
+    return typeid(CharStuck).hash_code() == typeid(*mCurState).hash_code();
+}
+
+void character::UseNeedle() {
+    if (isStucked()) {
+        /** resume controller **/
+        auto game_scene = GameScene::getCurrentMap();
+        auto controller1 = dynamic_cast<BaseController*>(game_scene->getChildByName("PlayerController"));
+        auto controller2 = dynamic_cast<BaseController*>(game_scene->getChildByName("BubbleController"));
+        controller1->ControllerSetAbled();
+        controller2->ControllerSetAbled();
+        changeState(std::make_shared<CharNormal>());
+    }
+    
+}
+
+void character::rideSpeedUp() {
+    // temporary empty
 }

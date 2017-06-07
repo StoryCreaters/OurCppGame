@@ -7,6 +7,8 @@ class BaseController: public cocos2d::Layer {
 public:
     virtual bool init();
     void initListenner();
+    void ControllerSetEnabled();
+    void ControllerSetAbled();
 protected:
     /*** Listen message from keyboard and others ***/
     virtual void myKeyboardPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) = 0;

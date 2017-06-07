@@ -107,8 +107,10 @@ bool GameScene::init()
     
     // add controller
     auto playerController = PlayerController::create();
+    playerController->setName("PlayerController");
     addChild(playerController);
     auto bubbleController = BubbleController::create();
+    bubbleController->setName("BubbleController");
     addChild(bubbleController);
     
     // add prop layer
@@ -116,6 +118,7 @@ bool GameScene::init()
     propLayer->setName("PropLayer");
     addChild(propLayer);
     auto propController = PropController::create();
+    propLayer->setName("PropController");
     addChild(propController);
     
     this->scheduleUpdate();

@@ -14,7 +14,43 @@ constexpr char* res[] = {
     "Gift_guard",
     "Gift_upper"
 };
-int i;
+
+std::function<void()> PropLayer::getPropfuncs(int index) {
+    switch (index) {
+        case 0:
+            return [](){return character::getMychara()->rideSpeedUp();};
+            break;
+        case 1:
+            return [](){return character::getMychara()->UseNeedle();};
+            break;
+        case 2:
+            return [](){return character::getMychara()->setGuard();};
+            break;
+        case 3:
+            return [](){return character::getMychara()->powerup();};
+            break;
+    }
+}
+
+std::function<bool()> PropLayer::getAblefuncs(int index) {
+    switch (index) {
+        case 0:
+            return [](){return character::getMychara()->isRiding();};
+            break;
+        case 1:
+            return [](){return character::getMychara()->isStucked();};
+            break;
+        case 2:
+            return [](){return true;};
+            break;
+        case 3:
+            return [](){return true;};
+            break;
+    }
+}
+
+
+
 bool PropLayer::init()
 {
     //////////////////////////////
@@ -23,7 +59,7 @@ bool PropLayer::init()
     {
         return false;
     }
-    for (i = 0; i < prop_nums; ++i) {
+    for (int i = 0; i < prop_nums; ++i) {
         Size visibleSize = Director::getInstance()->getVisibleSize();
         auto cur_button = Button::create(settings::PropLayer::gridBkg);
         Size buttonSize = cur_button->getContentSize();
@@ -40,13 +76,10 @@ bool PropLayer::init()
         label->setName("label");
         cur_button->addChild(label);
         cur_button->setTag(i);
-//        cur_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
-//            if (type == Widget::TouchEventType::ENDED) {
-//                propMinus(i, this);
-//            }
-//        });
+//        log("index:%d, string: %s", i, res[i]);
         addChild(cur_button);
     }
+//    propfuncs[PropLayer::prop_nums] = {std::bind(&character::powerup(),character::getMychara()), std::bind(&character::setGuard(),character::getMychara()),    std::bind(character::UseNeedle(), character::getMychara()), std::bind(, character::getMychara())};
     auto button0 = (Button*)this->getChildByTag(0);
     button0->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
         if (type == Widget::TouchEventType::ENDED) {
@@ -109,22 +142,24 @@ void PropLayer::addProp(int index) {
 }
 
 void PropLayer::useProp(int index) {
-//    log("index %d", index);
-    --currentProps[index];
+    if (!getAblefuncs(index)()) {
+        return;
+    }
     auto button = this->getChildByTag(index);
     auto scorelabel = (LabelTTF*)(button->getChildByName("label"));
     auto s = scorelabel->getString();
     int num = atoi(s.c_str());
     if (num >= 1) {
+        --currentProps[index];
         auto width = scorelabel->getPosition().x;
         auto height = scorelabel->getPosition().y;
         button->removeChildByName("label");
         string s2;
         s2 = to_string(num - 1);
-//        log("%d", num - 1);
         LabelTTF* label = LabelTTF::create(s2, "Marker Felt", 32);
         label->setPosition(cocos2d::Vec2(width, height));
         label->setName("label");
         button->addChild(label);
+        getPropfuncs(index)();
     }
 }

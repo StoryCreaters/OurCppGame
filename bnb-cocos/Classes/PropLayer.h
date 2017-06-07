@@ -17,11 +17,14 @@ class PropLayer : public cocos2d::Layer
 public:
     friend class PropItem;
     friend class GameItem;
+    friend class PropController;
     // 道具相关的枚举
     enum PropType {
         ALLPOWER, NEEDLE, RSPEED, GUARD
     };
     static constexpr int prop_nums = 4;
+    std::function<void(void)> getPropfuncs(int index);
+    std::function<bool(void)> getAblefuncs(int index);
     static Layer* getPropLayer();
     
     virtual bool init();
