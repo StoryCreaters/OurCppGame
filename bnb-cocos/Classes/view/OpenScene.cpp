@@ -57,7 +57,6 @@ bool OpenScene::init()
 	float volume = UserDefault::getInstance()->getFloatForKey("musicPercent");
 	audio->setBackgroundMusicVolume(volume);
 	audio->playBackgroundMusic("music/When The Morning Comes.mp3", true);
-
 	return true;
 }
 
@@ -68,9 +67,9 @@ cocos2d::Menu* OpenScene::setLayOutL1() {
 
 	cocos2d::Vector<cocos2d::MenuItem*> vecs;
 
-	std::string UiNames[] = { "GameUI/ProjectName", "GameUI/PlayMyself", "GameUI/PlayOnInternet", "GameUI/Help","GameUI/Setting","GameUI/Quit" };
-	ccMenuCallback Uifuncs[] = { nullptr,CC_CALLBACK_1(OpenScene::ToStartGame, this), CC_CALLBACK_1(OpenScene::ToStartInGame, this),CC_CALLBACK_1(OpenScene::OnTouchPause, this),CC_CALLBACK_1(OpenScene::GameSetting, this),CC_CALLBACK_1(OpenScene::menuCloseCallback, this) };
-	for (int i = 0; i < 6; ++i) {
+	std::string UiNames[] = { "GameUI/ProjectName", "GameUI/PlayOnInternet", "GameUI/Help","GameUI/Setting","GameUI/Quit" };
+	ccMenuCallback Uifuncs[] = { nullptr, CC_CALLBACK_1(OpenScene::ToStartInGame, this),CC_CALLBACK_1(OpenScene::OnTouchPause, this),CC_CALLBACK_1(OpenScene::GameSetting, this),CC_CALLBACK_1(OpenScene::menuCloseCallback, this) };
+	for (int i = 0; i < 5; ++i) {
 		auto menuI = cocos2d::MenuItemImage::create(UiNames[i] + ".png", UiNames[i] + "Selected.png", Uifuncs[i]);
 		if (i != 0)
 			menuI->setScale(0.8, 0.6);
@@ -143,9 +142,6 @@ void OpenScene::OnTouchResume() {
 	UImenus->setEnabled(true);
 }
 
-void OpenScene::ToStartGame(Ref *sender) {
-	Director::getInstance()->replaceScene(Players::createScene());
-}
 
 void OpenScene::ToStartInGame(Ref *sender) {
 	Director::getInstance()->replaceScene(RoomChoose::createScene());

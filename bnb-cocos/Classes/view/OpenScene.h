@@ -21,7 +21,6 @@ public:
 	void SwitchToOpen(cocos2d::Ref* pSender);
 
 	cocos2d::Menu* setLayOutL1();
-	cocos2d::Menu* setMusicLine(const std::string &music_name);
 	void musicOnAndOff(cocos2d::Ref* pSender);
 
 	CREATE_FUNC(OpenScene);
@@ -29,8 +28,8 @@ public:
 	void GameSetting(cocos2d::Ref* pSender);
 	void OnTouchPause(cocos2d::Ref* pSender);
 	void OnTouchResume();
-	void ToStartGame(cocos2d::Ref* sender);
-    void ToStartInGame(cocos2d::Ref* sender);
+	void ToStartInGame(cocos2d::Ref* sender);
+
 	// debug
 	void sceneTest(Ref *sender);
 private:

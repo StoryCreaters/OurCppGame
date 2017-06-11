@@ -39,6 +39,13 @@ bool RoomChoose::init() {
 			menuI->setScale(0.8, 0.6);
 		vecs.pushBack(menuI);
 	}
+	for (int i=0; i < 4; i++) {
+		LabelTTF* label;
+		label = LabelTTF::create("Number:", "微软雅黑", 32);
+		label->setColor(Color3B::BLACK);
+		label->setPosition(cocos2d::Vec2(visibleSize.width *0.8, visibleSize.height*0.62-i*115));
+		this->addChild(label);
+	}
 
 	UImenus = cocos2d::Menu::createWithArray(vecs);
 	UImenus->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
@@ -49,18 +56,14 @@ bool RoomChoose::init() {
 }
 
 void RoomChoose::ToRoomOne(Ref *sender) {
-	UserDefault::getInstance()->setIntegerForKey("Room", 1);
 	Director::getInstance()->replaceScene(Players::createScene());
 }
 void RoomChoose::ToRoomTwo(Ref *sender) {
-	UserDefault::getInstance()->setIntegerForKey("Room", 2);
 	Director::getInstance()->replaceScene(Players::createScene());
 }
 void RoomChoose::ToRoomThree(Ref *sender) {
-	UserDefault::getInstance()->setIntegerForKey("Room", 3);
 	Director::getInstance()->replaceScene(Players::createScene());
 }
 void RoomChoose::ToRoomFour(Ref *sender) {
-	UserDefault::getInstance()->setIntegerForKey("Room", 4);
 	Director::getInstance()->replaceScene(Players::createScene());
 }
