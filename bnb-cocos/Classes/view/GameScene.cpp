@@ -12,7 +12,7 @@
 #include "BubbleController.h"
 #include "PropLayer.h"
 #include "PropController.h"
-
+#include <chrono>
 
 USING_NS_CC;
 using namespace settings::GameScene;
@@ -418,9 +418,10 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
             bool ans(false);
             if (check_chain_boom(next_p)) {
                 // chain booming!!!
-            } else if (!hasCollisionInGridPos(next_p)) {
+            } else if (!hasCollisionInGridPos(next_p) && !prop_gotton[next_p.x][next_p.y]) {
                 // have tile
                 // need delay time and broken animation
+                prop_gotton[next_p.x][next_p.y] = true;
                 this->runAction(Sequence::create(DelayTime::create(0.2f), CallFuncN::create(
                       [=](Ref* sender) {
                           _meta->removeTileAt(next_p);
@@ -506,10 +507,9 @@ void GameScene::addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools item_kind) 
     item->setPosition(pos);
     // DEBUG: NOT SET ANIME HERE
     
-    std::unique_lock<std::mutex> lock(_mutex);
     if (screenItems.find(tiledPos) == screenItems.end())
         screenItems[tiledPos] = item;
-    log("%d %f %f", item_kind, tiledPos.x, tiledPos.y);
+    
     this->addChild(item);
     
 }

@@ -81,6 +81,7 @@ private:
     void tileLoadProps();
     // 瓦片地图上的道具们
     std::array<std::array<int, 15>, 15> prop_on_map;
+    std::array<std::array<bool, 15>, 15> prop_gotton;
     
     /**** player的属性, 和自己的player的属性, 可以考虑fsm和vector ****/
     character* _myplayer;
@@ -123,7 +124,6 @@ private:
     /*** add item to the game ***/
     void addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools tool);
     
-    mutable std::mutex _mutex;
 };
 
 #endif /* GameTheme_hpp */
