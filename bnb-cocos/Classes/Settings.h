@@ -96,7 +96,8 @@ namespace settings {
             "PropResource/PropItems.plist",
             "PropResource/Gift_Rowl.plist",
             "GamePlayer/unit_guard.plist",
-            "PropResource/Gift_Mpower.plist"
+            "PropResource/Gift_Mpower.plist",
+            "GamePlayer/Rowl.plist"
         };
         
         // 人物

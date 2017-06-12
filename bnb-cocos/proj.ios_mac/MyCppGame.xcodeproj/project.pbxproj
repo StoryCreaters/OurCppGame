@@ -119,6 +119,8 @@
 		82F3876F1EEEBDEC00E44B8E /* TextField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F3876C1EEEBDEC00E44B8E /* TextField.cpp */; };
 		82F387731EEEBDFB00E44B8E /* PropLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F387711EEEBDFB00E44B8E /* PropLayer.cpp */; };
 		82F387741EEEBDFB00E44B8E /* PropLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F387711EEEBDFB00E44B8E /* PropLayer.cpp */; };
+		82F387771EEEF14800E44B8E /* Vehicle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F387751EEEF14800E44B8E /* Vehicle.cpp */; };
+		82F387781EEEF14800E44B8E /* Vehicle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F387751EEEF14800E44B8E /* Vehicle.cpp */; };
 		82F3DBF21EA267EB00C6DBDA /* music in Resources */ = {isa = PBXBuildFile; fileRef = 82F3DBF11EA267EB00C6DBDA /* music */; };
 		82F3DBF31EA267EB00C6DBDA /* music in Resources */ = {isa = PBXBuildFile; fileRef = 82F3DBF11EA267EB00C6DBDA /* music */; };
 		82F3DBF51EA26A2700C6DBDA /* BackGround in Resources */ = {isa = PBXBuildFile; fileRef = 82F3DBF41EA26A2700C6DBDA /* BackGround */; };
@@ -285,6 +287,8 @@
 		82F3876D1EEEBDEC00E44B8E /* TextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextField.h; path = view/TextField.h; sourceTree = "<group>"; };
 		82F387711EEEBDFB00E44B8E /* PropLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PropLayer.cpp; path = view/PropLayer.cpp; sourceTree = "<group>"; };
 		82F387721EEEBDFB00E44B8E /* PropLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PropLayer.h; path = view/PropLayer.h; sourceTree = "<group>"; };
+		82F387751EEEF14800E44B8E /* Vehicle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Vehicle.cpp; sourceTree = "<group>"; };
+		82F387761EEEF14800E44B8E /* Vehicle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vehicle.h; sourceTree = "<group>"; };
 		82F3DBF11EA267EB00C6DBDA /* music */ = {isa = PBXFileReference; lastKnownFileType = folder; path = music; sourceTree = "<group>"; };
 		82F3DBF41EA26A2700C6DBDA /* BackGround */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BackGround; sourceTree = "<group>"; };
 		82FD4FD11ECF15B500025573 /* CommonUse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommonUse.cpp; sourceTree = "<group>"; };
@@ -573,6 +577,8 @@
 				82E9FF101ED80C47007C3AC0 /* Character.h */,
 				82E9FF111ED80C47007C3AC0 /* GameItem.cpp */,
 				82E9FF121ED80C47007C3AC0 /* GameItem.h */,
+				82F387751EEEF14800E44B8E /* Vehicle.cpp */,
+				82F387761EEEF14800E44B8E /* Vehicle.h */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -751,6 +757,7 @@
 				8220AF5C1EE29F1200161461 /* BaseController.cpp in Sources */,
 				82E9FF051ED80A9C007C3AC0 /* SettingScene.cpp in Sources */,
 				82E9FEF91ED80A9C007C3AC0 /* GameScene.cpp in Sources */,
+				82F387771EEEF14800E44B8E /* Vehicle.cpp in Sources */,
 				82E9FEF71ED80A9C007C3AC0 /* GameMapLayer.cpp in Sources */,
 				8220AF4B1EE28D2200161461 /* PropController.cpp in Sources */,
 				82E9FF071ED80A9C007C3AC0 /* SwallowTouch.cpp in Sources */,
@@ -792,6 +799,7 @@
 				82E9FF161ED80C47007C3AC0 /* Character.cpp in Sources */,
 				46880B8919C43A87006E1F66 /* AppDelegate.cpp in Sources */,
 				503AE10517EB98FF00D1A890 /* main.cpp in Sources */,
+				82F387781EEEF14800E44B8E /* Vehicle.cpp in Sources */,
 				82E9FEF81ED80A9C007C3AC0 /* GameMapLayer.cpp in Sources */,
 				82666F501EDC1D800025F456 /* WebClient.cpp in Sources */,
 				8220AF4C1EE28D2200161461 /* PropController.cpp in Sources */,

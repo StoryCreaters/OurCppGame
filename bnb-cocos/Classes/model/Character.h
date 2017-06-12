@@ -69,6 +69,7 @@ public:
     bool isStucked();
     void UseNeedle();
     void rideSpeedUp();
+    void offRiding();
 private:
     int _type_index;
     bool _isRiding;

@@ -94,6 +94,7 @@ bool GameScene::init()
     _myplayer->setPosition(offx + x, offy + y);
     _myplayer->setTag(20);
     _myplayer->setName("myplayer");
+    _myplayer->RideOn();
     // test
 //    _myplayer->changeState(std::make_shared<CharGuard>());
     addChild(_myplayer, 1);
@@ -446,8 +447,8 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
                                 removeChildByName("BubbleController");
                                 chara->changeState(std::make_shared<CharStuck>());
                             }
-                            else if(cur_code == typeid(CharOnRiding).hash_code())
-                                chara->changeState(std::make_shared<CharNormal>());
+                            else if(chara->isRiding())
+                                chara->offRiding();
                         }   
                     }
                 }

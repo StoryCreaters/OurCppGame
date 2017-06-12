@@ -5,6 +5,7 @@
 #include "GameScene.h"
 #include "BubbleController.h"
 #include "PlayerController.h"
+#include "Vehicle.h"
 
 using namespace settings::Character;
 character* character::getMychara() {
@@ -117,7 +118,7 @@ void character::changeState(std::shared_ptr<State> next_state) {
 void character::setGuard() {
     this->_guard = true;
     auto guard_sprite = Sprite::createWithSpriteFrameName("unit_guard_01.png");
-    runAnimationByName(guard_sprite, "unit_guard_", 0.3, 4);
+    runAnimationByName(guard_sprite, "unit_guard_", 0.1, 4);
     guard_sprite->setScale(1.15f);
     guard_sprite->setName("guard");
     guard_sprite->setAnchorPoint(Vec2(0.15, -0.2));
@@ -146,8 +147,13 @@ void character::powerup() {
 }// 道具-人参果
 
 void character::RideOn() {
-    
+    setSpriteFrame(_spriteName + "_down_01.png");
+    auto veh = Vehicle::create(Vehicle::OWL);
+    veh->setName("vehicle");
+    this->addChild(veh);
+    _isRiding = true;
 }
+
 bool character::isRiding() {
     return _isRiding;
 }
@@ -162,10 +168,6 @@ void character::UseNeedle() {
         /** resume controller **/
         auto game_scene = GameScene::getCurrentMap();
         // TODO: Change a better way
-//        auto controller1 = dynamic_cast<BaseController*>(game_scene->getChildByName("PlayerController"));
-//        auto controller2 = dynamic_cast<BaseController*>(game_scene->getChildByName("BubbleController"));
-//        controller1->ControllerSetAbled();
-//        controller2->ControllerSetAbled();
         auto playerController = PlayerController::create();
         playerController->setName("PlayerController");
         addChild(playerController);
@@ -180,4 +182,10 @@ void character::UseNeedle() {
 
 void character::rideSpeedUp() {
     // temporary empty
+}
+
+void character::offRiding() {
+    _isRiding = false;
+    auto veh = dynamic_cast<Vehicle*>(getChildByName("Vehicle"));
+    veh->removeV();
 }

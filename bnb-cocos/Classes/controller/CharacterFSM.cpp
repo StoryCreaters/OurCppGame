@@ -4,6 +4,7 @@
 #include "Character.h"
 #include "CommonUse.h"
 #include "BaseController.h"
+#include "Vehicle.h"
 
 class GameScene;
 USING_NS_CC;
@@ -79,7 +80,7 @@ void CharOnRiding::excute(cocos2d::Sprite *spr) {
     static auto gameScene =  dynamic_cast<GameScene*>(scene->getChildByTag(10));
     if (gameScene == nullptr) {
         // get it again
-        gameScene =  dynamic_cast<GameScene*>(scene->getChildByTag(10));
+        gameScene = dynamic_cast<GameScene*>(scene->getChildByTag(10));
         return;
     }
     auto chara = dynamic_cast<character*>(spr);
@@ -103,6 +104,12 @@ void CharMove::PreProcess(cocos2d::Sprite* spr) {
     auto tmp_f = SpriteFrameCache::getInstance()->getSpriteFrameByName(next_direction + "01.png");
     player->setSpriteFrame(tmp_f);
     runAnimationByName(player, next_direction, 0.1f, player->_animation_frames);
+    
+    /** if it is riding on some vehicle **/
+    if (player->isRiding()) {
+        auto veh = dynamic_cast<Vehicle*>(player->getChildByName("vehicle"));
+        veh->changeTo(direction);
+    }
 }
 
 
