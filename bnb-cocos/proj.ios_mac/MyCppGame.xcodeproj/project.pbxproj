@@ -75,8 +75,6 @@
 		825260841EE332910062167A /* riding in Resources */ = {isa = PBXBuildFile; fileRef = 825260831EE332910062167A /* riding */; };
 		825260851EE332910062167A /* riding in Resources */ = {isa = PBXBuildFile; fileRef = 825260831EE332910062167A /* riding */; };
 		8262943E1AAF051F00CB7CF7 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8262943D1AAF051F00CB7CF7 /* Security.framework */; };
-		8265DC491EE2E9C10018C6DD /* PropLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8265DC471EE2E9C10018C6DD /* PropLayer.cpp */; };
-		8265DC4A1EE2E9C10018C6DD /* PropLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8265DC471EE2E9C10018C6DD /* PropLayer.cpp */; };
 		82666F4F1EDC1D800025F456 /* WebClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82666F4D1EDC1D800025F456 /* WebClient.cpp */; };
 		82666F501EDC1D800025F456 /* WebClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82666F4D1EDC1D800025F456 /* WebClient.cpp */; };
 		827A69BE1EA8FE750073F534 /* gameStart in Resources */ = {isa = PBXBuildFile; fileRef = 827A69BD1EA8FE750073F534 /* gameStart */; };
@@ -117,6 +115,10 @@
 		82E9FF1E1ED80C65007C3AC0 /* BaseFSM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82E9FF191ED80C65007C3AC0 /* BaseFSM.cpp */; };
 		82E9FF1F1ED80C65007C3AC0 /* CharacterFSM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82E9FF1B1ED80C65007C3AC0 /* CharacterFSM.cpp */; };
 		82E9FF201ED80C65007C3AC0 /* CharacterFSM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82E9FF1B1ED80C65007C3AC0 /* CharacterFSM.cpp */; };
+		82F3876E1EEEBDEC00E44B8E /* TextField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F3876C1EEEBDEC00E44B8E /* TextField.cpp */; };
+		82F3876F1EEEBDEC00E44B8E /* TextField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F3876C1EEEBDEC00E44B8E /* TextField.cpp */; };
+		82F387731EEEBDFB00E44B8E /* PropLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F387711EEEBDFB00E44B8E /* PropLayer.cpp */; };
+		82F387741EEEBDFB00E44B8E /* PropLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F387711EEEBDFB00E44B8E /* PropLayer.cpp */; };
 		82F3DBF21EA267EB00C6DBDA /* music in Resources */ = {isa = PBXBuildFile; fileRef = 82F3DBF11EA267EB00C6DBDA /* music */; };
 		82F3DBF31EA267EB00C6DBDA /* music in Resources */ = {isa = PBXBuildFile; fileRef = 82F3DBF11EA267EB00C6DBDA /* music */; };
 		82F3DBF51EA26A2700C6DBDA /* BackGround in Resources */ = {isa = PBXBuildFile; fileRef = 82F3DBF41EA26A2700C6DBDA /* BackGround */; };
@@ -242,8 +244,6 @@
 		8222CA451EA6426D00092E33 /* GameUI */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GameUI; sourceTree = "<group>"; };
 		825260831EE332910062167A /* riding */ = {isa = PBXFileReference; lastKnownFileType = folder; path = riding; sourceTree = "<group>"; };
 		8262943D1AAF051F00CB7CF7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		8265DC471EE2E9C10018C6DD /* PropLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PropLayer.cpp; sourceTree = "<group>"; };
-		8265DC481EE2E9C10018C6DD /* PropLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PropLayer.h; sourceTree = "<group>"; };
 		82666F4D1EDC1D800025F456 /* WebClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WebClient.cpp; path = controller/WebClient.cpp; sourceTree = "<group>"; };
 		82666F4E1EDC1D800025F456 /* WebClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebClient.h; path = controller/WebClient.h; sourceTree = "<group>"; };
 		827A69BD1EA8FE750073F534 /* gameStart */ = {isa = PBXFileReference; lastKnownFileType = folder; path = gameStart; sourceTree = "<group>"; };
@@ -281,6 +281,10 @@
 		82E9FF1A1ED80C65007C3AC0 /* BaseFSM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseFSM.h; path = controller/BaseFSM.h; sourceTree = "<group>"; };
 		82E9FF1B1ED80C65007C3AC0 /* CharacterFSM.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CharacterFSM.cpp; path = controller/CharacterFSM.cpp; sourceTree = "<group>"; };
 		82E9FF1C1ED80C65007C3AC0 /* CharacterFSM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CharacterFSM.h; path = controller/CharacterFSM.h; sourceTree = "<group>"; };
+		82F3876C1EEEBDEC00E44B8E /* TextField.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextField.cpp; path = view/TextField.cpp; sourceTree = "<group>"; };
+		82F3876D1EEEBDEC00E44B8E /* TextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextField.h; path = view/TextField.h; sourceTree = "<group>"; };
+		82F387711EEEBDFB00E44B8E /* PropLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PropLayer.cpp; path = view/PropLayer.cpp; sourceTree = "<group>"; };
+		82F387721EEEBDFB00E44B8E /* PropLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PropLayer.h; path = view/PropLayer.h; sourceTree = "<group>"; };
 		82F3DBF11EA267EB00C6DBDA /* music */ = {isa = PBXFileReference; lastKnownFileType = folder; path = music; sourceTree = "<group>"; };
 		82F3DBF41EA26A2700C6DBDA /* BackGround */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BackGround; sourceTree = "<group>"; };
 		82FD4FD11ECF15B500025573 /* CommonUse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommonUse.cpp; sourceTree = "<group>"; };
@@ -531,8 +535,10 @@
 				82E9FEF41ED80A9C007C3AC0 /* SwallowTouch.h */,
 				82E9FEF51ED80A9C007C3AC0 /* ToStart.cpp */,
 				82E9FEF61ED80A9C007C3AC0 /* ToStart.h */,
-				8265DC471EE2E9C10018C6DD /* PropLayer.cpp */,
-				8265DC481EE2E9C10018C6DD /* PropLayer.h */,
+				82F3876C1EEEBDEC00E44B8E /* TextField.cpp */,
+				82F3876D1EEEBDEC00E44B8E /* TextField.h */,
+				82F387711EEEBDFB00E44B8E /* PropLayer.cpp */,
+				82F387721EEEBDFB00E44B8E /* PropLayer.h */,
 			);
 			name = view;
 			sourceTree = "<group>";
@@ -745,12 +751,12 @@
 				8220AF5C1EE29F1200161461 /* BaseController.cpp in Sources */,
 				82E9FF051ED80A9C007C3AC0 /* SettingScene.cpp in Sources */,
 				82E9FEF91ED80A9C007C3AC0 /* GameScene.cpp in Sources */,
-				8265DC491EE2E9C10018C6DD /* PropLayer.cpp in Sources */,
 				82E9FEF71ED80A9C007C3AC0 /* GameMapLayer.cpp in Sources */,
 				8220AF4B1EE28D2200161461 /* PropController.cpp in Sources */,
 				82E9FF071ED80A9C007C3AC0 /* SwallowTouch.cpp in Sources */,
 				82E9FF011ED80A9C007C3AC0 /* PreLoadScene.cpp in Sources */,
 				82E9FF131ED80C47007C3AC0 /* Bubbles.cpp in Sources */,
+				82F387731EEEBDFB00E44B8E /* PropLayer.cpp in Sources */,
 				82FD4FD31ECF15B500025573 /* CommonUse.cpp in Sources */,
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
 				82E9FF1D1ED80C65007C3AC0 /* BaseFSM.cpp in Sources */,
@@ -764,6 +770,7 @@
 				82E9FF171ED80C47007C3AC0 /* GameItem.cpp in Sources */,
 				82E9FF091ED80A9C007C3AC0 /* ToStart.cpp in Sources */,
 				8220AF491EE28D2200161461 /* PlayerController.cpp in Sources */,
+				82F3876E1EEEBDEC00E44B8E /* TextField.cpp in Sources */,
 				82E9FF031ED80A9C007C3AC0 /* RoomChooseScene.cpp in Sources */,
 				82E9FEFF1ED80A9C007C3AC0 /* PauseWithLabelLayer.cpp in Sources */,
 			);
@@ -776,10 +783,11 @@
 				82E9FF041ED80A9C007C3AC0 /* RoomChooseScene.cpp in Sources */,
 				82E9FF081ED80A9C007C3AC0 /* SwallowTouch.cpp in Sources */,
 				8220AF5D1EE29F1200161461 /* BaseController.cpp in Sources */,
+				82F3876F1EEEBDEC00E44B8E /* TextField.cpp in Sources */,
 				82E9FF141ED80C47007C3AC0 /* Bubbles.cpp in Sources */,
 				82E9FF201ED80C65007C3AC0 /* CharacterFSM.cpp in Sources */,
 				82174F881EE2CBFB00A6B4E6 /* MusicSetting.cpp in Sources */,
-				8265DC4A1EE2E9C10018C6DD /* PropLayer.cpp in Sources */,
+				82F387741EEEBDFB00E44B8E /* PropLayer.cpp in Sources */,
 				8220AF4A1EE28D2200161461 /* PlayerController.cpp in Sources */,
 				82E9FF161ED80C47007C3AC0 /* Character.cpp in Sources */,
 				46880B8919C43A87006E1F66 /* AppDelegate.cpp in Sources */,

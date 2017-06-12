@@ -189,7 +189,7 @@ void GameScene::CharacterMove(character* chara) {
     // 获得x y 的上界 下界
     const static float lowerx = offx + 3, upperx = visibleSize.width - offx;
     const static float lowery = offy + 3, uppery = visibleSize.height - offy;
-    const static Vec2 delta_rate = Vec2{0, -10};
+    const static Vec2 delta_rate = Vec2{0, 3};
     
     auto in_tile_map = [&](Vec2 pos)->bool{
         if (pos.x >= lowerx && pos.x <= upperx)
@@ -222,7 +222,7 @@ void GameScene::CharacterMove(character* chara) {
             walk = false;
         }
         
-        if (hasBubble(tileCoordForPosition(pos1 + test_point + delta_rate)) || hasBubble(tileCoordForPosition(pos2 + test_point + delta_rate))) {
+        if (hasCollideableBubble(tileCoordForPosition(pos1 + test_point + delta_rate)) || hasCollideableBubble(tileCoordForPosition(pos2 + test_point + delta_rate))) {
             walk = false;
         }
         if (walk) {
@@ -262,10 +262,11 @@ void GameScene::setBubble(character* chara) {
         
         // 动画(是否可以抽象)
         runAnimationByName(newBubble, "Popo_", 0.25, bubble_frame_nums);
-        newBubble->runAction(Sequence::create(DelayTime::create(0.3),CallFuncN::create(
-                            [=](Ref* sender) {
-                                _map_screen_bubbles[pos0] = newBubble;
-                            }), DelayTime::create(2.7), timeBoom, NULL));
+//        newBubble->runAction(Sequence::create(DelayTime::create(0.3),CallFuncN::create(
+//                            [=](Ref* sender) {
+//                                _map_screen_bubbles[pos0] = newBubble;
+//                            }), DelayTime::create(2.7), timeBoom, NULL));
+        _map_screen_bubbles[pos0] = newBubble;
         addChild(newBubble);
         ++chara->curSetBubbles;
         
@@ -347,7 +348,7 @@ bool GameScene::accessAble(cocos2d::Vec2 pos) {
     // TODO: find out what was wrong
     if (tileCoord.x < 0 || tileCoord.y < 0)
         return false;
-    if (hasCollisionInGridPos(tileCoord) && !hasBubble(tileCoord))
+    if (hasCollisionInGridPos(tileCoord) && !hasCollideableBubble(tileCoord))
         return true;
     return false;
     
@@ -480,11 +481,11 @@ bool GameScene::check_chain_boom(cocos2d::Vec2 blaze_pos) {
 }
 
 /** 对给出的瓦片地图坐标，有精灵就返回精灵，没有就返回nullptr **/
-Bubbles* GameScene::hasBubble(cocos2d::Vec2 tilePos) {
+Bubbles* GameScene::hasCollideableBubble(cocos2d::Vec2 tilePos) {
     auto bubbleIter = _map_screen_bubbles.find(tilePos);
     Bubbles* bubble = nullptr;
-    if (bubbleIter != _map_screen_bubbles.end()) {
-        bubble = bubbleIter->second;
+    if (bubbleIter != _map_screen_bubbles.end() && bubbleIter->second->isCollideable()) {
+        bubble = bubbleIter->second;    
     }
     return bubble;
 }

@@ -56,7 +56,7 @@ public:
     /********泡泡释放*************/
     void setBubble(character* chara);
     void BubbleBoom(Ref* sender);
-    Bubbles* hasBubble(cocos2d::Vec2 tilePos);
+    Bubbles* hasCollideableBubble(cocos2d::Vec2 tilePos);
     
     // normal
     void checkGetItem(character* chara);         // update

@@ -42,6 +42,7 @@ void CharStuck::excute(cocos2d::Sprite* spr) {
 
 void CharDead::PreProcess(cocos2d::Sprite* spr) {
     auto game_scene = getGameScene();
+    game_scene->removeChildByName("PropLayer");
     spr->stopAllActions();
     auto chara = dynamic_cast<character*>(spr);
     chara->playDieAnimation();
@@ -54,21 +55,16 @@ void CharDead::PreProcess(cocos2d::Sprite* spr) {
 void CharStuck::PreProcess(cocos2d::Sprite *spr) {
     auto game_scene = getGameScene();
     auto chara = dynamic_cast<character*>(spr);
-    for (auto &dir: chara->_chara_move) {
-        dir = false;
-    }
     if (chara == dynamic_cast<character*>(game_scene->getChildByTag(20))) {
-//        game_scene->_eventDispatcher->removeEventListenersForType(EventListener::Type::KEYBOARD);
-//        log("touch disable");
-//        auto controller1 = dynamic_cast<BaseController*>(game_scene->getChildByName("PlayerController"));
-//        auto controller2 = dynamic_cast<BaseController*>(game_scene->getChildByName("BubbleController"));
-//        controller1->ControllerSetEnabled();
-//        controller2->ControllerSetEnabled();
         // TODO: change a better way
         game_scene->removeChildByName("PlayerController");
         game_scene->removeChildByName("BubbleController");
         
     }
+    for (auto &dir: chara->_chara_move) {
+        dir = false;
+    }
+    
     chara->stopAllActions();
     chara->playStuckedAnimation();
     chara->runAction(Sequence::create(DelayTime::create(3),CallFuncN::create(
