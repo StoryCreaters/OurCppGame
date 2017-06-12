@@ -5,6 +5,7 @@
 #include "Settings.h"
 #include <array>
 #include "GameItem.h"
+#include <thread>
 
 class character;
 class Bubbles;
@@ -57,6 +58,7 @@ public:
     void setBubble(character* chara);
     void BubbleBoom(Ref* sender);
     Bubbles* hasCollideableBubble(cocos2d::Vec2 tilePos);
+    Bubbles* hasBubble(cocos2d::Vec2 tilePos);
     
     // normal
     void checkGetItem(character* chara);         // update
@@ -121,6 +123,7 @@ private:
     /*** add item to the game ***/
     void addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools tool);
     
+    mutable std::mutex _mutex;
 };
 
 #endif /* GameTheme_hpp */

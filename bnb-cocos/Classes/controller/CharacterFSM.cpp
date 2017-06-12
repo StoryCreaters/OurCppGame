@@ -57,8 +57,9 @@ void CharStuck::PreProcess(cocos2d::Sprite *spr) {
     auto chara = dynamic_cast<character*>(spr);
     if (chara == dynamic_cast<character*>(game_scene->getChildByTag(20))) {
         // TODO: change a better way
-        game_scene->removeChildByName("PlayerController");
-        game_scene->removeChildByName("BubbleController");
+        // TODO : set it removed earlier
+//        game_scene->removeChildByName("PlayerController");
+//        game_scene->removeChildByName("BubbleController");
         
     }
     for (auto &dir: chara->_chara_move) {

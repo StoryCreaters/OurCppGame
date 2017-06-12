@@ -216,14 +216,15 @@ void GameScene::CharacterMove(character* chara) {
         auto deltas = chara->get_collection_point(index);
         auto pos1 = deltas.first, pos2 = deltas.second;
         if (!in_tile_map(pos1 + test_point) || !in_tile_map(pos2 + test_point)) {
-            
             break;
-        } else if (!accessAble(pos1 + test_point) || !accessAble(pos2 + test_point)) {
+        } else if (!hasCollisionInGridPos(tileCoordForPosition(pos1 + test_point)) || !hasCollisionInGridPos(tileCoordForPosition(pos2 + test_point))) {
             walk = false;
         }
         
         if (hasCollideableBubble(tileCoordForPosition(pos1 + test_point + delta_rate)) || hasCollideableBubble(tileCoordForPosition(pos2 + test_point + delta_rate))) {
-            walk = false;
+            if (tileCoordForPosition(pos1) != tileCoordForPosition(pos2 + test_point + delta_rate)) {\
+                walk = false;
+            }
         }
         if (walk) {
             chara->setPosition(chara->getPosition() + cur_delta);
@@ -250,7 +251,7 @@ void GameScene::setBubble(character* chara) {
 
     // DEBUG : not mySpritePos
     auto mypos = _myplayer->getPosition();
-    if (accessAble(mypos)) {
+    if (!hasBubble(tileCoordForPosition(mypos)) && accessAble(mypos)) {
         // 调整精灵位置
         auto newBubble = Bubbles::create(_myplayer->_currentPower, chara);
         newBubble->setAnchorPoint(Vec2::ZERO);
@@ -258,14 +259,8 @@ void GameScene::setBubble(character* chara) {
         
         // DEBUG: 判断泡泡放置是否是accessable 的
         newBubble->setPosition(mySpritePos);
-        auto timeBoom = CallFuncN::create(CC_CALLBACK_1(GameScene::BubbleBoom, this));
-        
         // 动画(是否可以抽象)
         runAnimationByName(newBubble, "Popo_", 0.25, bubble_frame_nums);
-//        newBubble->runAction(Sequence::create(DelayTime::create(0.3),CallFuncN::create(
-//                            [=](Ref* sender) {
-//                                _map_screen_bubbles[pos0] = newBubble;
-//                            }), DelayTime::create(2.7), timeBoom, NULL));
         _map_screen_bubbles[pos0] = newBubble;
         addChild(newBubble);
         ++chara->curSetBubbles;
@@ -342,6 +337,7 @@ cocos2d::Vec2 GameScene::tileCoordForPosition(cocos2d::Vec2 pos) {
  检测是否可以到达
  in: cocos2d pos
  out: 是否与不可碰墙壁的发生碰撞
+ attention: 只要求有泡泡
  ***/
 bool GameScene::accessAble(cocos2d::Vec2 pos) {
     Vec2 tileCoord = tileCoordForPosition(pos);
@@ -444,8 +440,11 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
                         // chara was fired
                         auto cur_code = typeid(*(chara->mCurState)).hash_code();
                         if (!chara->isGuard()) {
-                            if (cur_code == typeid(CharStand).hash_code() || cur_code == typeid(CharMove).hash_code())
+                            if (cur_code == typeid(CharStand).hash_code() || cur_code == typeid(CharMove).hash_code()) {
+                                removeChildByName("PlayerController");
+                                removeChildByName("BubbleController");
                                 chara->changeState(std::make_shared<CharStuck>());
+                            }
                             else if(cur_code == typeid(CharOnRiding).hash_code())
                                 chara->changeState(std::make_shared<CharNormal>());
                         }   
@@ -482,15 +481,23 @@ bool GameScene::check_chain_boom(cocos2d::Vec2 blaze_pos) {
 
 /** 对给出的瓦片地图坐标，有精灵就返回精灵，没有就返回nullptr **/
 Bubbles* GameScene::hasCollideableBubble(cocos2d::Vec2 tilePos) {
+    auto bubble = hasBubble(tilePos);
+    if (bubble != nullptr && bubble->isCollideable())
+        return bubble;
+    return nullptr;
+}
+
+Bubbles* GameScene::hasBubble(cocos2d::Vec2 tilePos) {
     auto bubbleIter = _map_screen_bubbles.find(tilePos);
     Bubbles* bubble = nullptr;
-    if (bubbleIter != _map_screen_bubbles.end() && bubbleIter->second->isCollideable()) {
-        bubble = bubbleIter->second;    
+    if (bubbleIter != _map_screen_bubbles.end()) {
+        bubble = bubbleIter->second;
     }
     return bubble;
 }
 
 void GameScene::addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools item_kind) {
+    // 如果有道具就不再添加(多个同时爆炸？)
     auto pos = PositionForTileCoord(tiledPos);
     
     auto item = GameItem::createWithType(item_kind);
@@ -498,9 +505,11 @@ void GameScene::addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools item_kind) 
     item->setAnchorPoint(Vec2::ZERO);
     item->setPosition(pos);
     // DEBUG: NOT SET ANIME HERE
-//    runAnimationByName(item, std::string(settings::Items::ItemNames[item_kind]) + "_", 0.2, 3);
-    screenItems[tiledPos] = item;
     
+    std::unique_lock<std::mutex> lock(_mutex);
+    if (screenItems.find(tiledPos) == screenItems.end())
+        screenItems[tiledPos] = item;
+    log("%d %f %f", item_kind, tiledPos.x, tiledPos.y);
     this->addChild(item);
     
 }
