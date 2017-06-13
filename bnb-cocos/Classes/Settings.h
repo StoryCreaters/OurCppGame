@@ -97,7 +97,10 @@ namespace settings {
             "PropResource/Gift_Rowl.plist",
             "GamePlayer/unit_guard.plist",
             "PropResource/Gift_Mpower.plist",
-            "GamePlayer/Rowl.plist"
+            "PropResource/Vehicle.plist",
+            
+            "GamePlayer/Rowl.plist",
+            "GamePlayer/Rtutle.plist"
         };
         
         // 人物
@@ -140,7 +143,9 @@ namespace settings {
             "Gift_RspeedUp",
             "Gift_needle",
             "Gift_guard",
-            "Gift_upper"
+            "Gift_upper",
+            "GiftOwl",
+            "GiftTutle"
         };
     }
     

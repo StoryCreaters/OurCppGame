@@ -13,6 +13,7 @@
 #include "PropLayer.h"
 #include "PropController.h"
 #include <chrono>
+#include "OpenScene.h"
 
 USING_NS_CC;
 using namespace settings::GameScene;
@@ -57,9 +58,6 @@ bool GameScene::init()
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     
     addCloseMenu();
-    //
-//    auto web_layer = WebClient::create();
-//    this->addChild(web_layer);
     
     // a temporary background
     auto backG = Sprite::create(backGroundPicture);
@@ -94,32 +92,23 @@ bool GameScene::init()
     _myplayer->setPosition(offx + x, offy + y);
     _myplayer->setTag(20);
     _myplayer->setName("myplayer");
-    _myplayer->RideOn();
     // test
 //    _myplayer->changeState(std::make_shared<CharGuard>());
     addChild(_myplayer, 1);
     _game_players.pushBack(_myplayer);
     _my_bubbles = 0;        // bubbles start from 0
     
-//    // add prop layer
-//    auto propLayer = PropLayer::create();
-//    propLayer->setName("PropLayer");
-//    auto propController = PropController::create();
-//    propLayer->setName("PropController");
-//    // add controller
-//    auto playerController = PlayerController::create();
-//    playerController->setName("PlayerController");
-//    
-//    auto bubbleController = BubbleController::create();
-//    bubbleController->setName("BubbleController");
     
     /*** debug ***/
     auto playerController = PlayerController::create();
     playerController->setName("PlayerController");
     addChild(playerController);
+    controllers[0] = playerController;
+    
     auto bubbleController = BubbleController::create();
     bubbleController->setName("BubbleController");
     addChild(bubbleController);
+    controllers[1] = bubbleController;
     
     // add prop layer
     auto propLayer = PropLayer::create();
@@ -128,10 +117,7 @@ bool GameScene::init()
     auto propController = PropController::create();
     addChild(propController);
     
-//    addChild(propController);
-//    addChild(propLayer);
-//    addChild(bubbleController);
-//    addChild(playerController);
+    
     this->scheduleUpdate();
     
     return true;
@@ -200,8 +186,10 @@ void GameScene::CharacterMove(character* chara) {
     };
     
     const static float basic_step = 1.8;
-    float curstep = chara->_currentVelocity  / 3.0 + basic_step;
     
+    
+    int cur_velocity = chara->isRiding()? chara->getRidingSpeed(): chara->_currentVelocity;
+    float curstep = cur_velocity  / 3.0 + basic_step;
     // UP, DOWN, LEFT, RIGHT
     Vec2 delta_pos[4]{Vec2(0, curstep), Vec2(0, -curstep), Vec2(-curstep, 0), Vec2(curstep, 0)};
     // 判断动作，调整step
@@ -440,15 +428,21 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
                     }
                     if (tileCoordForPosition(chara->getPosition()) == next_p) {
                         // chara was fired
+                        log("fired");
                         auto cur_code = typeid(*(chara->mCurState)).hash_code();
                         if (!chara->isGuard()) {
-                            if (cur_code == typeid(CharStand).hash_code() || cur_code == typeid(CharMove).hash_code()) {
-                                removeChildByName("PlayerController");
-                                removeChildByName("BubbleController");
+                            if(chara->isRiding()) {
+                                chara->offRiding();
+                                chara->setGuard();
+                            }
+                            else if (cur_code == typeid(CharStand).hash_code() || cur_code == typeid(CharMove).hash_code()) {
+                                for (auto controller : controllers) {
+                                    this->removeChild(controller);
+                                }
+                                this->removeChildByName("PlayerController");
+                                this->removeChildByName("BubbleController");
                                 chara->changeState(std::make_shared<CharStuck>());
                             }
-                            else if(chara->isRiding())
-                                chara->offRiding();
                         }   
                     }
                 }

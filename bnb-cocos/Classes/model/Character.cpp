@@ -5,7 +5,7 @@
 #include "GameScene.h"
 #include "BubbleController.h"
 #include "PlayerController.h"
-#include "Vehicle.h"
+
 
 using namespace settings::Character;
 character* character::getMychara() {
@@ -146,9 +146,11 @@ void character::powerup() {
           }),NULL));
 }// 道具-人参果
 
-void character::RideOn() {
+void character::RideOn(Vehicle::VehicleType v_type) {
+    if (isRiding())
+        return;
     setSpriteFrame(_spriteName + "_down_01.png");
-    auto veh = Vehicle::create(Vehicle::OWL);
+    auto veh = Vehicle::create(v_type);
     veh->setName("vehicle");
     this->addChild(veh);
     _isRiding = true;
@@ -170,22 +172,34 @@ void character::UseNeedle() {
         // TODO: Change a better way
         auto playerController = PlayerController::create();
         playerController->setName("PlayerController");
-        addChild(playerController);
+        game_scene->addChild(playerController);
         auto bubbleController = BubbleController::create();
         bubbleController->setName("BubbleController");
-        addChild(bubbleController);
+        game_scene->addChild(bubbleController);
         setSpriteFrame(_spriteName + "_down_01.png");
+        game_scene->controllers[0] = playerController, game_scene->controllers[1] = bubbleController;
         changeState(std::make_shared<CharStand>());
     }
     
 }
 
 void character::rideSpeedUp() {
-    // temporary empty
+    auto veh = dynamic_cast<Vehicle*>(getChildByName("vehicle"));
+    veh->_tmp_speed += 3;
 }
 
 void character::offRiding() {
     _isRiding = false;
-    auto veh = dynamic_cast<Vehicle*>(getChildByName("Vehicle"));
+    auto veh = dynamic_cast<Vehicle*>(getChildByName("vehicle"));
     veh->removeV();
+}
+
+int character::getRidingSpeed() {
+    auto veh = dynamic_cast<Vehicle*>(getChildByName("vehicle"));
+    return veh->_tmp_speed;
+}
+
+int character::getRidingBubbles() {
+    auto veh = dynamic_cast<Vehicle*>(getChildByName("vehicle"));
+    return veh->_tmp_bubbles;
 }

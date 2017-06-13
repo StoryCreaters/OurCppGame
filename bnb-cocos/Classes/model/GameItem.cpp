@@ -3,20 +3,11 @@
 #include <string>
 #include "PropLayer.h"
 #include "GameScene.h"
+#include "Vehicle.h"
+
 // TODO : figure out how to deal with derived create
 GameItem* GameItem::createWithType(GameItem::ItemTools type) {
     return GameItem::create(type);
-//    if (static_cast<int>(type) < 4) {
-//        // 是基础的道具，可以直接写逻辑
-//        return GameItem::create(type);
-//    } else if (static_cast<int>(type) < 7) {
-//        // 是prop, 需要和PropLayer Controller交互
-//        log("xxd");
-//        return PropItem::create(type);
-//    } else {
-//        // 是骑宠0.0
-//        
-//    }
 }
 
 GameItem* GameItem::create(GameItem::ItemTools type)
@@ -71,12 +62,19 @@ void GameItem::getItem(character* chara) {
         }
     } else if (type == GameItem::MAXPOWER) {
         chara->_currentPower = chara->_maxPower;
-    } else {
+    } else if (type != GameItem::OWL && type != GameItem::TUTLE){
         auto prop_layer = dynamic_cast<PropLayer*>(GameScene::getCurrentMap()->getChildByName("PropLayer"));
         if (prop_layer == nullptr) {
             log("呜呜呜");
         }
         prop_layer->addProp(static_cast<int>(type) - 4);
+    } else {
+        // 骑宠: chara获得骑宠
+        if (type == GameItem::OWL) {
+            chara->RideOn(Vehicle::OWL);
+        } else if (type == GameItem::TUTLE) {
+            chara->RideOn(Vehicle::TUTLE);
+        }
     }
 }
 

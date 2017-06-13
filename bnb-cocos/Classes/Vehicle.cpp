@@ -9,10 +9,14 @@ bool Vehicle::initWithType(VehicleType type)
     {
         case VehicleType::OWL:
             _name_index = "Rowl";
+            _tmp_speed = 3;
+            _tmp_bubbles = 7;
             break;
         // UNDO:
         case VehicleType::TUTLE:
-            _name_index = "Tutle";
+            _name_index = "Rtutle";
+            _tmp_speed = 1;
+            _tmp_bubbles = 6;
             break;
         default:
             log("pass value in vehicle false");
@@ -20,7 +24,7 @@ bool Vehicle::initWithType(VehicleType type)
     }
     this->initWithSpriteFrameName(_name_index + "_down_01.png");
     log("create :%s", _name_index.c_str());
-    this->setAnchorPoint(Vec2(-0.1, 0.25));
+    this->setAnchorPoint(Vec2(-0.1, 0.15));
     return true;
 }
 
@@ -42,10 +46,7 @@ Vehicle* Vehicle::create(VehicleType type)
 }
 
 void Vehicle::changeTo(int direction) {
-    log("veh dir:%d", direction);
-    log("name index: %s", this->_name_index.c_str());
     std::string next_direction(_name_index + "_"+ std::string(settings::GameScene::direc_string[direction]) +"_");
-    log("%s", next_direction.c_str());
     auto tmp_f = SpriteFrameCache::getInstance()->getSpriteFrameByName(next_direction + "01.png");
     setSpriteFrame(tmp_f);
 }

@@ -16,6 +16,7 @@ class GameScene : public cocos2d::Layer
 public:
     friend class PlayerController;
     friend class CharStuck;
+    friend class character;
     using tilePosition = cocos2d::Vec2;
     
     // 返回gameScene对象
@@ -70,7 +71,8 @@ private:
     cocos2d::Size visibleSize;
     float offx;
     float offy;
-    
+    // TODO: restore controlls
+    Layer* controllers[2];
     
     
     /***** tilemap的大小变化率*****/

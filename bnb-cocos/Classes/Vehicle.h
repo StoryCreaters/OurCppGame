@@ -5,6 +5,7 @@
 
 class Vehicle: public cocos2d::Sprite {
 public:
+    friend class character;
     enum VehicleType {
         OWL, TUTLE
     };
@@ -18,6 +19,9 @@ public:
 private:
     // 宠物名称索引
     std::string _name_index;
+    // 骑宠自带的三维
+    int _tmp_speed;
+    int _tmp_bubbles;
 };
 
 #endif /* Vehicle_hpp */
