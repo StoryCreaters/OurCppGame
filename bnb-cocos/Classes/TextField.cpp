@@ -28,9 +28,7 @@ bool TextFieldTest::init()
 	
 	auto listenerkeyPad = EventListenerKeyboard::create();
 	listenerkeyPad->onKeyReleased = CC_CALLBACK_2(TextFieldTest::onKeyReleased, this);
-
-
-	//textField->_eventDispatcher->addEventListenerWithSceneGraphPriority(listenerkeyPad, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listenerkeyPad, this);
 	// 添加文本框事件监听器
 	textField->addEventListener([=](Ref *pSender, TextField::EventType type) {
 		// 根据文本框的事件类型执行相应的代码
@@ -73,8 +71,9 @@ bool TextFieldTest::init()
 }
 void TextFieldTest::onKeyReleased(EventKeyboard::KeyCode keycode, cocos2d::Event*event) {
 	log("text was called");
-	if (keycode == EventKeyboard::KeyCode::KEY_RETURN)
+	if (keycode == EventKeyboard::KeyCode::KEY_ENTER)
 	{
+		log("回车 was called");
 		_displayValueLabel->setString("input finished");
 		// 获得文本框输入的数据
 		std::string value = textField->getStringValue();
@@ -82,6 +81,7 @@ void TextFieldTest::onKeyReleased(EventKeyboard::KeyCode keycode, cocos2d::Event
 		if (value.length() > 0)
 		{
 			_messageValueLabel->setString("your name:" + value);
+			textField->setString("          ");
 		}
 		else
 		{
