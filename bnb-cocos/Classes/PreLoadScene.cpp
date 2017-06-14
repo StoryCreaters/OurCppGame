@@ -80,6 +80,9 @@ void PreLoadScene::loadSpriteFrame() {
 
 void PreLoadScene::loadMusic() {
 	CocosDenshion::SimpleAudioEngine::getInstance()->preloadBackgroundMusic(to_load_music);
+	for (int i = 0; i < 4; i++) {
+		CocosDenshion::SimpleAudioEngine::getInstance()->preloadEffect(load_effect[i]);
+	}
 }
 
 void PreLoadScene::progressUpdate() {
@@ -94,12 +97,10 @@ void PreLoadScene::progressUpdate() {
 		auto pft = ProgressFromTo::create(0.5f, _progress->getPercentage(), 100);
 		// 定义了一个CallFunc动作
 		auto callFunc = CallFunc::create([=] {
-			// 当加载资源完成，延迟2秒跳转到游戏主场景
-			auto delay = DelayTime::create(delaytime);
 			auto callFunc = CallFunc::create([] {
 				Director::getInstance()->replaceScene(OpenScene::createScene());
 			});
-			auto action = Sequence::create(delay, callFunc, NULL);
+			auto action = Sequence::create(callFunc, NULL);
 			this->runAction(action);
 		});
 		auto action = Sequence::create(pft, callFunc, NULL);

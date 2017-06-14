@@ -23,11 +23,17 @@ bool TextFieldTest::init()
 	this->addChild(_messageValueLabel);
 
 	// 创建文本框
-	auto textField = TextField::create("Please input the data", "Arial", 32);
+	textField = TextField::create("Please input your NAME", "Arial", 32);
 	textField->setPosition(Vec2(visibleSize.width *0.4, visibleSize.height *0.4));
+	
+	auto listenerkeyPad = EventListenerKeyboard::create();
+	listenerkeyPad->onKeyReleased = CC_CALLBACK_2(TextFieldTest::onKeyReleased, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listenerkeyPad, this);
 	// 添加文本框事件监听器
 	textField->addEventListener([=](Ref *pSender, TextField::EventType type) {
 		// 根据文本框的事件类型执行相应的代码
+		//this->setKeypadEnabled(true);
+		
 		switch (type)
 		{
 		case TextField::EventType::ATTACH_WITH_IME:
@@ -41,7 +47,7 @@ bool TextFieldTest::init()
 			// 如果数据大于0，显示在_messageValueLabel当中
 			if (value.length() > 0)
 			{
-				_messageValueLabel->setString("you have input:" + value);
+				_messageValueLabel->setString("your name:" + value);
 			}
 			else
 			{
@@ -62,4 +68,24 @@ bool TextFieldTest::init()
 	});
 	this->addChild(textField);
 	return true;
+}
+void TextFieldTest::onKeyReleased(EventKeyboard::KeyCode keycode, cocos2d::Event*event) {
+	log("text was called");
+	if (keycode == EventKeyboard::KeyCode::KEY_ENTER)
+	{
+		log("回车 was called");
+		_displayValueLabel->setString("input finished");
+		// 获得文本框输入的数据
+		std::string value = textField->getStringValue();
+		// 如果数据大于0，显示在_messageValueLabel当中
+		if (value.length() > 0)
+		{
+			_messageValueLabel->setString("your name:" + value);
+			textField->setString("          ");
+		}
+		else
+		{
+			_messageValueLabel->setString("you Don't input any data!");
+		}
+	}
 }
