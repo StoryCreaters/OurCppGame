@@ -19,14 +19,12 @@ public:
 	static DWORD WINAPI Send(LPVOID lpParam);    //发送线程
 	static DWORD WINAPI Receive(LPVOID lpParam);  //接受线程
 
+	static DWORD WINAPI sendAndRecv(LPVOID lpParam); 
 
 	//SOCKET相关
 public:
 	SOCKET ClientSocket;
 	struct sockaddr_in ServerAddr;
-
-	DWORD SendThreadID;
-	DWORD RecvThreadID;
 
 	char RecvBuf[1024];
 	char SendBuf[1024];

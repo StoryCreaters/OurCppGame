@@ -21,13 +21,12 @@ bool WebGameScene::init()
 		return false;
 	}
 
-
 	//初始化服务端
 	client.init();
 
-	this->schedule(schedule_selector(WebGameScene::update),0.15);
+	this->schedule(schedule_selector(WebGameScene::update),0.10);
 
-	
+
 	return true;
 	
 }
@@ -35,8 +34,11 @@ bool WebGameScene::init()
 void WebGameScene::update(float dt) {
 	
 	client.ClientProcess();
-
+	
 }
 
-
+bool WebGameScene::checkSyn()
+{
+	return true;
+}
 

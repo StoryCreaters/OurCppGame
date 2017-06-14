@@ -9,6 +9,8 @@
 #include "../controller/PlayerController.h"
 #include "../controller/CharacterFSM.h"
 #include <random>
+#include <sys/types.h>
+#include <fcntl.h>
 
 USING_NS_CC;
 using namespace settings::GameScene;
@@ -26,8 +28,8 @@ static inline GameScene* getGameScene() {
 
 bool GameClient::init()
 {
-	
-
+	std::fstream outfile;
+	outfile.open("e:\\log2.txt",std::ios::app);
 
 	WSADATA wsaData;
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
@@ -42,22 +44,42 @@ bool GameClient::init()
 
 	if (ClientSocket == INVALID_SOCKET)
 	{
-	
 		WSACleanup(); //释放套接字资源  
 		return false;
 	}
-
-	if (connect(ClientSocket, (LPSOCKADDR)&ServerAddr,
-		sizeof(ServerAddr)) == INVALID_SOCKET)
-	{
-
+	unsigned long ul = 1;
+	int ret = ioctlsocket(ClientSocket, FIONBIO, (unsigned long*)&ul); //设置成非阻塞
+	if (ret == SOCKET_ERROR)  //设置失败
+	{ 
+		outfile << "设置非阻塞失败\n";
 		closesocket(ClientSocket); //关闭套接字  
 		WSACleanup(); //释放套接字资源  
 		return false;
 	}
+	outfile << "设置非阻塞成功\n";
 
+	if (connect(ClientSocket, (LPSOCKADDR)&ServerAddr,
+		sizeof(ServerAddr)) < 0)
+	{
+		fd_set wfd;
+		struct timeval tm;
 
-	
+		FD_ZERO(&wfd);
+		FD_SET(ClientSocket, &wfd);
+		tm.tv_sec = 0.1;
+		tm.tv_usec = 0;
+		int sel = select(ClientSocket, NULL, &wfd, NULL, &tm);
+		if (sel <= 0)
+		{
+			outfile << "连接失败\n";
+			closesocket(ClientSocket); //关闭套接字  
+			WSACleanup(); //释放套接字资源  
+			return false;
+		}
+	}
+
+	outfile << "客户端连接成功!\n";
+	outfile.close();
 	return true;
 }
 
@@ -84,53 +106,207 @@ void  GameClient::ClientProcess()
 		flag = true;
 	}
 
-	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)Receive, this, 0, &RecvThreadID);
+	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)sendAndRecv, this, 0, NULL);
 
-	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)Send, this, 0, &SendThreadID);
-	
 }
 
+
+DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
+{
+	GameClient *Client = (GameClient *)lpParam;
+	const int PACKAGE = 28;
+
+	
+	while (true)
+	{
+		fd_set wfd, rfd;
+		FD_ZERO(&wfd);
+		FD_ZERO(&rfd);
+
+		FD_SET(Client->ClientSocket, &wfd);
+		FD_SET(Client->ClientSocket, &rfd);
+
+		int sel = select(0, &rfd, &wfd, NULL, NULL);
+		if (sel > 0)
+		{
+			if (FD_ISSET(Client->ClientSocket, &wfd))
+			{
+				/*
+				发送数据
+				*/
+				int direct;
+				for (direct = 0; direct < 4; ++direct) {
+					if (Client->runningGameScene->_game_players.at(0)->_chara_move[direct])
+						break;
+				}
+				int still_1 = Client->runningGameScene->_game_players.at(0)->_chara_still;
+
+				int put_bubble_1 = 0;
+				//if (runningGameScene->key == GameScene::BUBBLE)
+				//	put_bubble_1 = 1;
+
+				Vec2 pos = Client->runningGameScene->_game_players.at(0)->getPosition();
+				//Vec2 broken_tile = runningGameScene->next_ps;
+
+				char sendData[1024];
+				ZeroMemory(sendData, sizeof(sendData));
+
+				//传递格式 位置（.x .y) 静止 方向 是否放泡泡了 泡泡炸坏了哪个tile(.x .y)
+				sprintf(sendData, "%f %f %d %d %d", pos.x, pos.y, still_1,
+					direct, put_bubble_1);
+
+				//发送
+			
+				int sendByte = 0;
+				while (sendByte < PACKAGE)
+				{
+					int ret = send(Client->ClientSocket, sendData, strlen(sendData) + sizeof(char), 0);
+					sendByte += ret;
+				}
+				
+			}
+			
+			if (FD_ISSET(Client->ClientSocket, &rfd))
+			{
+				/*
+				接收数据
+				*/
+				int direct_2;
+				int still_2;
+				int put_bubble_2 = 0;
+				char recvData[1024];
+				ZeroMemory(recvData, sizeof(recvData));
+
+				int temp = 0;
+				//接收
+
+				int recvByte = 0;
+				int ret;
+				while (recvByte < PACKAGE)
+				{
+					ret = recv(Client->ClientSocket, recvData, 1024, 0);
+					recvByte += ret;
+				}
+			
+				recvData[PACKAGE] = '\0';
+			
+
+				Vec2 Pos;
+				Vec2 broken_tile;
+				//接收格式（同上） 
+
+
+				sscanf(recvData, "%f %f %d %d %d", &Pos.x, &Pos.y, &still_2,
+					&direct_2, &put_bubble_2);
+
+				//DEBUG
+				
+				if (broken_tile.x != 0 || broken_tile.y != 0)
+				{
+					Client->runningGameScene->_meta->removeTileAt(broken_tile);
+				}
+
+				/*
+				if (put_bubble_2)
+				runningGameScene->setBubble(runningGameScene->_game_players.at(1), 1);
+				*/
+				if (still_2 == true)
+				{
+					Client->runningGameScene->_game_players.at(1)->changeState(std::make_shared<CharStand>());
+				}
+				else
+				{
+					for (int i = 0; i < 4; i++)
+						Client->runningGameScene->_game_players.at(1)->_chara_move[i] = false;
+					if (direct_2 < 4)
+					{
+						Client->runningGameScene->_game_players.at(1)->_chara_move[direct_2] = true;
+						GameScene::_optionCode code = GameScene::_optionCode::DEFAULT;
+						switch (direct_2)
+						{
+						case 0:
+							code = GameScene::_optionCode::GO_UP;
+							break;
+						case 1:
+							code = GameScene::_optionCode::GO_DOWN;
+							break;
+						case 2:
+							code = GameScene::_optionCode::GO_LEFT;
+							break;
+						case 3:
+							code = GameScene::_optionCode::GO_RIGHT;
+							break;
+						default:
+							break;
+						}
+						Client->runningGameScene->_game_players.at(1)->changeState(std::make_shared<CharMove>(static_cast<int>(code)));
+					}
+				}
+			}
+
+			ExitThread(1);
+		}
+	}
+	return 1;
+}
 //-----------------------------------------------------------------------------  
 //函数名：启动发送线程  
-//描述：用于数据的发送  
+//描述：Select模式管理，用于数据的发送  
 //  
 //-----------------------------------------------------------------------------  
 DWORD WINAPI GameClient::Send(LPVOID lpParam)
 {
 
-
+	fstream ofile("e:\\log3.txt", std::ios::app);
 	GameClient *Client = (GameClient *)lpParam;
-	/*
-	发送数据
-	*/
-	int direct;
-	for (direct = 0; direct < 4; ++direct) {
-		if (Client->runningGameScene->_game_players.at(0)->_chara_move[direct])
-			break;
+	
+	{
+
+		fd_set write;
+		FD_ZERO(&write);
+		FD_SET(Client->ClientSocket, &write);
+
+		//we only care write
+		select(0, NULL, &write, NULL, NULL);
+		
+		if (FD_ISSET(Client->ClientSocket, &write))
+		{
+			/*
+			发送数据
+			*/
+			int direct;
+			for (direct = 0; direct < 4; ++direct) {
+				if (Client->runningGameScene->_game_players.at(0)->_chara_move[direct])
+					break;
+			}
+			int still_1 = Client->runningGameScene->_game_players.at(0)->_chara_still;
+
+			int put_bubble_1 = 0;
+			//if (runningGameScene->key == GameScene::BUBBLE)
+			//	put_bubble_1 = 1;
+
+			Vec2 pos = Client->runningGameScene->_game_players.at(0)->getPosition();
+			//Vec2 broken_tile = runningGameScene->next_ps;
+
+			char sendData[1024];
+			ZeroMemory(sendData, sizeof(sendData));
+
+			//传递格式 位置（.x .y) 静止 方向 是否放泡泡了 泡泡炸坏了哪个tile(.x .y)
+			sprintf(sendData, "%f %f %d %d %d", pos.x, pos.y, still_1,
+				direct, put_bubble_1);
+
+			//发送
+			int ret = send(Client->ClientSocket, sendData, strlen(sendData) + sizeof(char), 0);
+			if (ret > 0)
+				ofile << "发送成功!\n";
+			else
+				ofile << "发送失败!\n";
+		}
+		
+
 	}
-	int still_1 = Client->runningGameScene->_game_players.at(0)->_chara_still;
-
-	int put_bubble_1 = 0;
-	//if (runningGameScene->key == GameScene::BUBBLE)
-	//	put_bubble_1 = 1;
-
-	Vec2 pos = Client->runningGameScene->_game_players.at(0)->getPosition();
-	//Vec2 broken_tile = runningGameScene->next_ps;
-
-	char sendData[1024];
-	ZeroMemory(sendData, sizeof(sendData));
-
-	//传递格式 位置（.x .y) 静止 方向 是否放泡泡了 泡泡炸坏了哪个tile(.x .y)
-	sprintf(sendData, "%f %f %d %d %d", pos.x, pos.y, still_1,
-		direct, put_bubble_1);
-
-	//发送
-	int ret = send(Client->ClientSocket, sendData, strlen(sendData) + sizeof(char), 0);
-
-
-
-
-	return 0;
+	ofile.close();
+	return 1;
 }
 
 //-----------------------------------------------------------------------------  
@@ -142,71 +318,104 @@ DWORD WINAPI  GameClient::Receive(LPVOID lpParam)
 {
 	GameClient * Client = (GameClient *)lpParam;
 
-	/*
-	接收数据
-	*/
-	int direct_2;
-	int still_2;
-	int put_bubble_2 = 0;
-	char recvData[1024];
-	ZeroMemory(recvData, sizeof(recvData));
-	const int size = 22;
-	int temp = 0;
-	//接收
-	int ret2 = recv(Client->ClientSocket, recvData, 1024, 0);
-	recvData[ret2] = '\0';
+	fstream ofile("e:\\log.txt", std::ios::app);
+	ofile << "gg1\n";
 
-	Vec2 Pos;
-	Vec2 broken_tile;
-	//接收格式（同上） 
-	sscanf(recvData, "%f %f %d %d %d", &Pos.x, &Pos.y, &still_2,
-		&direct_2, &put_bubble_2);
-
-
-	if (broken_tile.x != 0 || broken_tile.y != 0)
 	{
-		Client->runningGameScene->_meta->removeTileAt(broken_tile);
-	}
+		fd_set Read;
 
-	/*
-	if (put_bubble_2)
-	runningGameScene->setBubble(runningGameScene->_game_players.at(1), 1);
-	*/
-	if (still_2 == true)
-	{
-		Client->runningGameScene->_game_players.at(1)->changeState(std::make_shared<CharStand>());
-	}
-	else
-	{
-		for (int i = 0; i < 4; i++)
-			Client->runningGameScene->_game_players.at(1)->_chara_move[i] = false;
-		if (direct_2 < 4)
+		FD_ZERO(&Read);
+		FD_SET(Client->ClientSocket, &Read);
+	
+		//we only care read
+		select(0, &Read, NULL, NULL, NULL);
+	
+		if (FD_ISSET(Client->ClientSocket, &Read))
 		{
-			Client->runningGameScene->_game_players.at(1)->_chara_move[direct_2] = true;
-			GameScene::_optionCode code = GameScene::_optionCode::DEFAULT;
-			switch (direct_2)
+			/*
+			接收数据
+			*/
+			int direct_2;
+			int still_2;
+			int put_bubble_2 = 0;
+			char recvData[1024];
+			ZeroMemory(recvData, sizeof(recvData));
+			const int size = 22;
+			int temp = 0;
+			//接收
+			ofile << "gg2\n";
+			int ret2 = recv(Client->ClientSocket, recvData, 1024, 0);
+			ofile << "gg3\n";
+			recvData[ret2] = '\0';
+			if (ret2 > 0)
+				ofile << "接收成功!\n";
+			else
+				ofile << "接收失败!\n";
+
+			Vec2 Pos;
+			Vec2 broken_tile;
+			//接收格式（同上） 
+		
+
+			sscanf(recvData, "%f %f %d %d %d", &Pos.x, &Pos.y, &still_2,
+				&direct_2, &put_bubble_2);
+
+			ofile << "#recv:" << Pos.x << " " << Pos.y << " " << still_2 <<
+				" " << direct_2 << " " << put_bubble_2 << endl;
+
+			if (broken_tile.x != 0 || broken_tile.y != 0)
 			{
-			case 0:
-				code = GameScene::_optionCode::GO_UP;
-				break;
-			case 1:
-				code = GameScene::_optionCode::GO_DOWN;
-				break;
-			case 2:
-				code = GameScene::_optionCode::GO_LEFT;
-				break;
-			case 3:
-				code = GameScene::_optionCode::GO_RIGHT;
-				break;
-			default:
-				break;
+				Client->runningGameScene->_meta->removeTileAt(broken_tile);
 			}
-			Client->runningGameScene->_game_players.at(1)->changeState(std::make_shared<CharMove>(static_cast<int>(code)));
+
+			/*
+			if (put_bubble_2)
+			runningGameScene->setBubble(runningGameScene->_game_players.at(1), 1);
+			*/
+			if (still_2 == true)
+			{
+				Client->runningGameScene->_game_players.at(1)->changeState(std::make_shared<CharStand>());
+			}
+			else
+			{
+				for (int i = 0; i < 4; i++)
+					Client->runningGameScene->_game_players.at(1)->_chara_move[i] = false;
+				if (direct_2 < 4)
+				{
+					Client->runningGameScene->_game_players.at(1)->_chara_move[direct_2] = true;
+					GameScene::_optionCode code = GameScene::_optionCode::DEFAULT;
+					switch (direct_2)
+					{
+					case 0:
+						code = GameScene::_optionCode::GO_UP;
+						break;
+					case 1:
+						code = GameScene::_optionCode::GO_DOWN;
+						break;
+					case 2:
+						code = GameScene::_optionCode::GO_LEFT;
+						break;
+					case 3:
+						code = GameScene::_optionCode::GO_RIGHT;
+						break;
+					default:
+						break;
+					}
+					Client->runningGameScene->_game_players.at(1)->changeState(std::make_shared<CharMove>(static_cast<int>(code)));
+				}
+			}
+
 		}
+		else
+		{
+			ofile << "不存在的\n";
+			ofile.close();
+			ExitThread(0);
+		}
+		
 	}
-
-
-	return 0;
+	ofile.close();
+	return 1;
 }
 
 
