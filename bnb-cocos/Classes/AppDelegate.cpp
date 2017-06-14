@@ -1,6 +1,6 @@
 #include "AppDelegate.h"
 #include "HelloWorldScene.h"
-#include "PreLoadScene.h"
+#include "view/PreLoadScene.h"
 
 USING_NS_CC;
 
@@ -74,10 +74,11 @@ bool AppDelegate::applicationDidFinishLaunching() {
     }
 
     register_all_packages();
-
+    
+   // FileUtils::getInstance()->addSearchPath("Classes/view");
+    
     // create a scene. it's an autorelease object
     auto scene = PreLoadScene::createScene();
-
     // run
     director->runWithScene(scene);
 

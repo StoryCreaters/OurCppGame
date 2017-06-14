@@ -2,7 +2,7 @@
 #include "PreLoadScene.h"
 #include "SimpleAudioEngine.h"
 #include "Settings.h"
-#include "view/OpenScene.h"
+#include "OpenScene.h"
 
 using namespace settings::PreLoadScene;
 USING_NS_CC;
@@ -69,10 +69,6 @@ void PreLoadScene::loadSpriteFrame() {
 	for (auto s : gifts_animation) {
 		sprite_frame_cache->addSpriteFramesWithFile(s);
 	}
-	/*
-	for (auto s : items_animation) {
-		sprite_frame_cache->addSpriteFramesWithFile(s);
-	}*/
 	for (auto s : person_animation) {
 		sprite_frame_cache->addSpriteFramesWithFile(s);
 	}
