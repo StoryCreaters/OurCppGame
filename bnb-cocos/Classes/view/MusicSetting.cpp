@@ -6,18 +6,18 @@ using namespace CocosDenshion;
 using namespace ui;
 
 
-Scene* Settings::createScene() {
+Scene* MusicSetting::createScene() {
 	// 创建一个场景对象，该对象将会由自动释放池管理内存的释放
 	auto scene = Scene::create();
 	// 创建层对象，该对象将会由自动释放池管理内存的释放
-	auto layer = Settings::create();
+	auto layer = MusicSetting::create();
 	// 将GameSet层作为子节点添加到场景
 	scene->addChild(layer);
 	// 返回场景对象
 	return scene;
 }
 
-bool Settings::init() {
+bool MusicSetting::init() {
 	// 调用父类的init方法
 	if (!Layer::init()) {
 		return false;
@@ -93,13 +93,13 @@ bool Settings::init() {
 	//	}
 	//});
 	//this->addChild(return_button);
-	auto close_menu = cocos2d::MenuItemLabel::create(cocos2d::Label::create("Back", "fonts/Marker Felt.ttf", 50), CC_CALLBACK_1(Settings::back, this));
+	auto close_menu = cocos2d::MenuItemLabel::create(cocos2d::Label::create("Back", "fonts/Marker Felt.ttf", 50), CC_CALLBACK_1(MusicSetting::back, this));
 	this->setPosition(Vec2(visibleSize.width *0.85, visibleSize.height*0.18));
 	this->addChild(close_menu);
 	return true;
 }
 
-void Settings::back(Ref *sender) {
+void MusicSetting::back(Ref *sender) {
 	auto transition = TransitionShrinkGrow::create(2.0, OpenScene::createScene());
 	Director::getInstance()->popScene();
 }

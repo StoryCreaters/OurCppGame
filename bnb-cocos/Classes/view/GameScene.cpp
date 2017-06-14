@@ -48,7 +48,6 @@ GameScene* GameScene::getCurrentMap() {
 
 bool GameScene::init()
 {
-<<<<<<< HEAD
 	if (!Layer::init())
 	{
 		return false;
@@ -134,81 +133,6 @@ bool GameScene::init()
 	this->scheduleUpdate();
 
 	return true;
-=======
-    if ( !Layer::init() )
-    {
-        return false;
-    }
-    
-    
-    visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    
-    addCloseMenu();
-    
-    // a temporary background
-    auto backG = Sprite::create(backGroundPicture);
-    addChild(backG, -10);
-    backG->setPosition(visibleSize / 2);
-    
-    /***** tilemap ******/
-    _tileMap = TMXTiledMap::create("gameStart/map03.tmx");
-    _tileMap->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-    _tileMap->setPosition(Point(visibleSize.width / 2 , visibleSize.height / 2));
-    _tileMap->setScale(settings::GameScene::_tile_delta_rate);
-    
-    _meta = _tileMap->getLayer("Unbroken");
-    _background = _tileMap->getLayer("Background");
-    addChild(_tileMap, -1);
-    
-    // 注意坐标位置差
-    offx = (visibleSize.width - _tileMap->getContentSize().width * _tile_delta_rate)/ 2;
-    offy = (visibleSize.height - _tileMap->getContentSize().height * _tile_delta_rate) / 2;
-    TMXObjectGroup *objects = _tileMap->getObjectGroup("player");
-    CCASSERT(nullptr != objects, "'Objects' object group not found");
-    auto spawnPoint = objects->getObject("SpawnPoint1");
-    CCASSERT(!spawnPoint.empty(), "SpawnPoint object not found");
-    float x = spawnPoint["x"].asFloat() * _tile_delta_rate;
-    float y = spawnPoint["y"].asFloat() * _tile_delta_rate;
-    
-    tileLoadProps();
-    
-    /*** add character***/
-    _myplayer = character::create(character::CHRIS);
-    _myplayer->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-    _myplayer->setPosition(offx + x, offy + y);
-    _myplayer->setTag(20);
-    _myplayer->setName("myplayer");
-    // test
-//    _myplayer->changeState(std::make_shared<CharGuard>());
-    addChild(_myplayer, 1);
-    _game_players.pushBack(_myplayer);
-    _my_bubbles = 0;        // bubbles start from 0
-    
-    
-    /*** debug ***/
-    auto playerController = PlayerController::create();
-    playerController->setName("PlayerController");
-    addChild(playerController);
-    controllers[0] = playerController;
-    
-    auto bubbleController = BubbleController::create();
-    bubbleController->setName("BubbleController");
-    addChild(bubbleController);
-    controllers[1] = bubbleController;
-    
-    // add prop layer
-    auto propLayer = PropLayer::create();
-    propLayer->setName("PropLayer");
-    addChild(propLayer);
-    auto propController = PropController::create();
-    addChild(propController);
-    
-    
-    this->scheduleUpdate();
-    
-    return true;
->>>>>>> 61810585b0fea6a9fa2e38a46a2ca79e38426f41
 }
 
 
