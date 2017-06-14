@@ -14,9 +14,9 @@ public:
     
     // 道具种类及其数量
     enum ItemTools {
-        POPO, POWER, RUN, MAXPOWER, ALLPOWER, NEEDLE, GUARD, UPPER
+        POPO, POWER, RUN, MAXPOWER, ALLPOWER, NEEDLE, GUARD, UPPER, OWL, TUTLE
     };
-    constexpr static int toolNumbers = 8;
+    constexpr static int toolNumbers = 10;
     
     // 创建道具
     static GameItem* create(ItemTools type);

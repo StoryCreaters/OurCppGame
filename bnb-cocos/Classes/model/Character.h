@@ -6,6 +6,7 @@
 #include "Settings.h"
 #include <array>
 #include "BaseFSM.h"
+#include "Vehicle.h"
 
 class State;
 
@@ -64,11 +65,16 @@ public:
     void setGuard();         // 道具-护盾
     bool isGuard();
     void powerup();         // 道具-人参果
-    void RideOn();
+    void RideOn(Vehicle::VehicleType);
     bool isRiding();
     bool isStucked();
     void UseNeedle();
     void rideSpeedUp();
+    void offRiding();
+    void isOnTutle();
+    // return the attr of riding 
+    int getRidingSpeed();
+    int getRidingBubbles();
 private:
     int _type_index;
     bool _isRiding;
