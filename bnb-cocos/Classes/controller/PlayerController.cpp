@@ -31,6 +31,9 @@ void PlayerController::myKeyboardPressed(cocos2d::EventKeyboard::KeyCode keyCode
         default:
             break;
     }
+	auto gameLayer = GameScene::getCurrentMap();
+	gameLayer->OnBubble = false;
+
     auto _myplayer = getMyplayer();
     if (code != GameScene::_optionCode::DEFAULT) {
 		_myplayer->_chara_still = false;

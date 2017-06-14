@@ -18,6 +18,7 @@ public:
     friend class CharStuck;
 	friend class WebGameScene;  //声明为友元类，毕竟web的很多内容必须使用GameScene的
 	friend class GameClient;
+	friend class BubbleController;
     using tilePosition = cocos2d::Vec2;
     
     // 返回gameScene对象
@@ -99,6 +100,7 @@ private:
     std::array<bool, 4> _my_sprite_move;
     
     /**** 爆炸相关 ****/
+	bool OnBubble;
     enum boom_vec {
         HORIZONTAL, VERTICAL
     };

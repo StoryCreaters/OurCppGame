@@ -99,7 +99,7 @@ bool GameScene::init()
 	addChild(_myplayer, 1);
 	_game_players.pushBack(_myplayer);
 	_player_bubbles.push_back(0);
-
+	OnBubble = false;
 
 	//其他client的控制的玩家
 	addCharacter(x, y, character::CHRIS,"player2");//##############改动###############

@@ -24,7 +24,7 @@ bool WebGameScene::init()
 	//初始化服务端
 	client.init();
 
-	this->schedule(schedule_selector(WebGameScene::update),0.10);
+	this->scheduleUpdate();
 
 
 	return true;

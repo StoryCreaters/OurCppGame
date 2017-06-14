@@ -16,10 +16,8 @@ public:
 	void acceptProps();
 	~GameClient();
 	void ClientProcess();    //启动客户处理
-	static DWORD WINAPI Send(LPVOID lpParam);    //发送线程
-	static DWORD WINAPI Receive(LPVOID lpParam);  //接受线程
 
-	static DWORD WINAPI sendAndRecv(LPVOID lpParam); 
+	static DWORD WINAPI sendAndRecv(LPVOID lpParam);   //收发消息
 
 	//SOCKET相关
 public:
