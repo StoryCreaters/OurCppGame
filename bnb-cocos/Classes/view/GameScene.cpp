@@ -129,7 +129,11 @@ bool GameScene::init()
 	propLayer->setName("PropLayer");
 	addChild(propLayer);
 	log("CameScene_prop");
-
+    controllers[0] = bubbleController, controllers[1] = playerController;
+    auto propController = PropController::create();
+    propController->setName("PropController");
+    addChild(propController);
+    
 	this->scheduleUpdate();
 
 	return true;
