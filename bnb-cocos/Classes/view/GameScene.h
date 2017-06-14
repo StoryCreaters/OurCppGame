@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include "Settings.h"
 #include <array>
+#include <string>
 #include "../model/GameItem.h"
 
 class character;
@@ -52,7 +53,7 @@ public:
     bool hasCollisionInGridPos(cocos2d::Vec2 pos);
     
 	/** create a character **/
-	bool addCharacter(float x, float y, character::characterType Type);
+	bool addCharacter(float x, float y, character::characterType Type,std::string setname);
     /** clear a character **/
     void RemoveCharacter(character* chara);
     

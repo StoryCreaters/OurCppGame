@@ -33,8 +33,13 @@ void PlayerController::myKeyboardPressed(cocos2d::EventKeyboard::KeyCode keyCode
     }
     auto _myplayer = getMyplayer();
     if (code != GameScene::_optionCode::DEFAULT) {
+		_myplayer->_chara_still = false;
         _myplayer->changeState(std::make_shared<CharMove>(static_cast<int>(code)));
     }
+	else
+	{
+		_myplayer->_chara_still = true;
+	}
 }
 
 void PlayerController::myKeyboardOff(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
@@ -57,7 +62,8 @@ void PlayerController::myKeyboardOff(cocos2d::EventKeyboard::KeyCode keyCode, co
             return;
     }
     if (typeid(*(mychara->mCurState)).hash_code() == typeid(CharMove).hash_code()) {
-
+		auto _myplayer = getMyplayer();
+		_myplayer->_chara_still = true;
         auto realState = dynamic_pointer_cast<CharMove>(mychara->mCurState);
         if (realState->direction == static_cast<int>(key)) {
             // the same direction :stop

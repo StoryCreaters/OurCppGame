@@ -1,6 +1,7 @@
 ﻿#include "WebGameScene.h"
 #include "../view/GameScene.h"
 #include "../controller/PlayerController.h"
+#include "../controller/CharacterFSM.h"
 #include <random>
 
 USING_NS_CC;
@@ -50,8 +51,6 @@ void WebGameScene::update(float dt) {
 	}
 	
 
-	outfile.open("e:\\log3.txt", std::ios::app);
-	outfile << "多少个players：" << runningGameScene->_game_players.size() << std::endl;
 	/*
 	############以下代码仅供测试，测试完毕后将会封装到BnbGameClient中############
 	*/
@@ -63,12 +62,13 @@ void WebGameScene::update(float dt) {
 			*/
 			character * _play_1 = runningGameScene->_game_players.at(0);
 
-			char direct_1[2];
+			
 			int direct;
 			for (direct = 0; direct < 4; ++direct) {
 				if (_play_1->_chara_move[direct])
 					break;
 			}
+			int still_1 = _play_1->_chara_still;
 
 			int put_bubble_1 = 0;
 			//if (runningGameScene->key == GameScene::BUBBLE)
@@ -80,17 +80,13 @@ void WebGameScene::update(float dt) {
 			char sendData[1024];
 			ZeroMemory(sendData, sizeof(sendData));
 
-			//传递格式 位置（.x .y) 方向 是否放泡泡了 泡泡炸坏了哪个tile(.x .y)
-			sprintf(sendData, "%f %f %d %d", pos.x, pos.y,
+			//传递格式 位置（.x .y) 静止 方向 是否放泡泡了 泡泡炸坏了哪个tile(.x .y)
+			sprintf(sendData, "%f %f %d %d %d", pos.x, pos.y,still_1,
 				direct, put_bubble_1);
 
-			outfile << sendData << std::endl;
 			//发送
 			int ret = send(client.ClientSocket, sendData, strlen(sendData) + sizeof(char), 0);
-			if (ret <= 0)
-				outfile << "发送错误!\n";
-			else
-				outfile << "发送成功!\n";
+		
 		}
 
 //*******************************************************************************************
@@ -100,6 +96,7 @@ void WebGameScene::update(float dt) {
 			接收数据
 			*/
 			int direct_2;
+			int still_2;
 			int put_bubble_2 = 0;
 			char recvData[1024];
 			ZeroMemory(recvData, sizeof(recvData));
@@ -118,9 +115,10 @@ void WebGameScene::update(float dt) {
 			Vec2 Pos;
 			Vec2 broken_tile;
 				//接收格式（同上） 
-				sscanf(recvData, "%f %f %d %d", &Pos.x, &Pos.y,
+				sscanf(recvData, "%f %f %d %d %d", &Pos.x, &Pos.y,&still_2,
 					&direct_2, &put_bubble_2);
 
+			
 			if (broken_tile.x != 0 || broken_tile.y != 0)
 			{
 				runningGameScene->_meta->removeTileAt(broken_tile);
@@ -130,11 +128,42 @@ void WebGameScene::update(float dt) {
 			if (put_bubble_2)
 				runningGameScene->setBubble(runningGameScene->_game_players.at(1), 1);
 				*/
-			for (int i = 0; i < 4; i++)
-				runningGameScene->_game_players.at(1)->_chara_move[i] = false;
-			if (direct_2 < 4)
-				runningGameScene->_game_players.at(1)->_chara_move[direct_2] = true;
-			runningGameScene->CharacterMove(runningGameScene->_game_players.at(1));
+			if (still_2 == true)
+			{
+				runningGameScene->_game_players.at(1)->changeState(std::make_shared<CharStand>());
+			}
+			else
+			{
+				for (int i = 0; i < 4; i++)
+					runningGameScene->_game_players.at(1)->_chara_move[i] = false;
+				if (direct_2 < 4)
+				{
+					runningGameScene->_game_players.at(1)->_chara_move[direct_2] = true;
+					GameScene::_optionCode code = GameScene::_optionCode::DEFAULT;
+					switch (direct_2)
+					{
+					case 0:
+						code = GameScene::_optionCode::GO_UP;
+						break;
+					case 1:
+						code = GameScene::_optionCode::GO_DOWN;
+						break;
+					case 2:
+						code = GameScene::_optionCode::GO_LEFT;
+						break;
+					case 3:
+						code = GameScene::_optionCode::GO_RIGHT;
+						break;
+					default:
+						break;
+					}
+					runningGameScene->_game_players.at(1)->changeState(std::make_shared<CharMove>(static_cast<int>(code)));
+				}
+			}
+			
+				
+			
+
 			//runningGameScene->_game_players.at(1)->setPosition(Pos);
 		}
 	}

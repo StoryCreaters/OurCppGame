@@ -102,7 +102,7 @@ bool GameScene::init()
 
 
 	//其他client的控制的玩家
-	addCharacter(x, y, character::CHRIS);//##############改动###############
+	addCharacter(x, y, character::CHRIS,"player2");//##############改动###############
     
 //    // add prop layer
 //    auto propLayer = PropLayer::create();
@@ -136,11 +136,14 @@ bool GameScene::init()
 //    addChild(propLayer);
 //    addChild(bubbleController);
 //    addChild(playerController);
+
+
 	/* web */
 	auto webPlayer = WebGameScene::create();
 	webPlayer->setName("WebPlayer");
 	this->addChild(webPlayer);
 	/* web */
+
 
     this->scheduleUpdate();
     
@@ -150,13 +153,16 @@ bool GameScene::init()
 /*
 描述：增加角色
 */
-bool GameScene::addCharacter(float x, float y, character::characterType Type)//##############改动###############
+bool GameScene::addCharacter(float x, float y, character::characterType Type,std::string setname)//##############改动###############
 {
 	character* temp = character::create(Type);
 	temp->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	temp->setPosition(offx + x, offy + y);
-	addChild(temp, 1);
+	
 	_game_players.pushBack(temp);
+	addChild(_game_players.back(), 1);
+	_game_players.back()->setTag(20);
+	_game_players.back()->setName(setname);
 
 	_player_bubbles.push_back(0);
 	return true;
