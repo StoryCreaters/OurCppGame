@@ -33,35 +33,24 @@ bool Settings::init() {
 	music_text->setPosition(Vec2(visibleSize.width*0.25, visibleSize.height*0.7));
 	this->addChild(music_text);
 
-	// 创建一个滑动条
+	
 	auto music_slider = Slider::create();
-	// 设置滑动条的纹理
 	music_slider->loadBarTexture("GameUI/sliderTrack.png");
-	// 设置滑动条的滚轮纹理
 	music_slider->loadSlidBallTextures("GameUI/sliderThumb.png", "GameUI/sliderThumb.png", "");
-	// 设置处理滑动条的进度条纹理
 	music_slider->loadProgressBarTexture("GameUI/sliderProgress.png");
-	// 获取之前设置的背景音乐音量
-	float musicPercent = UserDefault::getInstance()->getFloatForKey("musicPercent");
-	// 如果是第一次进入设置场景，设置背景音乐滑动条默认初始值为100
+	float musicPercent = CocosDenshion::SimpleAudioEngine::getInstance()->getBackgroundMusicVolume() * 100;
 	if (musicPercent == 0.0f) {
 	musicPercent = 100.0f;
 	}
-	// 设置背景音乐滑动条的初始值
 	music_slider->setPercent(musicPercent);
 	music_slider->setPosition(Vec2(visibleSize.width*0.6, visibleSize.height*0.7));
-	// 添加事件监听器,调整背景音乐音量
 	music_slider->addEventListener([=](Ref* pSender, Slider::EventType type) {
-		// 当滑块的百分比发生变化时
 		if (type == Slider::EventType::ON_PERCENTAGE_CHANGED)
 		{
-			// 获得滑动条百分比
 			int percent = music_slider->getPercent();
-			// 设置背景音乐值为滑动条百分比/100，因为Slider的百分比是1-100，而MusicVolume的取值是0.0-1.0
 			SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(float(percent) / 100);
-			//Volume = SimpleAudioEngine::getInstance()->getBackgroundMusicVolume();
 			// 存储设置的背景音乐值
-			UserDefault::getInstance()->setFloatForKey("musicPercent", percent);
+			UserDefault::getInstance()->setFloatForKey("musicPercent", float(percent) / 100);
 		}
 	});
 	this->addChild(music_slider);
@@ -72,51 +61,45 @@ bool Settings::init() {
 	sound_text->setPosition(Vec2(visibleSize.width*0.25, visibleSize.height*0.5));
 	this->addChild(sound_text);
 
-	// 创建一个滑动条
 	auto effects_slider = Slider::create();
-	// 设置滑动条的纹理
 	effects_slider->loadBarTexture("GameUI/sliderTrack.png");
-	// 设置滑动条的滚轮纹理
 	effects_slider->loadSlidBallTextures("GameUI/sliderThumb.png", "GameUI/sliderThumb.png", "");
-	// 设置处理滑动条的进度条纹理
 	effects_slider->loadProgressBarTexture("GameUI/sliderProgress.png");
-	// 获取之前设置的音效音量
-	float effectPercent = UserDefault::getInstance()->getFloatForKey("effectPercent");
+	float effectPercent = UserDefault::getInstance()->getFloatForKey("effectPercent") * 100;
 	// 如果是第一次进入设置场景，设置音效滑动条默认初始值为100
 	if (effectPercent == 0.0f) {
 		effectPercent = 100.0f;
 	}
-	// 设置音效滑动条的初始值
 	effects_slider->setPercent(effectPercent);
 	effects_slider->setPosition(Vec2(visibleSize.width*0.6, visibleSize.height*0.5));
-	// 添加事件监听器,调整音效音量
 	effects_slider->addEventListener([=](Ref* pSender, Slider::EventType type) {
-		// 当滑块的百分比发生变化时
 		if (type == Slider::EventType::ON_PERCENTAGE_CHANGED)
 		{
-			// 获得滑动条百分比
 			int percent = effects_slider->getPercent();
-			// 设置背景音效值
 			SimpleAudioEngine::getInstance()->setEffectsVolume(float(percent) / 100);
-			// 存储设置的背景音乐值
-			UserDefault::getInstance()->setFloatForKey("effectPercent", percent);
+			UserDefault::getInstance()->setFloatForKey("effectPercent", float(percent) / 100);
 		}
 	});
 	this->addChild(effects_slider);
 
 	// 创建“返回“按钮，点击时调用returnToMenu函数
-	auto return_button = Button::create("GameUI/b1.png");
-	return_button->setPosition(Vec2(200, 200));
-	return_button->addTouchEventListener([](Ref* pSender, Widget::TouchEventType type) {
-		if (type == Widget::TouchEventType::ENDED) {
-			// 切换到MenuScene场景
-			//auto transition = TransitionShrinkGrow::create(2.0, OpenScene::createScene());
-			Director::getInstance()->popScene();
-		}
-	});
-	this->addChild(return_button);
-
+	//auto return_button = Button::create("GameUI/b1.png");
+	//return_button->setPosition(Vec2(visibleSize.width *0.85, visibleSize.height*0.18));
+	//return_button->addTouchEventListener([](Ref* pSender, Widget::TouchEventType type) {
+	//	if (type == Widget::TouchEventType::ENDED) {
+	//		// 切换到MenuScene场景
+	//		//auto transition = TransitionShrinkGrow::create(2.0, OpenScene::createScene());
+	//		Director::getInstance()->popScene();
+	//	}
+	//});
+	//this->addChild(return_button);
+	auto close_menu = cocos2d::MenuItemLabel::create(cocos2d::Label::create("Back", "fonts/Marker Felt.ttf", 50), CC_CALLBACK_1(Settings::back, this));
+	this->setPosition(Vec2(visibleSize.width *0.85, visibleSize.height*0.18));
+	this->addChild(close_menu);
 	return true;
 }
 
-
+void Settings::back(Ref *sender) {
+	auto transition = TransitionShrinkGrow::create(2.0, OpenScene::createScene());
+	Director::getInstance()->popScene();
+}

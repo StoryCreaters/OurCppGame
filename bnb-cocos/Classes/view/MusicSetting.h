@@ -10,7 +10,7 @@
 #include "OpenScene.h"
 using namespace CocosDenshion;
 
-// 2. AudioControl类用来设置背景音乐和声音特效
+//用来设置背景音乐和声音特效
 class Settings : public cocos2d::Layer
 {
 public:

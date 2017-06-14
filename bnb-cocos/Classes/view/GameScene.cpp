@@ -61,9 +61,9 @@ bool GameScene::init()
 	//
 	//    auto web_layer = WebClient::create();
 	//    this->addChild(web_layer);
-
+	
 	// a temporary background
-	auto backG = Sprite::create(backGroundPicture);
+	auto backG = Sprite::create("BackGround/Cool_background.jpg");
 	addChild(backG, -10);
 	backG->setPosition(visibleSize / 2);
 

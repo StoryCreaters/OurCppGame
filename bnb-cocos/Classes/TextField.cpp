@@ -39,22 +39,23 @@ bool TextFieldTest::init()
 		case TextField::EventType::ATTACH_WITH_IME:
 			_displayValueLabel->setString("input beggin");
 			break;
-		case TextField::EventType::DETACH_WITH_IME:
-		{
-			_displayValueLabel->setString("input finished");
-			// 获得文本框输入的数据
-			std::string value = textField->getStringValue();
-			// 如果数据大于0，显示在_messageValueLabel当中
-			if (value.length() > 0)
-			{
-				_messageValueLabel->setString("your name:" + value);
-			}
-			else
-			{
-				_messageValueLabel->setString("you Don't input any data!");
-			}
-		}
-		break;
+		//case TextField::EventType::DETACH_WITH_IME:
+		//{
+		//	_displayValueLabel->setString("input finished");
+		//	// 获得文本框输入的数据
+		//	std::string value = textField->getStringValue();
+		//	// 如果数据大于0，显示在_messageValueLabel当中
+		//	if (value.length() > 0)
+		//	{
+		//		_messageValueLabel->setString("your name:" + value);
+		//		textField->setString("          ");
+		//	}
+		//	else
+		//	{
+		//		_messageValueLabel->setString("you Don't input any data!");
+		//	}
+		//}
+		//break;
 		case TextField::EventType::INSERT_TEXT:
 			_displayValueLabel->setString("insert data");
 			break;
