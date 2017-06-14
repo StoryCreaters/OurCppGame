@@ -17,7 +17,7 @@ public:
     friend class PlayerController;
     friend class CharStuck;
 	friend class WebGameScene;  //声明为友元类，毕竟web的很多内容必须使用GameScene的
-
+	friend class GameClient;
     using tilePosition = cocos2d::Vec2;
     
     // 返回gameScene对象
