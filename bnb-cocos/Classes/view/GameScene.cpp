@@ -1,4 +1,4 @@
-// TODO: æ”¹å˜é®æŒ¡å…³ç³»
+// TODO: ¸Ä±äÕÚµ²¹ØÏµ
 #include "GameScene.h"
 #include "Bubbles.h"
 #include "Settings.h"
@@ -76,7 +76,7 @@ bool GameScene::init()
     _background = _tileMap->getLayer("Background");
     addChild(_tileMap, -1);
     
-    // æ³¨æ„åæ ‡ä½ç½®å·®
+    // ×¢Òâ×ø±êÎ»ÖÃ²î
     offx = (visibleSize.width - _tileMap->getContentSize().width * _tile_delta_rate)/ 2;
     offy = (visibleSize.height - _tileMap->getContentSize().height * _tile_delta_rate) / 2;
     TMXObjectGroup *objects = _tileMap->getObjectGroup("player");
@@ -183,10 +183,10 @@ void GameScene::addCloseMenu() {
     this->addChild(closeMenu, 1);
 }
 
-/****äººç‰©ç§»åŠ¨****/
+/****ÈËÎïÒÆ¶¯****/
 void GameScene::CharacterMove(character* chara) {
-    //TODO: å¢åŠ è¾¹ç•Œæ£€æµ‹
-    // è·å¾—x y çš„ä¸Šç•Œ ä¸‹ç•Œ
+    //TODO: Ôö¼Ó±ß½ç¼ì²â
+    // »ñµÃx y µÄÉÏ½ç ÏÂ½ç
     const static float lowerx = offx + 3, upperx = visibleSize.width - offx;
     const static float lowery = offy + 3, uppery = visibleSize.height - offy;
     const static Vec2 delta_rate = Vec2{0, -10};
@@ -203,7 +203,7 @@ void GameScene::CharacterMove(character* chara) {
     
     // UP, DOWN, LEFT, RIGHT
     Vec2 delta_pos[4]{Vec2(0, curstep), Vec2(0, -curstep), Vec2(-curstep, 0), Vec2(curstep, 0)};
-    // åˆ¤æ–­åŠ¨ä½œï¼Œè°ƒæ•´step
+    // ÅĞ¶Ï¶¯×÷£¬µ÷Õûstep
     // get exact direction and last move
     
     for (int index = 0; index < 4; ++index) {
@@ -232,8 +232,8 @@ void GameScene::CharacterMove(character* chara) {
     }
 }
 
-// bubbleåº”è¯¥è®¾ç½®åœ¨tilemapçš„gridä¸Š
-// bubbleæ¸²æŸ“é—®é¢˜
+// bubbleÓ¦¸ÃÉèÖÃÔÚtilemapµÄgridÉÏ
+// bubbleäÖÈ¾ÎÊÌâ
 void GameScene::setBubble(character* chara) {
     if (chara->curSetBubbles >= chara->_currentBubbles) {
         return;
@@ -251,16 +251,16 @@ void GameScene::setBubble(character* chara) {
     // DEBUG : not mySpritePos
     auto mypos = _myplayer->getPosition();
     if (accessAble(mypos)) {
-        // è°ƒæ•´ç²¾çµä½ç½®
+        // µ÷Õû¾«ÁéÎ»ÖÃ
         auto newBubble = Bubbles::create(_myplayer->_currentPower, chara);
         newBubble->setAnchorPoint(Vec2::ZERO);
         newBubble->setScale(_tile_delta_rate);
         
-        // DEBUG: åˆ¤æ–­æ³¡æ³¡æ”¾ç½®æ˜¯å¦æ˜¯accessable çš„
+        // DEBUG: ÅĞ¶ÏÅİÅİ·ÅÖÃÊÇ·ñÊÇaccessable µÄ
         newBubble->setPosition(mySpritePos);
         auto timeBoom = CallFuncN::create(CC_CALLBACK_1(GameScene::BubbleBoom, this));
         
-        // åŠ¨ç”»(æ˜¯å¦å¯ä»¥æŠ½è±¡)
+        // ¶¯»­(ÊÇ·ñ¿ÉÒÔ³éÏó)
         runAnimationByName(newBubble, "Popo_", 0.25, bubble_frame_nums);
         newBubble->runAction(Sequence::create(DelayTime::create(0.3),CallFuncN::create(
                             [=](Ref* sender) {
@@ -274,7 +274,7 @@ void GameScene::setBubble(character* chara) {
 
 
 
-// æ³¡æ³¡çˆ†ç‚¸, å¯ä»¥æ·»åŠ é€»è¾‘
+// ÅİÅİ±¬Õ¨, ¿ÉÒÔÌí¼ÓÂß¼­
 void GameScene::BubbleBoom(Ref* sender) {
     auto *sprite = dynamic_cast<Bubbles*>(sender);
     auto beg_pos = sprite->getPosition();
@@ -291,7 +291,7 @@ void GameScene::BubbleBoom(Ref* sender) {
             break;
         }
     }
-    /***çˆ†ç‚¸é€»è¾‘***/
+    /***±¬Õ¨Âß¼­***/
     auto pos = tileCoordForPosition(beg_pos);
     for (auto chara: _game_players) {
         // pay attention the guard
@@ -328,8 +328,8 @@ cocos2d::Vec2 GameScene::PositionForTileCoord(cocos2d::Vec2 pos) {
 }
 
 cocos2d::Vec2 GameScene::tileCoordForPosition(cocos2d::Vec2 pos) {
-    // ç©å®¶ä½ç½®çš„yé™¤ä»¥åœ°å›¾çš„é«˜ï¼Œå¾—åˆ°çš„æ˜¯åœ°å›¾çºµå‘ç¬¬å‡ ä¸ªæ ¼å­ï¼ˆtileï¼‰ï¼Œ
-    // ä½†æ˜¯å› ä¸ºcocos2d-xçš„yè½´ï¼ˆå·¦ä¸‹è§’ï¼‰å’ŒTileMapçš„yè½´ï¼ˆå·¦ä¸Šè§’ï¼‰è½´ç›¸åï¼Œæ‰€ä»¥ä½¿ç”¨åœ°å›¾çš„é«˜åº¦å‡å»ç©å®¶ä½ç½®çš„y
+    // Íæ¼ÒÎ»ÖÃµÄy³ıÒÔµØÍ¼µÄ¸ß£¬µÃµ½µÄÊÇµØÍ¼×İÏòµÚ¼¸¸ö¸ñ×Ó£¨tile£©£¬
+    // µ«ÊÇÒòÎªcocos2d-xµÄyÖá£¨×óÏÂ½Ç£©ºÍTileMapµÄyÖá£¨×óÉÏ½Ç£©ÖáÏà·´£¬ËùÒÔÊ¹ÓÃµØÍ¼µÄ¸ß¶È¼õÈ¥Íæ¼ÒÎ»ÖÃµÄy
     float pointHeight = _tileMap->getTileSize().height * _tile_delta_rate / CC_CONTENT_SCALE_FACTOR();
     int x = (int)((pos.x - offx) / (_tileMap->getTileSize().width * _tile_delta_rate / CC_CONTENT_SCALE_FACTOR()));
     int y = static_cast<int>((visibleSize.height - offy - pos.y) / pointHeight);
@@ -338,9 +338,9 @@ cocos2d::Vec2 GameScene::tileCoordForPosition(cocos2d::Vec2 pos) {
 }
 
 /***
- æ£€æµ‹æ˜¯å¦å¯ä»¥åˆ°è¾¾
+ ¼ì²âÊÇ·ñ¿ÉÒÔµ½´ï
  in: cocos2d pos
- out: æ˜¯å¦ä¸ä¸å¯ç¢°å¢™å£çš„å‘ç”Ÿç¢°æ’
+ out: ÊÇ·ñÓë²»¿ÉÅöÇ½±ÚµÄ·¢ÉúÅö×²
  ***/
 bool GameScene::accessAble(cocos2d::Vec2 pos) {
     Vec2 tileCoord = tileCoordForPosition(pos);
@@ -403,21 +403,21 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
     
     // dir: 0->horizontal, 1->vertical;
     Vec2 dirs[] = {Vec2(1, 0), Vec2(0, 1)};
-    // æ­£è´Ÿæ–¹å‘å’Œè¯¥æ–¹å‘æ˜¯å¦åœæ­¢
+    // Õı¸º·½ÏòºÍ¸Ã·½ÏòÊÇ·ñÍ£Ö¹
     int syn[] = {-1, 1};
     bool synb[] = {true, true};
     for (int i = 1; i <= power; ++i) {
         for (int j = 0; j < 2; ++j) {
             if (!synb[j])
                 continue;
-            // è·å–ä¸‹ä¸€ä¸ªçˆ†ç‚¸çš„ä½ç½®
+            // »ñÈ¡ÏÂÒ»¸ö±¬Õ¨µÄÎ»ÖÃ
             auto next_p = dirs[r_vec] * syn[j] * i + tiled_position;
-            // åˆ¤æ–­çˆ†ç‚¸ä½ç½®æ˜¯å¦åœ¨åœ°å›¾ä¸­
+            // ÅĞ¶Ï±¬Õ¨Î»ÖÃÊÇ·ñÔÚµØÍ¼ÖĞ
             if (!in_map(next_p.x, next_p.y)) {
                 synb[j] = false;
                 continue;
             }
-            // æ˜¯å¦æ‰©å±•
+            // ÊÇ·ñÀ©Õ¹
             bool ans(false);
             if (check_chain_boom(next_p)) {
                 // chain booming!!!
@@ -479,7 +479,7 @@ bool GameScene::check_chain_boom(cocos2d::Vec2 blaze_pos) {
     return false;
 }
 
-/** å¯¹ç»™å‡ºçš„ç“¦ç‰‡åœ°å›¾åæ ‡ï¼Œæœ‰ç²¾çµå°±è¿”å›ç²¾çµï¼Œæ²¡æœ‰å°±è¿”å›nullptr **/
+/** ¶Ô¸ø³öµÄÍßÆ¬µØÍ¼×ø±ê£¬ÓĞ¾«Áé¾Í·µ»Ø¾«Áé£¬Ã»ÓĞ¾Í·µ»Ønullptr **/
 Bubbles* GameScene::hasBubble(cocos2d::Vec2 tilePos) {
     auto bubbleIter = _map_screen_bubbles.find(tilePos);
     Bubbles* bubble = nullptr;
@@ -508,7 +508,7 @@ void GameScene::addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools item_kind) 
 void GameScene::tileLoadProps() {
     static std::random_device rd;
     static std::uniform_int_distribution<int> dist(0, GameItem::toolNumbers * 5 / 3);
-    // åŠ è½½åœ°å›¾çš„å¯¹åº”çš„é“å…·
+    // ¼ÓÔØµØÍ¼µÄ¶ÔÓ¦µÄµÀ¾ß
     for (int x = 0; x < 15; ++x)
         for (int y = 0; y < 15; ++y)
             if (!hasCollisionInGridPos(Vec2(x, y))) {
@@ -532,9 +532,9 @@ void GameScene::checkGetItem(character* chara) {
 void GameScene::RemoveCharacter(character* chara) {
     _game_players.eraseObject(chara);
     this->removeChild(chara);
-    // TODO:è¿™é‡Œéœ€è¦é‡æ–°æè¿°ï¼Œæ³¨æ„ä¿®æ”¹
+    // TODO:ÕâÀïĞèÒªÖØĞÂÃèÊö£¬×¢ÒâĞŞ¸Ä
     if (_game_players.size() == 0) {
-        // æ¸¸æˆæ²¡æœ‰ç©å®¶
+        // ÓÎÏ·Ã»ÓĞÍæ¼Ò
         log("game over");
     }
 }
@@ -546,10 +546,11 @@ bool GameScene::checkCollisionWithOther(character* chara) {
             continue;
         }
         else if (tileCoordForPosition(c->getPosition()) == pos) {
-            // æ­£åœ¨ç¢°æ’
+            // ÕıÔÚÅö×²
             return true;
         }
     }
     return false;
 }
+
 
