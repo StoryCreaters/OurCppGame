@@ -65,7 +65,7 @@ bool GameScene::init()
     backG->setPosition(visibleSize / 2);
     
     /***** tilemap ******/
-    _tileMap = TMXTiledMap::create("gameStart/map01.tmx");
+    _tileMap = TMXTiledMap::create("gameStart/map03.tmx");
     _tileMap->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     _tileMap->setPosition(Point(visibleSize.width / 2 , visibleSize.height / 2));
     _tileMap->setScale(settings::GameScene::_tile_delta_rate);

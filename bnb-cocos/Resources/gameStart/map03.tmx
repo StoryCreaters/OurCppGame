@@ -12,7 +12,7 @@
   <object id="3" name="SpawnPoint3" x="574" y="528" width="17" height="18"/>
   <object id="4" name="SpawnPoint4" x="491" y="250" width="17" height="19"/>
  </objectgroup>
- <layer name="BackGround" width="15" height="15">
+ <layer name="Background" width="15" height="15">
   <data encoding="csv">
 4,4,4,4,4,2,2,6,2,2,4,4,4,4,4,
 3,3,3,3,3,2,2,6,2,2,3,3,3,3,3,
