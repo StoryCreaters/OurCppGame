@@ -4,6 +4,7 @@
 #include "Character.h"
 #include "CommonUse.h"
 #include "BaseController.h"
+#include "Vehicle.h"
 
 class GameScene;
 USING_NS_CC;
@@ -42,6 +43,7 @@ void CharStuck::excute(cocos2d::Sprite* spr) {
 
 void CharDead::PreProcess(cocos2d::Sprite* spr) {
     auto game_scene = getGameScene();
+    game_scene->removeChildByName("PropLayer");
     spr->stopAllActions();
     auto chara = dynamic_cast<character*>(spr);
     chara->playDieAnimation();
@@ -54,21 +56,17 @@ void CharDead::PreProcess(cocos2d::Sprite* spr) {
 void CharStuck::PreProcess(cocos2d::Sprite *spr) {
     auto game_scene = getGameScene();
     auto chara = dynamic_cast<character*>(spr);
+    if (chara == dynamic_cast<character*>(game_scene->getChildByTag(20))) {
+        // TODO: change a better way
+        // TODO : set it removed earlier
+//        game_scene->removeChildByName("PlayerController");
+//        game_scene->removeChildByName("BubbleController");
+        
+    }
     for (auto &dir: chara->_chara_move) {
         dir = false;
     }
-    if (chara == dynamic_cast<character*>(game_scene->getChildByTag(20))) {
-//        game_scene->_eventDispatcher->removeEventListenersForType(EventListener::Type::KEYBOARD);
-//        log("touch disable");
-//        auto controller1 = dynamic_cast<BaseController*>(game_scene->getChildByName("PlayerController"));
-//        auto controller2 = dynamic_cast<BaseController*>(game_scene->getChildByName("BubbleController"));
-//        controller1->ControllerSetEnabled();
-//        controller2->ControllerSetEnabled();
-        // TODO: change a better way
-        game_scene->removeChildByName("PlayerController");
-        game_scene->removeChildByName("BubbleController");
-        
-    }
+    
     chara->stopAllActions();
     chara->playStuckedAnimation();
     chara->runAction(Sequence::create(DelayTime::create(3),CallFuncN::create(
@@ -82,7 +80,7 @@ void CharOnRiding::excute(cocos2d::Sprite *spr) {
     static auto gameScene =  dynamic_cast<GameScene*>(scene->getChildByTag(10));
     if (gameScene == nullptr) {
         // get it again
-        gameScene =  dynamic_cast<GameScene*>(scene->getChildByTag(10));
+        gameScene = dynamic_cast<GameScene*>(scene->getChildByTag(10));
         return;
     }
     auto chara = dynamic_cast<character*>(spr);
@@ -106,6 +104,12 @@ void CharMove::PreProcess(cocos2d::Sprite* spr) {
     auto tmp_f = SpriteFrameCache::getInstance()->getSpriteFrameByName(next_direction + "01.png");
     player->setSpriteFrame(tmp_f);
     runAnimationByName(player, next_direction, 0.1f, player->_animation_frames);
+    
+    /** if it is riding on some vehicle **/
+    if (player->isRiding()) {
+        auto veh = dynamic_cast<Vehicle*>(player->getChildByName("vehicle"));
+        veh->changeTo(direction);
+    }
 }
 
 
@@ -142,11 +146,11 @@ void CharGuard::excute(cocos2d::Sprite *spr) {
 // check the state of the character
 bool checkStateFireAble(character* chara) {
     auto state_chara = typeid(*(chara->mCurState)).hash_code();
-    if (state_chara == typeid(CharNormal).hash_code() || state_chara == typeid(CharOnRiding).hash_code() ||
-        state_chara == typeid(CharMove).hash_code() || state_chara == typeid(CharStand).hash_code())
+    if (state_chara == typeid(CharNormal).hash_code() ||state_chara == typeid(CharMove).hash_code() || state_chara == typeid(CharStand).hash_code())
         return true;
     return false;
 }
+
 bool checkStateWalkAble(character* chara) {
     auto state_chara = typeid(*(chara->mCurState)).hash_code();
     if (checkStateFireAble(chara) || state_chara == typeid(CharGuard).hash_code())

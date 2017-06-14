@@ -5,6 +5,7 @@
 #include "Settings.h"
 #include <array>
 #include "GameItem.h"
+#include <thread>
 
 class character;
 class Bubbles;
@@ -15,6 +16,7 @@ class GameScene : public cocos2d::Layer
 public:
     friend class PlayerController;
     friend class CharStuck;
+    friend class character;
     using tilePosition = cocos2d::Vec2;
     
     // 返回gameScene对象
@@ -56,6 +58,7 @@ public:
     /********泡泡释放*************/
     void setBubble(character* chara);
     void BubbleBoom(Ref* sender);
+    Bubbles* hasCollideableBubble(cocos2d::Vec2 tilePos);
     Bubbles* hasBubble(cocos2d::Vec2 tilePos);
     
     // normal
@@ -68,7 +71,8 @@ private:
     cocos2d::Size visibleSize;
     float offx;
     float offy;
-    
+    // TODO: restore controlls
+    Layer* controllers[2];
     
     
     /***** tilemap的大小变化率*****/
@@ -79,6 +83,7 @@ private:
     void tileLoadProps();
     // 瓦片地图上的道具们
     std::array<std::array<int, 15>, 15> prop_on_map;
+    std::array<std::array<bool, 15>, 15> prop_gotton;
     
     /**** player的属性, 和自己的player的属性, 可以考虑fsm和vector ****/
     character* _myplayer;

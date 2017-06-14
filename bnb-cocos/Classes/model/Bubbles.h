@@ -10,8 +10,10 @@ public:
     static Bubbles* create(int power, character* setter);
     int get_power() const {return _power;}
     character* setterCharacter;
+    int isCollideable() const {return _collideable;}
 private:
     int _power;
+    bool _collideable;
 };
 
 #endif /* Bubbles_hpp */
