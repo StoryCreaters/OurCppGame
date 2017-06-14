@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="15" height="15" tilewidth="40" tileheight="40" nextobjectid="5">
+ <tileset firstgid="1" name="background" tilewidth="40" tileheight="40" tilecount="7" columns="7">
+  <image source="background.png" width="280" height="40"/>
+ </tileset>
+ <tileset firstgid="8" name="tileset" tilewidth="40" tileheight="67" tilecount="8" columns="8">
+  <image source="tileset.png" width="320" height="67"/>
+ </tileset>
+ <objectgroup name="player">
+  <object id="1" name="SpawnPoint1" x="88" y="130" width="22" height="21"/>
+  <object id="2" name="SpawnPoint2" x="92" y="528" width="20" height="20"/>
+  <object id="3" name="SpawnPoint3" x="574" y="528" width="17" height="18"/>
+  <object id="4" name="SpawnPoint4" x="491" y="250" width="17" height="19"/>
+ </objectgroup>
+ <layer name="BackGround" width="15" height="15">
+  <data encoding="csv">
+4,4,4,4,4,2,2,6,2,2,4,4,4,4,4,
+3,3,3,3,3,2,2,6,2,2,3,3,3,3,3,
+3,3,3,3,3,2,2,6,2,2,3,3,3,3,3,
+3,3,3,3,3,2,2,6,2,2,3,3,3,3,3,
+3,3,3,3,3,2,2,6,2,2,3,3,3,3,3,
+3,3,3,3,3,2,2,6,2,2,3,3,3,3,3,
+3,3,3,3,3,2,2,6,2,2,3,3,3,3,3,
+7,7,7,7,7,2,2,6,2,2,7,7,7,7,7,
+3,3,3,3,3,2,2,6,2,2,3,3,3,3,3,
+3,3,3,3,3,2,2,6,2,2,3,3,3,3,3,
+3,3,3,3,3,2,2,6,2,2,3,3,3,3,3,
+3,3,3,3,3,2,2,6,2,2,3,3,3,3,3,
+3,3,3,3,3,2,2,6,2,2,3,3,3,3,3,
+3,3,3,3,3,2,2,6,2,2,3,3,3,3,3,
+4,4,4,4,4,2,2,6,2,2,4,4,4,4,4
+</data>
+ </layer>
+ <layer name="Unbroken" width="15" height="15">
+  <data encoding="csv">
+0,9,0,9,14,10,0,0,10,10,14,8,8,0,0,
+9,0,9,0,14,10,10,10,0,10,14,0,0,0,0,
+0,0,0,0,14,10,0,0,10,10,14,8,8,8,8,
+0,9,0,9,14,10,10,0,0,10,14,8,8,8,8,
+0,9,0,0,14,10,0,10,10,10,14,8,8,8,8,
+0,9,0,0,14,10,10,0,0,10,14,8,8,8,8,
+9,9,9,9,14,10,0,10,10,10,14,0,0,0,0,
+0,0,0,0,14,10,10,0,0,10,14,0,0,0,0,
+9,9,9,9,14,10,0,10,10,10,14,8,8,8,8,
+9,9,9,9,14,10,10,0,0,10,14,8,8,8,8,
+9,9,9,9,14,10,0,0,10,10,14,8,8,8,8,
+9,9,0,0,14,10,10,10,0,10,14,8,8,8,8,
+0,9,0,9,14,10,0,0,10,10,14,8,0,0,0,
+0,0,0,9,14,10,0,0,0,10,14,0,0,0,0,
+9,9,0,9,14,10,10,0,0,10,14,8,0,0,8
+</data>
+ </layer>
+</map>
