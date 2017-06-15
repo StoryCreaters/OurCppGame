@@ -160,10 +160,10 @@ bool GameScene::addCharacter(float x, float y, character::characterType Type,std
 	temp->setPosition(offx + x, offy + y);
 	
 	_game_players.pushBack(temp);
-	addChild(_game_players.back(), 1);
-	_game_players.back()->setTag(20);
+	
+	_game_players.back()->setTag(3213);
 	_game_players.back()->setName(setname);
-
+	addChild(_game_players.back(), 1);
 	_player_bubbles.push_back(0);
 	return true;
 }

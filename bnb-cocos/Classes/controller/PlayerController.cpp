@@ -31,8 +31,7 @@ void PlayerController::myKeyboardPressed(cocos2d::EventKeyboard::KeyCode keyCode
         default:
             break;
     }
-	auto gameLayer = GameScene::getCurrentMap();
-	gameLayer->OnBubble = false;
+	
 
     auto _myplayer = getMyplayer();
     if (code != GameScene::_optionCode::DEFAULT) {
@@ -43,6 +42,7 @@ void PlayerController::myKeyboardPressed(cocos2d::EventKeyboard::KeyCode keyCode
 	{
 		_myplayer->_chara_still = true;
 	}
+	
 }
 
 void PlayerController::myKeyboardOff(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
@@ -73,5 +73,7 @@ void PlayerController::myKeyboardOff(cocos2d::EventKeyboard::KeyCode keyCode, co
             mychara->changeState(std::make_shared<CharStand>());
         }
     }
+	auto gameLayer = GameScene::getCurrentMap();
+		gameLayer->OnBubble = false;
 }
     

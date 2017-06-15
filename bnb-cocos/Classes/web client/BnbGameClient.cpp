@@ -9,12 +9,13 @@
 #include "../controller/PlayerController.h"
 #include "../controller/CharacterFSM.h"
 #include <random>
-#include <sys/types.h>
-#include <fcntl.h>
+
+
 
 USING_NS_CC;
 using namespace settings::GameScene;
 
+using std::queue;
 using std::fstream;
 using std::string;
 using std::endl;
@@ -100,6 +101,7 @@ void  GameClient::ClientProcess()
 			return;
 		}
 	}
+	
 	if (flag == false)
 	{
 		acceptProps();
@@ -107,17 +109,16 @@ void  GameClient::ClientProcess()
 	}
 
 	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)sendAndRecv, this, 0, NULL);
-
+	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)control, this, 0, NULL);
+	
 }
 
 
 DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 {
 	GameClient *Client = (GameClient *)lpParam;
-	const int PACKAGE = 28;
+	const int PACKAGE = 28;          //每次发送包的长度
 
-	
-	while (true)
 	{
 		fd_set wfd, rfd;
 		FD_ZERO(&wfd);
@@ -139,6 +140,7 @@ DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 					if (Client->runningGameScene->_game_players.at(0)->_chara_move[direct])
 						break;
 				}
+
 				int still_1 = Client->runningGameScene->_game_players.at(0)->_chara_still;
 
 				int put_bubble_1 = 0;
@@ -146,6 +148,7 @@ DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 				if (Client->runningGameScene->OnBubble == true)
 					put_bubble_1 = 1;
 
+				
 				Vec2 pos = Client->runningGameScene->_game_players.at(0)->getPosition();
 				//Vec2 broken_tile = runningGameScene->next_ps;
 
@@ -167,6 +170,7 @@ DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 				
 			}
 			
+			
 			if (FD_ISSET(Client->ClientSocket, &rfd))
 			{
 				/*
@@ -175,7 +179,7 @@ DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 				int direct_2;
 				int still_2;
 				int put_bubble_2 = 0;
-				char recvData[1024];
+				char recvData[PACKAGE * 100];
 				ZeroMemory(recvData, sizeof(recvData));
 
 				int temp = 0;
@@ -185,41 +189,33 @@ DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 				int ret;
 				while (recvByte < PACKAGE)
 				{
-					ret = recv(Client->ClientSocket, recvData, 1024, 0);
+					ret = recv(Client->ClientSocket, recvData, PACKAGE * 100, 0);
 					recvByte += ret;
 				}
-			
+				fstream outfile("e:\\text.txt", std::ios::app);
+	
+				int len = recvByte / PACKAGE;
 				recvData[PACKAGE] = '\0';
-			
-
-				Vec2 Pos;
-				Vec2 broken_tile;
+		
 				//接收格式（同上） 
 
+				
+				outfile << "len:" << len << " ";
+				for (int i = 0; i < len; i++)
+				{
+					recvInfo temp;
+					sscanf(recvData + i*PACKAGE, "%f %f %d %d %d",&temp.Posx,&temp.Posy,
+						&temp.still,&temp.direct,&temp.putBubble);
+					
+					outfile << "#recv:" << temp.Posx << " " << temp.Posy << " "
+						<< " " << temp.still << " " << temp.direct << " " << temp.putBubble << endl;
+					
+					Client->recvQueue.push(temp);
+				}
 
-				sscanf(recvData, "%f %f %d %d %d", &Pos.x, &Pos.y, &still_2,
-					&direct_2, &put_bubble_2);
+				outfile.close();
 
 				/*
-				std::fstream outfile("e:\\text.txt", std::ios::app);
-				if (!outfile.is_open())
-				{
-					log("妈个鸡");
-				}
-				outfile << "#recv :" << Pos.x << " " << Pos.y << " " << still_2 << " "
-					<< direct_2 << " " << put_bubble_2 << endl;
-				outfile.close();
-				*/
-
-				if (broken_tile.x != 0 || broken_tile.y != 0)
-				{
-					Client->runningGameScene->_meta->removeTileAt(broken_tile);
-				}
-
-			
-				if (put_bubble_2)
-					Client->runningGameScene->setBubble(Client->runningGameScene->_game_players.at(1));
-				
 				if (still_2 == true)
 				{
 					Client->runningGameScene->_game_players.at(1)->changeState(std::make_shared<CharStand>());
@@ -250,16 +246,45 @@ DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 							break;
 						}
 						//DEBUG 
-						Client->runningGameScene->_game_players.at(1)->setPosition(Pos.x, Pos.y);
+						
+						//if (code != GameScene::_optionCode::DEFAULT)
+						//	Client->runningGameScene->_game_players.at(1)->changeState(std::make_shared<CharMove>(static_cast<int>(code)));
+						//Client->runningGameScene->CharacterMove(Client->runningGameScene->_game_players.at(1));
 					}
-				}
+				}*/
 			}
-
-			ExitThread(1);
 		}
+		
 	}
 	return 1;
 }
+
+DWORD WINAPI GameClient::control(LPVOID lpParam)
+{
+	GameClient *Client = (GameClient *)lpParam;
+	
+	if (Client->recvQueue.empty() == true)
+	{
+		return 0;
+	}
+
+	while (!Client->recvQueue.empty())
+	{
+		recvInfo temp = Client->recvQueue.front();
+		Client->recvQueue.pop();
+
+
+		Client->runningGameScene->_game_players.at(1)->setPosition(temp.Posx, temp.Posy);
+		
+		if (temp.putBubble)
+			Client->runningGameScene->setBubble(Client->runningGameScene->_game_players.at(1));
+
+	}
+	
+	return 1;
+
+}
+
 
 void GameClient::acceptProps()
 {
