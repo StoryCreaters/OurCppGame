@@ -135,9 +135,16 @@ namespace settings {
 		};
 		// frame里面 不需要路径
 		constexpr char* ItemNames[] = {
-			"GiftPoPo",
-			"GiftPower",
-			"GiftRun"
+            "GiftPoPo",
+            "GiftPower",
+            "GiftRun",
+            "Gift_Mpower",
+            "Gift_RspeedUp",
+            "Gift_needle",
+            "Gift_guard",
+            "Gift_upper",
+            "GiftOwl",
+            "GiftTutle"
 		};
 	}
 
