@@ -128,6 +128,9 @@ private:
     /*** add item to the game ***/
     void addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools tool);
     
+    void Win(character* chara);
+    void Lose(character* chara);
+    void gameOver(const std::string &message);
 };
 
 #endif /* GameTheme_hpp */

@@ -117,6 +117,10 @@
 		82E9FF1E1ED80C65007C3AC0 /* BaseFSM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82E9FF191ED80C65007C3AC0 /* BaseFSM.cpp */; };
 		82E9FF1F1ED80C65007C3AC0 /* CharacterFSM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82E9FF1B1ED80C65007C3AC0 /* CharacterFSM.cpp */; };
 		82E9FF201ED80C65007C3AC0 /* CharacterFSM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82E9FF1B1ED80C65007C3AC0 /* CharacterFSM.cpp */; };
+		82EA52161EF2F2E200D61C17 /* effect in Resources */ = {isa = PBXBuildFile; fileRef = 82EA52151EF2F2E200D61C17 /* effect */; };
+		82EA52171EF2F2E200D61C17 /* effect in Resources */ = {isa = PBXBuildFile; fileRef = 82EA52151EF2F2E200D61C17 /* effect */; };
+		82EA521A1EF2F2EC00D61C17 /* music in Resources */ = {isa = PBXBuildFile; fileRef = 82EA52191EF2F2EC00D61C17 /* music */; };
+		82EA521B1EF2F2EC00D61C17 /* music in Resources */ = {isa = PBXBuildFile; fileRef = 82EA52191EF2F2EC00D61C17 /* music */; };
 		82F3876E1EEEBDEC00E44B8E /* TextField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F3876C1EEEBDEC00E44B8E /* TextField.cpp */; };
 		82F3876F1EEEBDEC00E44B8E /* TextField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F3876C1EEEBDEC00E44B8E /* TextField.cpp */; };
 		82F387731EEEBDFB00E44B8E /* PropLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82F387711EEEBDFB00E44B8E /* PropLayer.cpp */; };
@@ -289,6 +293,8 @@
 		82E9FF1A1ED80C65007C3AC0 /* BaseFSM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseFSM.h; path = controller/BaseFSM.h; sourceTree = "<group>"; };
 		82E9FF1B1ED80C65007C3AC0 /* CharacterFSM.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CharacterFSM.cpp; path = controller/CharacterFSM.cpp; sourceTree = "<group>"; };
 		82E9FF1C1ED80C65007C3AC0 /* CharacterFSM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CharacterFSM.h; path = controller/CharacterFSM.h; sourceTree = "<group>"; };
+		82EA52151EF2F2E200D61C17 /* effect */ = {isa = PBXFileReference; lastKnownFileType = folder; path = effect; sourceTree = "<group>"; };
+		82EA52191EF2F2EC00D61C17 /* music */ = {isa = PBXFileReference; lastKnownFileType = folder; path = music; sourceTree = "<group>"; };
 		82F3876C1EEEBDEC00E44B8E /* TextField.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextField.cpp; path = view/TextField.cpp; sourceTree = "<group>"; };
 		82F3876D1EEEBDEC00E44B8E /* TextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextField.h; path = view/TextField.h; sourceTree = "<group>"; };
 		82F387711EEEBDFB00E44B8E /* PropLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PropLayer.cpp; path = view/PropLayer.cpp; sourceTree = "<group>"; };
@@ -436,6 +442,8 @@
 		46880B7519C43A67006E1F66 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				82EA52191EF2F2EC00D61C17 /* music */,
+				82EA52151EF2F2E200D61C17 /* effect */,
 				825260831EE332910062167A /* riding */,
 				82A878931EC1C1D2006385CC /* BubbleImages */,
 				82A878901EC1BD7F006385CC /* GameProp */,
@@ -719,6 +727,7 @@
 				50EF62A217ECD613001EB2F8 /* Icon-29.png in Resources */,
 				50EF629617ECD46A001EB2F8 /* Icon-40.png in Resources */,
 				5087E78217EB970100C73F5D /* Icon-144.png in Resources */,
+				82EA521A1EF2F2EC00D61C17 /* music in Resources */,
 				82A8788D1EC1BD76006385CC /* PropResource in Resources */,
 				82FFA96B1EA9FA7C0061D94D /* GamePlayer in Resources */,
 				50EF629817ECD46A001EB2F8 /* Icon-80.png in Resources */,
@@ -728,6 +737,7 @@
 				46880B7B19C43A67006E1F66 /* CloseNormal.png in Resources */,
 				82A878911EC1BD7F006385CC /* GameProp in Resources */,
 				82F3DBF51EA26A2700C6DBDA /* BackGround in Resources */,
+				82EA52161EF2F2E200D61C17 /* effect in Resources */,
 				50EF629717ECD46A001EB2F8 /* Icon-58.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -739,7 +749,9 @@
 				46880B8219C43A67006E1F66 /* HelloWorld.png in Resources */,
 				503AE0F817EB97AB00D1A890 /* Icon.icns in Resources */,
 				82F3DBF61EA26A2700C6DBDA /* BackGround in Resources */,
+				82EA52171EF2F2E200D61C17 /* effect in Resources */,
 				82A878921EC1BD7F006385CC /* GameProp in Resources */,
+				82EA521B1EF2F2EC00D61C17 /* music in Resources */,
 				8222CA471EA6426D00092E33 /* GameUI in Resources */,
 				825260851EE332910062167A /* riding in Resources */,
 				827A69BF1EA8FE750073F534 /* gameStart in Resources */,

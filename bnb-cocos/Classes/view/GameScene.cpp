@@ -16,6 +16,7 @@
 #include "OpenScene.h"
 
 USING_NS_CC;
+using namespace ui;
 using namespace settings::GameScene;
 
 
@@ -273,6 +274,10 @@ void GameScene::setBubble(character* chara) {
 
 // 泡泡爆炸, 可以添加逻辑
 void GameScene::BubbleBoom(Ref* sender) {
+    auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+    float volume = UserDefault::getInstance()->getFloatForKey("effectPercent");
+    audio->setEffectsVolume(volume);
+    audio->playEffect("effect/explode.wav", false);
     auto *sprite = dynamic_cast<Bubbles*>(sender);
     auto beg_pos = sprite->getPosition();
     int power = sprite->get_power();
@@ -570,3 +575,57 @@ bool GameScene::checkCollisionWithOther(character* chara) {
     return false;
 }
 
+void GameScene::Win(character* chara) {
+    //增加音效
+    auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+    float volume = UserDefault::getInstance()->getFloatForKey("effectPercent");
+    audio->setEffectsVolume(volume);
+    audio->playEffect("effect/win.wav", false);
+    gameOver("Play Again");
+}
+
+void GameScene::Lose(character* chara) {
+    //增加音效
+    auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+    float volume = UserDefault::getInstance()->getFloatForKey("effectPercent");
+    audio->setEffectsVolume(volume);
+    audio->playEffect("effect/lose.wav", false);
+    gameOver("Game Win");
+}
+// 游戏结束
+void GameScene::gameOver(const std::string &message) {
+    // 获得设备可见视图大小
+    Size visibleSize = Director::getInstance()->getVisibleSize();
+    auto backGround = cocos2d::Sprite::create("BackGround/temple of times.png");
+    backGround->setPosition(cocos2d::Vec2(visibleSize.width / 2, visibleSize.height / 2));
+    this->addChild(backGround, 0);
+    // “重新开始”按钮
+    auto restart_button = Button::create("GameUI/button.png");
+    restart_button->setScale(2);
+    restart_button->setTitleText(message);
+    restart_button->setTitleFontName("微软雅黑");
+    restart_button->setTitleFontSize(16);
+    restart_button->setPosition(Vec2(visibleSize.width / 2, visibleSize.height *0.7));
+    restart_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
+        if (type == Widget::TouchEventType::ENDED) {
+            auto transition = TransitionFadeBL::create(2.0, GameScene::createScene());
+            Director::getInstance()->replaceScene(transition);
+        }
+    });
+    this->addChild(restart_button, 1);
+    
+    // “返回主菜单”按钮
+    auto back_button = Button::create("GameUI/button.png");
+    back_button->setScale(2);
+    back_button->setTitleText("Return Menu");
+    back_button->setTitleFontName("微软雅黑");
+    back_button->setTitleFontSize(16);
+    back_button->setPosition(Vec2(visibleSize.width / 2, visibleSize.height *0.4));
+    back_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
+        if (type == Widget::TouchEventType::ENDED) {
+            auto transition = TransitionShrinkGrow::create(2.0, OpenScene::createScene());
+            Director::getInstance()->replaceScene(transition);
+        }
+    });
+    this->addChild(back_button, 1);
+}
