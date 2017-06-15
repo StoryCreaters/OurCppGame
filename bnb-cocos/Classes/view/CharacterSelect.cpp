@@ -95,15 +95,20 @@ bool Players::init() {
 	textfield->setName("TextField");
 	addChild(textfield);
 	//设OK键
-	auto ok_button = Button::create("GameUI/ok.png");
+	auto ok_button = Button::create("GameUI/button1.png");
 	ok_button->setPosition(Vec2(visibleSize.width *0.20, visibleSize.height*0.18));
-	ok_button->addTouchEventListener([](Ref* pSender, Widget::TouchEventType type) {
+	this->addChild(ok_button);
+	ok_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
 		if (type == Widget::TouchEventType::ENDED) {
+			removeChild(ok_button);
+			auto cancel_button = Button::create("GameUI/button2.png");
+			cancel_button->setPosition(Vec2(visibleSize.width *0.20, visibleSize.height*0.18));
+			this->addChild(cancel_button);
 			// 切换到GameScene场景
 			auto transition = TransitionFadeBL::create(2.0, GameScene::createScene());
 			Director::getInstance()->replaceScene(transition);
 		}
 	});
-	this->addChild(ok_button);
+	
 	return true;
 }
