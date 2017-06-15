@@ -3,6 +3,8 @@
 #include "GameScene.h"
 #include "RoomChooseScene.h"
 #include "TextField.h"
+#include "ChatBox.h"
+
 USING_NS_CC;
 using namespace ui;
 
@@ -28,7 +30,7 @@ bool Players::init() {
 	}
 	// 获得设备可见视图大小
 	Size visibleSize = Director::getInstance()->getVisibleSize();
-	auto backGround = cocos2d::Sprite::create("BackGround/Character_Select.png");
+	auto backGround = cocos2d::Sprite::create("BackGround/temple of times.png");
 	backGround->setPosition(cocos2d::Vec2(visibleSize.width / 2, visibleSize.height / 2));
 	this->addChild(backGround, 0);
 	//Player1
@@ -88,12 +90,13 @@ bool Players::init() {
 	});
 	this->addChild(return_button);
 	//留白
-	auto layerColor = LayerColor::create(Color4B(41, 36, 33, 200), 400, 400);
-	layerColor->setPosition(208, 150);
-	this->addChild(layerColor);
-	auto textfield = TextFieldTest::create();
-	textfield->setName("TextField");
-	addChild(textfield);
+    addChild(ChatBox::create());
+//	auto layerColor = LayerColor::create(Color4B(41, 36, 33, 200), 400, 400);
+//	layerColor->setPosition(208, 150);
+//	this->addChild(layerColor);
+//	auto textfield = TextFieldTest::create();
+//	textfield->setName("TextField");
+//	addChild(textfield);
 	//设OK键
 	auto ok_button = Button::create("GameUI/ok.png");
 	ok_button->setPosition(Vec2(visibleSize.width *0.20, visibleSize.height*0.18));

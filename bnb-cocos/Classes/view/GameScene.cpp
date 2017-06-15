@@ -68,7 +68,7 @@ bool GameScene::init()
 	backG->setPosition(visibleSize / 2);
 
 	/***** tilemap ******/
-	_tileMap = TMXTiledMap::create("gameStart/map01.tmx");
+	_tileMap = TMXTiledMap::create("gameStart/map02.tmx");
 	_tileMap->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	_tileMap->setPosition(Point(visibleSize.width / 2, visibleSize.height / 2));
 	_tileMap->setScale(settings::GameScene::_tile_delta_rate);
@@ -111,12 +111,8 @@ bool GameScene::init()
 	_myplayer->setName("myplayer");
 	addChild(_myplayer, 1);
 	_game_players.pushBack(_myplayer);
-	_my_bubbles = 0;        // bubbles start from 0
-
-							// test
-							//    addItems(Vec2(10, 10));
-
-
+	_my_bubbles = 0;
+    // bubbles start from 0
 
 	// add controller
 	auto playerController = PlayerController::create();
@@ -301,8 +297,11 @@ void GameScene::BubbleBoom(Ref* sender) {
         }
         auto chara_pos = tileCoordForPosition(chara->getPosition());
         chara_pos.y += 1;
-        if (chara_pos == pos)
-            chara->changeState(std::make_shared<CharStuck>());
+        if (chara_pos == pos) {
+            log("fired");
+            chara->charaFired();
+        }
+        removePositionItem(pos);
     }
     add_and_clear_with_time(Sprite::create(center_boom), boom_time, beg_pos);
     horizontal_boom(beg_pos, power);
@@ -414,6 +413,8 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
                 continue;
             // 获取下一个爆炸的位置
             auto next_p = dirs[r_vec] * syn[j] * i + tiled_position;
+            removePositionItem(next_p);
+
             // 判断爆炸位置是否在地图中
             if (!in_map(next_p.x, next_p.y)) {
                 synb[j] = false;
@@ -444,22 +445,8 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
                     }
                     if (tileCoordForPosition(chara->getPosition()) == next_p) {
                         // chara was fired
-                        log("fired");
-                        auto cur_code = typeid(*(chara->mCurState)).hash_code();
-                        if (!chara->isGuard()) {
-                            if(chara->isRiding()) {
-                                chara->offRiding();
-                                chara->setGuard();
-                            }
-                            else if (cur_code == typeid(CharStand).hash_code() || cur_code == typeid(CharMove).hash_code()) {
-                                for (auto controller : controllers) {
-                                    this->removeChild(controller);
-                                }
-                                this->removeChildByName("PlayerController");
-                                this->removeChildByName("BubbleController");
-                                chara->changeState(std::make_shared<CharStuck>());
-                            }
-                        }   
+//                        log("fired");
+                        chara->charaFired();
                     }
                 }
                 ans = true;
@@ -545,6 +532,15 @@ void GameScene::checkGetItem(character* chara) {
     if (itemIter != screenItems.end()) {
         auto item = itemIter->second;
         item->getItem(chara);
+        screenItems.erase(itemIter);
+        this->removeChild(item);
+    }
+}
+
+void GameScene::removePositionItem(const Vec2 pos) {
+    auto itemIter = screenItems.find(pos);
+    if (itemIter != screenItems.end()) {
+        auto item = itemIter->second;
         screenItems.erase(itemIter);
         this->removeChild(item);
     }
