@@ -203,3 +203,22 @@ int character::getRidingBubbles() {
     auto veh = dynamic_cast<Vehicle*>(getChildByName("vehicle"));
     return veh->_tmp_bubbles;
 }
+
+void character::charaFired() {
+    auto cur_code = typeid(*mCurState).hash_code();
+    if (!isGuard()) {
+        if(isRiding()) {
+            offRiding();
+            setGuard();
+        }
+        else if (cur_code == typeid(CharStand).hash_code() || cur_code == typeid(CharMove).hash_code()) {
+            auto controllers = GameScene::getCurrentMap()->controllers;
+            for (int i = 0; i < 2; ++i) {
+                GameScene::getCurrentMap()->removeChild(controllers[i]);
+            }
+            this->removeChildByName("PlayerController");
+            this->removeChildByName("BubbleController");
+            changeState(std::make_shared<CharStuck>());
+        }
+    }
+}

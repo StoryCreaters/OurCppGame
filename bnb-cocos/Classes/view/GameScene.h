@@ -106,6 +106,8 @@ private:
     std::map<cocos2d::Vec2, Bubbles*> _map_screen_bubbles;
     // items on game scene
     std::map<cocos2d::Vec2, GameItem*> screenItems;
+    // pass in and position
+    void removePositionItem(const Vec2 pos);
     
     bool check_chain_boom(cocos2d::Vec2 coordPos);
     

@@ -28,7 +28,6 @@ public:
 	void ToRoomTwo(cocos2d::Ref* sender);
 	void ToRoomThree(cocos2d::Ref* sender);
 	void ToRoomFour(cocos2d::Ref* sender);
-
 private:
 	Menu* UImenus = nullptr;
 };
