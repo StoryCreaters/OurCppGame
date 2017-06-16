@@ -53,7 +53,7 @@ GameServer::GameServer()
 		int retval = bind(ListenSocket, (LPSOCKADDR)&Server, sizeof(Server));
 		cout << "绑定错误，错误号10048\n";
 		fflush(stdout);
-
+		
 	}
 	cout << "服务器的IP为:"<< Server.sin_addr.S_un.S_addr
 		<< " 端口号为: " << port << "\n";
@@ -240,6 +240,11 @@ DWORD WINAPI GameServer::ListenThread(void *data) //传进来具体哪个AcceptS
 				cout <<	"玩家" << GameSocket->ID << "发送了消息:"
 					<< recvBuf << "\n";
 				fflush(stdout);
+			}
+			if (result == SOCKET_ERROR)
+			{
+				CleanSocket(GameSocket->ID);
+
 			}
 		}
 		

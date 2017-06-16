@@ -26,7 +26,7 @@ bool WebGameScene::init()
 
 	this->schedule(schedule_selector(WebGameScene::update));
 
-
+	
 	return true;
 	
 }
@@ -40,5 +40,10 @@ void WebGameScene::update(float dt) {
 bool WebGameScene::checkSyn()
 {
 	return true;
+}
+
+WebGameScene::~WebGameScene()
+{
+	this->unschedule(schedule_selector(WebGameScene::update)); //取消自定义函数的定时器
 }
 

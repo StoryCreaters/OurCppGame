@@ -12,6 +12,7 @@ class WebGameScene : public cocos2d::Layer
 public:
 	static cocos2d::Scene* createScene();
 	virtual bool init();    
+	~WebGameScene();
 	void update(float dt);
 	bool checkSyn();
 	CREATE_FUNC(WebGameScene);

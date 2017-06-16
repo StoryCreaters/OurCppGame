@@ -12,6 +12,7 @@
 
 
 
+
 USING_NS_CC;
 using namespace settings::GameScene;
 
@@ -21,6 +22,8 @@ using std::string;
 using std::endl;
 
 #define PORTS 1236      //设置端口号，与Server一致
+
+std::queue <recvInfo> GameClient::recvQueue;
 
 static inline GameScene* getGameScene() {
 	auto scene = Director::getInstance()->getRunningScene();
@@ -107,25 +110,44 @@ void  GameClient::ClientProcess()
 		acceptProps();
 		flag = true;
 	}
-
-	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)sendAndRecv, this, 0, NULL);
-	CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)control, this, 0, NULL);
+	HANDLE hThread1;
+	HANDLE hThread2;
+	hThread1 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)sendAndRecv, this, 0, NULL);
 	
+	hThread2 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)control, this, 0, NULL);
+	CloseHandle(hThread1);
+	CloseHandle(hThread2);
+
+	
+	hMutex = CreateMutex(nullptr, TRUE, TEXT("Control"));
+	if (hMutex)
+	{
+		if (ERROR_ALREADY_EXISTS == GetLastError())
+		{
+			return;
+		}
+	}
+	WaitForSingleObject(hMutex, INFINITE);
+	ReleaseMutex(hMutex);
+	ReleaseMutex(hMutex);
 }
 
 
 DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 {
 	GameClient *Client = (GameClient *)lpParam;
+	GameClient *Client2 = (GameClient *)lpParam;
 	const int PACKAGE = 28;          //每次发送包的长度
 
 	{
+		WaitForSingleObject(Client->hMutex, INFINITE);
+
 		fd_set wfd, rfd;
 		FD_ZERO(&wfd);
 		FD_ZERO(&rfd);
 
 		FD_SET(Client->ClientSocket, &wfd);
-		FD_SET(Client->ClientSocket, &rfd);
+		FD_SET(Client2->ClientSocket, &rfd);
 
 		int sel = select(0, &rfd, &wfd, NULL, NULL);
 		if (sel > 0)
@@ -135,13 +157,15 @@ DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 				/*
 				发送数据
 				*/
+				character * myplayer = dynamic_cast<character*>(Client->runningGameScene->getChildByName("myplayer"));
+
 				int direct;
 				for (direct = 0; direct < 4; ++direct) {
-					if (Client->runningGameScene->_game_players.at(0)->_chara_move[direct])
+					if (myplayer->_chara_move[direct])
 						break;
 				}
 
-				int still_1 = Client->runningGameScene->_game_players.at(0)->_chara_still;
+				int still_1 = myplayer->_chara_still;
 
 				int put_bubble_1 = 0;
 
@@ -149,7 +173,7 @@ DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 					put_bubble_1 = 1;
 
 				
-				Vec2 pos = Client->runningGameScene->_game_players.at(0)->getPosition();
+				Vec2 pos = myplayer->getPosition();
 				//Vec2 broken_tile = runningGameScene->next_ps;
 
 				char sendData[1024];
@@ -171,7 +195,7 @@ DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 			}
 			
 			
-			if (FD_ISSET(Client->ClientSocket, &rfd))
+			if (FD_ISSET(Client2->ClientSocket, &rfd))
 			{
 				/*
 				接收数据
@@ -189,31 +213,24 @@ DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 				int ret;
 				while (recvByte < PACKAGE)
 				{
-					ret = recv(Client->ClientSocket, recvData, PACKAGE * 100, 0);
+					ret = recv(Client2->ClientSocket, recvData, PACKAGE * 100, 0);
 					recvByte += ret;
 				}
-				fstream outfile("e:\\text.txt", std::ios::app);
+			
 	
 				int len = recvByte / PACKAGE;
 				recvData[PACKAGE] = '\0';
 		
-				//接收格式（同上） 
-
-				
-				outfile << "len:" << len << " ";
 				for (int i = 0; i < len; i++)
 				{
 					recvInfo temp;
 					sscanf(recvData + i*PACKAGE, "%f %f %d %d %d",&temp.Posx,&temp.Posy,
 						&temp.still,&temp.direct,&temp.putBubble);
 					
-					outfile << "#recv:" << temp.Posx << " " << temp.Posy << " "
-						<< " " << temp.still << " " << temp.direct << " " << temp.putBubble << endl;
-					
-					Client->recvQueue.push(temp);
+					recvQueue.push(temp);
 				}
 
-				outfile.close();
+			
 
 				/*
 				if (still_2 == true)
@@ -255,7 +272,11 @@ DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 			}
 		}
 		
+		ReleaseMutex(Client->hMutex);
 	}
+
+	WaitForSingleObject(Client->hMutex, INFINITE);
+
 	return 1;
 }
 
@@ -263,24 +284,61 @@ DWORD WINAPI GameClient::control(LPVOID lpParam)
 {
 	GameClient *Client = (GameClient *)lpParam;
 	
-	if (Client->recvQueue.empty() == true)
+	if (recvQueue.empty() == true)
 	{
 		return 0;
 	}
 
-	while (!Client->recvQueue.empty())
+	character * player2 = dynamic_cast<character*>(Client->runningGameScene->getChildByName("player2"));
+
+	fstream outfile("e:\\text.txt");
+	while (!recvQueue.empty())
 	{
-		recvInfo temp = Client->recvQueue.front();
-		Client->recvQueue.pop();
+		WaitForSingleObject(Client->hMutex, INFINITE);
+
+		recvInfo temp;
+		if (!recvQueue.empty())
+			temp = recvQueue.front();
+		else
+		{
+			ReleaseMutex(Client->hMutex);
+			return 0;
+		}
+			
+
+		outfile << "queue size: " << recvQueue.size() << " |";
+		outfile << "消费者: " << temp.Posx << " " << temp.Posy << " "
+			<< temp.still << " " << temp.direct << " " << temp.putBubble << endl;
 
 
-		Client->runningGameScene->_game_players.at(1)->setPosition(temp.Posx, temp.Posy);
+		if (temp.Posx > 0 && temp.Posy > 0)  //判断一下，万一传输错了
+			player2->setPosition(temp.Posx, temp.Posy);
+		else
+		{
+			ReleaseMutex(Client->hMutex);
+			return 0;
+		}
+
+		Vec2 Pos(temp.Posx, temp.Posy);
+
+		if (temp.putBubble && 
+			player2->_currentBubbles <=
+			player2->_maxBubbles)
+			Client->runningGameScene->setBubble(player2, Pos);
 		
-		if (temp.putBubble)
-			Client->runningGameScene->setBubble(Client->runningGameScene->_game_players.at(1));
+		if (!recvQueue.empty())
+			recvQueue.pop();
+		else
+		{
+			ReleaseMutex(Client->hMutex);
+			return 0;
+		}
 
+		ReleaseMutex(Client->hMutex);
 	}
-	
+	outfile.close();
+
+	WaitForSingleObject(Client->hMutex, INFINITE);
 	return 1;
 
 }
@@ -320,5 +378,6 @@ GameClient::~GameClient()
 {
 	delete[]prop;
 	closesocket(ClientSocket);
+
 	WSACleanup();
 }

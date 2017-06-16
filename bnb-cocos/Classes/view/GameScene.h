@@ -59,7 +59,7 @@ public:
     void RemoveCharacter(character* chara);
     
     /********泡泡释放*************/
-    void setBubble(character* chara);
+    void setBubble(character* chara,Vec2 pos);
     void BubbleBoom(Ref* sender);
     Bubbles* hasBubble(cocos2d::Vec2 tilePos);
     

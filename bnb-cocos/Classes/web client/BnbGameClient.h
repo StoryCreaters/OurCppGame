@@ -39,7 +39,8 @@ public:
 	//网络数据处理
 
 private:
-	std::queue <recvInfo> recvQueue;
+	static std::queue <recvInfo> recvQueue;
+	HANDLE hMutex;
 	GameScene* runningGameScene;
 	char *prop;
 };

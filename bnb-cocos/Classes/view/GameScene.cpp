@@ -265,12 +265,12 @@ void GameScene::CharacterMove(character* chara) {
 
 // bubble应该设置在tilemap的grid上
 // bubble渲染问题
-void GameScene::setBubble(character* chara) {
+void GameScene::setBubble(character* chara, Vec2 pos) {
     if (chara->curSetBubbles >= chara->_currentBubbles) {
         return;
     }
     // TODO: duplicate here!!
-    auto pos0 = tileCoordForPosition(chara->getPosition());
+    auto pos0 = pos;
     if (chara->getAnchorPoint() != Vec2::ZERO) {
         if (pos0.x > 14) pos0.x = 14;
     }

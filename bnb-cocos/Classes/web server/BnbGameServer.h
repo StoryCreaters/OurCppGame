@@ -35,7 +35,7 @@ public:
 	static int SendMessageToOneClient(int ID, const std::string  str);  //向某一个Client发送信息
 
 	int CheckSocket();     //检测当前可用的ID号
-	void CleanSocket(int ID); //清空ID号的套接字
+	static void CleanSocket(int ID); //清空ID号的套接字
 	static void SendMessageToAllClient(const std::string  str, int ID = -1); //向所有Client发送信息
 
 	//Socket 相关
