@@ -3,6 +3,10 @@
 #include "GameScene.h"
 #include "RoomChooseScene.h"
 #include "TextField.h"
+#include "ChatBox.h"
+#include "../web client/BnbGameClient.h"
+
+
 USING_NS_CC;
 using namespace ui;
 
@@ -21,14 +25,22 @@ Players* Players::getCurrent() {
 	auto currentScene = Director::getInstance()->getRunningScene();
 	return dynamic_cast<Players*>(currentScene->getChildByName("Players"));
 }
+
+
+extern "C" GameClient client;
+
+
 bool Players::init() {
 	// 调用父类的init方法
 	if (!Layer::init()) {
 		return false;
 	}
+	//网络初始化
+	
+
 	// 获得设备可见视图大小
 	Size visibleSize = Director::getInstance()->getVisibleSize();
-	auto backGround = cocos2d::Sprite::create("BackGround/Character_Select.png");
+	auto backGround = cocos2d::Sprite::create("BackGround/temple of times.png");
 	backGround->setPosition(cocos2d::Vec2(visibleSize.width / 2, visibleSize.height / 2));
 	this->addChild(backGround, 0);
 	//Player1
@@ -88,22 +100,30 @@ bool Players::init() {
 	});
 	this->addChild(return_button);
 	//留白
-	auto layerColor = LayerColor::create(Color4B(41, 36, 33, 200), 400, 400);
-	layerColor->setPosition(208, 150);
-	this->addChild(layerColor);
-	auto textfield = TextFieldTest::create();
-	textfield->setName("TextField");
-	addChild(textfield);
+    addChild(ChatBox::create());
+//	auto layerColor = LayerColor::create(Color4B(41, 36, 33, 200), 400, 400);
+//	layerColor->setPosition(208, 150);
+//	this->addChild(layerColor);
+//	auto textfield = TextFieldTest::create();
+//	textfield->setName("TextField");
+//	addChild(textfield);
 	//设OK键
-	auto ok_button = Button::create("GameUI/ok.png");
+	auto ok_button = Button::create("GameUI/button1.png");
 	ok_button->setPosition(Vec2(visibleSize.width *0.20, visibleSize.height*0.18));
-	ok_button->addTouchEventListener([](Ref* pSender, Widget::TouchEventType type) {
+	this->addChild(ok_button);
+	ok_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
 		if (type == Widget::TouchEventType::ENDED) {
+			removeChild(ok_button);
+			auto cancel_button = Button::create("GameUI/button2.png");
+			cancel_button->setPosition(Vec2(visibleSize.width *0.20, visibleSize.height*0.18));
+			this->addChild(cancel_button);
 			// 切换到GameScene场景
 			auto transition = TransitionFadeBL::create(2.0, GameScene::createScene());
 			Director::getInstance()->replaceScene(transition);
 		}
 	});
-	this->addChild(ok_button);
+	
+	
+
 	return true;
 }

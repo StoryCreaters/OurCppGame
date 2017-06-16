@@ -7,7 +7,6 @@
 #include <memory>
 #include "../model/Character.h"
 
-
 class BaseFsm;
 
 class State {

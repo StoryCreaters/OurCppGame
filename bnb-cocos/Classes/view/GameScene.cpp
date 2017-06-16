@@ -7,14 +7,17 @@
 #include <random>
 #include "../controller/CharacterFSM.h"
 #include "../model/Character.h"
-#include "../web client/WebGameScene.h"
 #include "../controller/PlayerController.h"
 #include "../controller/BubbleController.h"
-#include "PropLayer.h"
+#include "../view/PropLayer.h"
 #include "../controller/PropController.h"
+#include <chrono>
+#include "OpenScene.h"
 
+#include <fstream>
 
 USING_NS_CC;
+using namespace ui;
 using namespace settings::GameScene;
 
 
@@ -47,127 +50,113 @@ GameScene* GameScene::getCurrentMap() {
 
 bool GameScene::init()
 {
-    if ( !Layer::init() )
-    {
-        return false;
-    }
-    
-    
-    visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    
-    addCloseMenu();
-    //
-//    auto web_layer = WebClient::create();
-//    this->addChild(web_layer);
-    
-    // a temporary background
-    auto backG = Sprite::create(backGroundPicture);
-    addChild(backG, -10);
-    backG->setPosition(visibleSize / 2);
-    
-    /***** tilemap ******/
-    _tileMap = TMXTiledMap::create("gameStart/map01.tmx");
-    _tileMap->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-    _tileMap->setPosition(Point(visibleSize.width / 2 , visibleSize.height / 2));
-    _tileMap->setScale(settings::GameScene::_tile_delta_rate);
-    
-    _meta = _tileMap->getLayer("Unbroken");
-    _background = _tileMap->getLayer("Background");
-    addChild(_tileMap, -1);
-    
-    // 注意坐标位置差
-    offx = (visibleSize.width - _tileMap->getContentSize().width * _tile_delta_rate)/ 2;
-    offy = (visibleSize.height - _tileMap->getContentSize().height * _tile_delta_rate) / 2;
-    TMXObjectGroup *objects = _tileMap->getObjectGroup("player");
-    CCASSERT(nullptr != objects, "'Objects' object group not found");
-    auto spawnPoint = objects->getObject("SpawnPoint1");
-    CCASSERT(!spawnPoint.empty(), "SpawnPoint object not found");
-    float x = spawnPoint["x"].asFloat() * _tile_delta_rate;
-    float y = spawnPoint["y"].asFloat() * _tile_delta_rate;
-    
-    
-    /*** add character***/
-	//本client的可控制的玩家
-	_myplayer = character::create(character::CHRIS);
-	_myplayer->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	_myplayer->setPosition(offx + x, offy + y);
-	_myplayer->setTag(20);
-	_myplayer->setName("myplayer");
-	// test
-	//    _myplayer->changeState(std::make_shared<CharGuard>());
-	addChild(_myplayer, 1);
-	_game_players.pushBack(_myplayer);
-	_player_bubbles.push_back(0);
-	OnBubble = false;
+	if (!Layer::init())
+	{
+		return false;
+	}
 
-	//其他client的控制的玩家
-	addCharacter(x, y, character::CHRIS,"player2");//##############改动###############
-    
-//    // add prop layer
-//    auto propLayer = PropLayer::create();
-//    propLayer->setName("PropLayer");
-//    auto propController = PropController::create();
-//    propLayer->setName("PropController");
-//    // add controller
-//    auto playerController = PlayerController::create();
-//    playerController->setName("PlayerController");
-//    
-//    auto bubbleController = BubbleController::create();
-//    bubbleController->setName("BubbleController");
-    
-    /*** debug ***/
-    auto playerController = PlayerController::create();
-    playerController->setName("PlayerController");
-    addChild(playerController);
 
-    auto bubbleController = BubbleController::create();
-    bubbleController->setName("BubbleController");
-    addChild(bubbleController);
-    
-    // add prop layer
-    auto propLayer = PropLayer::create();
-    propLayer->setName("PropLayer");
-    addChild(propLayer);
+	visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+	addCloseMenu();
+	//
+	//    auto web_layer = WebClient::create();
+	//    this->addChild(web_layer);
+	
+	// a temporary background
+	auto backG = Sprite::create("BackGround/Cool_background.jpg");
+	addChild(backG, -10);
+	backG->setPosition(visibleSize / 2);
+
+	/***** tilemap ******/
+	_tileMap = TMXTiledMap::create("gameStart/map02.tmx");
+	_tileMap->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+	_tileMap->setPosition(Point(visibleSize.width / 2, visibleSize.height / 2));
+	_tileMap->setScale(settings::GameScene::_tile_delta_rate);
+
+	_meta = _tileMap->getLayer("Unbroken");
+	_background = _tileMap->getLayer("Background");
+	addChild(_tileMap, -1);
+
+	// 注意坐标位置差
+
+	/*** add character***/
+	addPlayer(static_cast<character::characterType>(UserDefault::getInstance()->getIntegerForKey("PLAYER")), 1, true);
+
+	addPlayer(character::SHADOWFOX, 4, false);
+	
+
+	// add controller
+	auto playerController = PlayerController::create();
+	addChild(playerController);
+	auto bubbleController = BubbleController::create();
+	addChild(bubbleController);
+	// add prop layer
+	log("CameScene_prop111");
+	auto propLayer = PropLayer::create();
+	propLayer->setName("PropLayer");
+	addChild(propLayer);
+	log("CameScene_prop");
+    controllers[0] = bubbleController, controllers[1] = playerController;
     auto propController = PropController::create();
+    propController->setName("PropController");
     addChild(propController);
     
-//    addChild(propController);
-//    addChild(propLayer);
-//    addChild(bubbleController);
-//    addChild(playerController);
 
-
-	/* web */
 	auto webPlayer = WebGameScene::create();
 	webPlayer->setName("WebPlayer");
 	this->addChild(webPlayer);
-	/* web */
 
+	this->scheduleUpdate();
 
-    this->scheduleUpdate();
-    
-    return true;
-}
-
-/*
-描述：增加角色
-*/
-bool GameScene::addCharacter(float x, float y, character::characterType Type,std::string setname)//##############改动###############
-{
-	character* temp = character::create(Type);
-	temp->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	temp->setPosition(offx + x, offy + y);
-	
-	_game_players.pushBack(temp);
-	
-	_game_players.back()->setTag(3213);
-	_game_players.back()->setName(setname);
-	addChild(_game_players.back(), 1);
-	_player_bubbles.push_back(0);
 	return true;
 }
 
+void GameScene::addPlayer(character::characterType T, int index, bool isMyPlayer)
+{
+	/*** add character***/
+	std::string spawn_point_index = "SpawnPoint" + std::to_string(index);
+	log("index: %d, str: %s", index, spawn_point_index.c_str());
+
+	offx = (visibleSize.width - _tileMap->getContentSize().width * _tile_delta_rate) / 2;
+	offy = (visibleSize.height - _tileMap->getContentSize().height * _tile_delta_rate) / 2;
+	objects = _tileMap->getObjectGroup("player");
+
+
+	auto spawnPoint = objects->getObject(spawn_point_index);
+
+	CCASSERT(!spawnPoint.empty(), "SpawnPoint object not found");
+
+	float x = spawnPoint["x"].asFloat() * _tile_delta_rate;
+	float y = spawnPoint["y"].asFloat() * _tile_delta_rate;
+	
+	auto newchara = character::create(T);
+	if (isMyPlayer) {
+		_myplayer = newchara;
+		_myplayer->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+		_myplayer->setPosition(offx + x, offy + y);
+		_myplayer->setTag(20);
+		_myplayer->setName("myplayer");
+		_game_players.pushBack(_myplayer);
+		_my_bubbles = 0;
+		_myplayer->_chara_bubble = false;
+	}
+	else
+	{
+		newchara->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+		newchara->setPosition(offx + x, offy + y);
+		newchara->setTag(21);
+		std::string playerName = "player" + std::to_string(index);
+		newchara->setName(playerName);
+		_game_players.pushBack(newchara);
+
+		newchara->_chara_bubble = false;
+	}
+
+	addChild(newchara, 1);
+
+}
 void GameScene::menuCloseCallback(Ref* pSender)
 {
     //Close the cocos2d-x game scene and quit the application
@@ -220,7 +209,7 @@ void GameScene::CharacterMove(character* chara) {
     // 获得x y 的上界 下界
     const static float lowerx = offx + 3, upperx = visibleSize.width - offx;
     const static float lowery = offy + 3, uppery = visibleSize.height - offy;
-    const static Vec2 delta_rate = Vec2{0, -10};
+    const static Vec2 delta_rate = Vec2{0, 3};
     
     auto in_tile_map = [&](Vec2 pos)->bool{
         if (pos.x >= lowerx && pos.x <= upperx)
@@ -230,8 +219,10 @@ void GameScene::CharacterMove(character* chara) {
     };
     
     const static float basic_step = 1.8;
-    float curstep = chara->_currentVelocity  / 3.0 + basic_step;
     
+    
+    int cur_velocity = chara->isRiding()? chara->getRidingSpeed(): chara->_currentVelocity;
+    float curstep = cur_velocity  / 3.0 + basic_step;
     // UP, DOWN, LEFT, RIGHT
     Vec2 delta_pos[4]{Vec2(0, curstep), Vec2(0, -curstep), Vec2(-curstep, 0), Vec2(curstep, 0)};
     // 判断动作，调整step
@@ -247,14 +238,15 @@ void GameScene::CharacterMove(character* chara) {
         auto deltas = chara->get_collection_point(index);
         auto pos1 = deltas.first, pos2 = deltas.second;
         if (!in_tile_map(pos1 + test_point) || !in_tile_map(pos2 + test_point)) {
-            
             break;
-        } else if (!accessAble(pos1 + test_point) || !accessAble(pos2 + test_point)) {
+        } else if (!hasCollisionInGridPos(tileCoordForPosition(pos1 + test_point)) || !hasCollisionInGridPos(tileCoordForPosition(pos2 + test_point))) {
             walk = false;
         }
         
-        if (hasBubble(tileCoordForPosition(pos1 + test_point + delta_rate)) || hasBubble(tileCoordForPosition(pos2 + test_point + delta_rate))) {
-            walk = false;
+        if (hasCollideableBubble(tileCoordForPosition(pos1 + test_point + delta_rate)) || hasCollideableBubble(tileCoordForPosition(pos2 + test_point + delta_rate))) {
+            if (tileCoordForPosition(pos1) != tileCoordForPosition(pos2 + test_point + delta_rate)) {\
+                walk = false;
+            }
         }
         if (walk) {
             chara->setPosition(chara->getPosition() + cur_delta);
@@ -265,48 +257,48 @@ void GameScene::CharacterMove(character* chara) {
 
 // bubble应该设置在tilemap的grid上
 // bubble渲染问题
-void GameScene::setBubble(character* chara, Vec2 pos) {
+void GameScene::setBubble(character* chara,Vec2 Pos) {
     if (chara->curSetBubbles >= chara->_currentBubbles) {
         return;
     }
     // TODO: duplicate here!!
-    auto pos0 = pos;
+
     if (chara->getAnchorPoint() != Vec2::ZERO) {
-        if (pos0.x > 14) pos0.x = 14;
+        if (Pos.x > 14) Pos.x = 14;
     }
     // TODO: find out what was wrong
-    if (pos0.y > 14) pos0.y = 14;
+    if (Pos.y > 14) Pos.y = 14;
     
     auto mySpritePos = PositionForTileCoord(tileCoordForPosition(chara->getPosition()));
 
     // DEBUG : not mySpritePos
-    auto mypos = chara->getPosition();
-    if (accessAble(mypos)) {
+    auto mypos = _myplayer->getPosition();
+    if (!hasBubble(tileCoordForPosition(mypos)) && accessAble(mypos)) {
         // 调整精灵位置
-        auto newBubble = Bubbles::create(chara->_currentPower, chara);
+        auto newBubble = Bubbles::create(_myplayer->_currentPower, chara);
         newBubble->setAnchorPoint(Vec2::ZERO);
         newBubble->setScale(_tile_delta_rate);
         
         // DEBUG: 判断泡泡放置是否是accessable 的
         newBubble->setPosition(mySpritePos);
-        auto timeBoom = CallFuncN::create(CC_CALLBACK_1(GameScene::BubbleBoom, this));
-        
         // 动画(是否可以抽象)
         runAnimationByName(newBubble, "Popo_", 0.25, bubble_frame_nums);
-        newBubble->runAction(Sequence::create(DelayTime::create(0.3),CallFuncN::create(
-                            [=](Ref* sender) {
-                                _map_screen_bubbles[pos0] = newBubble;
-                            }), DelayTime::create(2.7), timeBoom, NULL));
+        _map_screen_bubbles[Pos] = newBubble;
         addChild(newBubble);
         ++chara->curSetBubbles;
         
     }
+	chara->_chara_bubble = false;
 }
 
 
 
 // 泡泡爆炸, 可以添加逻辑
 void GameScene::BubbleBoom(Ref* sender) {
+    auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+    float volume = UserDefault::getInstance()->getFloatForKey("effectPercent");
+    audio->setEffectsVolume(volume);
+    audio->playEffect("effect/explode.wav", false);
     auto *sprite = dynamic_cast<Bubbles*>(sender);
     auto beg_pos = sprite->getPosition();
     int power = sprite->get_power();
@@ -331,8 +323,11 @@ void GameScene::BubbleBoom(Ref* sender) {
         }
         auto chara_pos = tileCoordForPosition(chara->getPosition());
         chara_pos.y += 1;
-        if (chara_pos == pos)
-            chara->changeState(std::make_shared<CharStuck>());
+        if (chara_pos == pos) {
+            log("fired");
+            chara->charaFired();
+        }
+        removePositionItem(pos);
     }
     add_and_clear_with_time(Sprite::create(center_boom), boom_time, beg_pos);
     horizontal_boom(beg_pos, power);
@@ -347,7 +342,7 @@ void GameScene::update(float dt) {
 
 /**** coord convert ****/
 cocos2d::Vec2 GameScene::PositionForTileCoord(cocos2d::Vec2 pos) {
-    if (_game_players.at(0)->getAnchorPoint() != Vec2::ZERO) {
+    if (_myplayer->getAnchorPoint() != Vec2::ZERO) {
         if (pos.x > 14) pos.x = 14;
     }
     // TODO: find out what was wrong
@@ -372,13 +367,14 @@ cocos2d::Vec2 GameScene::tileCoordForPosition(cocos2d::Vec2 pos) {
  检测是否可以到达
  in: cocos2d pos
  out: 是否与不可碰墙壁的发生碰撞
+ attention: 只要求有泡泡
  ***/
 bool GameScene::accessAble(cocos2d::Vec2 pos) {
     Vec2 tileCoord = tileCoordForPosition(pos);
     // TODO: find out what was wrong
     if (tileCoord.x < 0 || tileCoord.y < 0)
         return false;
-    if (hasCollisionInGridPos(tileCoord) && !hasBubble(tileCoord))
+    if (hasCollisionInGridPos(tileCoord) && !hasCollideableBubble(tileCoord))
         return true;
     return false;
     
@@ -443,6 +439,8 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
                 continue;
             // 获取下一个爆炸的位置
             auto next_p = dirs[r_vec] * syn[j] * i + tiled_position;
+            removePositionItem(next_p);
+
             // 判断爆炸位置是否在地图中
             if (!in_map(next_p.x, next_p.y)) {
                 synb[j] = false;
@@ -452,9 +450,10 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
             bool ans(false);
             if (check_chain_boom(next_p)) {
                 // chain booming!!!
-            } else if (!hasCollisionInGridPos(next_p)) {
+            } else if (!hasCollisionInGridPos(next_p) && !prop_gotton[next_p.x][next_p.y]) {
                 // have tile
                 // need delay time and broken animation
+                prop_gotton[next_p.x][next_p.y] = true;
                 this->runAction(Sequence::create(DelayTime::create(0.2f), CallFuncN::create(
                       [=](Ref* sender) {
                           _meta->removeTileAt(next_p);
@@ -472,13 +471,8 @@ void GameScene::boom_animate(cocos2d::Vec2 pos, int power, int r_vec) {
                     }
                     if (tileCoordForPosition(chara->getPosition()) == next_p) {
                         // chara was fired
-                        auto cur_code = typeid(*(chara->mCurState)).hash_code();
-                        if (!chara->isGuard()) {
-                            if (cur_code == typeid(CharStand).hash_code() || cur_code == typeid(CharMove).hash_code())
-                                chara->changeState(std::make_shared<CharStuck>());
-                            else if(cur_code == typeid(CharOnRiding).hash_code())
-                                chara->changeState(std::make_shared<CharNormal>());
-                        }   
+//                        log("fired");
+                        chara->charaFired();
                     }
                 }
                 ans = true;
@@ -511,6 +505,13 @@ bool GameScene::check_chain_boom(cocos2d::Vec2 blaze_pos) {
 }
 
 /** 对给出的瓦片地图坐标，有精灵就返回精灵，没有就返回nullptr **/
+Bubbles* GameScene::hasCollideableBubble(cocos2d::Vec2 tilePos) {
+    auto bubble = hasBubble(tilePos);
+    if (bubble != nullptr && bubble->isCollideable())
+        return bubble;
+    return nullptr;
+}
+
 Bubbles* GameScene::hasBubble(cocos2d::Vec2 tilePos) {
     auto bubbleIter = _map_screen_bubbles.find(tilePos);
     Bubbles* bubble = nullptr;
@@ -521,6 +522,7 @@ Bubbles* GameScene::hasBubble(cocos2d::Vec2 tilePos) {
 }
 
 void GameScene::addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools item_kind) {
+    // 如果有道具就不再添加(多个同时爆炸？)
     auto pos = PositionForTileCoord(tiledPos);
     
     auto item = GameItem::createWithType(item_kind);
@@ -528,14 +530,15 @@ void GameScene::addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools item_kind) 
     item->setAnchorPoint(Vec2::ZERO);
     item->setPosition(pos);
     // DEBUG: NOT SET ANIME HERE
-//    runAnimationByName(item, std::string(settings::Items::ItemNames[item_kind]) + "_", 0.2, 3);
-    screenItems[tiledPos] = item;
+    
+    if (screenItems.find(tiledPos) == screenItems.end())
+        screenItems[tiledPos] = item;
     
     this->addChild(item);
     
 }
 
-/*
+
 void GameScene::tileLoadProps() {
     static std::random_device rd;
     static std::uniform_int_distribution<int> dist(0, GameItem::toolNumbers * 5 / 3);
@@ -547,7 +550,7 @@ void GameScene::tileLoadProps() {
             }
     
 }
-*/
+
 
 void GameScene::checkGetItem(character* chara) {
     auto tiledCharaPos = tileCoordForPosition(chara->getPosition());
@@ -555,6 +558,15 @@ void GameScene::checkGetItem(character* chara) {
     if (itemIter != screenItems.end()) {
         auto item = itemIter->second;
         item->getItem(chara);
+        screenItems.erase(itemIter);
+        this->removeChild(item);
+    }
+}
+
+void GameScene::removePositionItem(const Vec2 pos) {
+    auto itemIter = screenItems.find(pos);
+    if (itemIter != screenItems.end()) {
+        auto item = itemIter->second;
         screenItems.erase(itemIter);
         this->removeChild(item);
     }
@@ -584,3 +596,57 @@ bool GameScene::checkCollisionWithOther(character* chara) {
     return false;
 }
 
+void GameScene::Win(character* chara) {
+    //增加音效
+    auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+    float volume = UserDefault::getInstance()->getFloatForKey("effectPercent");
+    audio->setEffectsVolume(volume);
+    audio->playEffect("effect/win.wav", false);
+    gameOver("Play Again");
+}
+
+void GameScene::Lose(character* chara) {
+    //增加音效
+    auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+    float volume = UserDefault::getInstance()->getFloatForKey("effectPercent");
+    audio->setEffectsVolume(volume);
+    audio->playEffect("effect/lose.wav", false);
+    gameOver("Game Win");
+}
+// 游戏结束
+void GameScene::gameOver(const std::string &message) {
+    // 获得设备可见视图大小
+    Size visibleSize = Director::getInstance()->getVisibleSize();
+    auto backGround = cocos2d::Sprite::create("BackGround/temple of times.png");
+    backGround->setPosition(cocos2d::Vec2(visibleSize.width / 2, visibleSize.height / 2));
+    this->addChild(backGround, 0);
+    // “重新开始”按钮
+    auto restart_button = Button::create("GameUI/button.png");
+    restart_button->setScale(2);
+    restart_button->setTitleText(message);
+    restart_button->setTitleFontName("微软雅黑");
+    restart_button->setTitleFontSize(16);
+    restart_button->setPosition(Vec2(visibleSize.width / 2, visibleSize.height *0.7));
+    restart_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
+        if (type == Widget::TouchEventType::ENDED) {
+            auto transition = TransitionFadeBL::create(2.0, GameScene::createScene());
+            Director::getInstance()->replaceScene(transition);
+        }
+    });
+    this->addChild(restart_button, 1);
+    
+    // “返回主菜单”按钮
+    auto back_button = Button::create("GameUI/button.png");
+    back_button->setScale(2);
+    back_button->setTitleText("Return Menu");
+    back_button->setTitleFontName("微软雅黑");
+    back_button->setTitleFontSize(16);
+    back_button->setPosition(Vec2(visibleSize.width / 2, visibleSize.height *0.4));
+    back_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
+        if (type == Widget::TouchEventType::ENDED) {
+            auto transition = TransitionShrinkGrow::create(2.0, OpenScene::createScene());
+            Director::getInstance()->replaceScene(transition);
+        }
+    });
+    this->addChild(back_button, 1);
+}

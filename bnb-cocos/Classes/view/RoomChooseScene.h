@@ -4,6 +4,7 @@
 // 与web交互 选择房间的scene
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
+
 using namespace cocos2d;
 class RoomChoose : public cocos2d::Layer
 {
@@ -18,7 +19,8 @@ public:
 	* 注意：init函数在Cocos2d-x中返回bool值，而不是返回Cocos2d-iPhone中的“id”
 	*/
 	virtual bool init();
-
+	
+	void update(float dt)override;
 	/**
 	* 使用CREATE_FUNC宏创建当前类的对象，返回的对象将会由自动释放池管理内存的释放
 	*/
@@ -28,7 +30,6 @@ public:
 	void ToRoomTwo(cocos2d::Ref* sender);
 	void ToRoomThree(cocos2d::Ref* sender);
 	void ToRoomFour(cocos2d::Ref* sender);
-
 private:
 	Menu* UImenus = nullptr;
 };

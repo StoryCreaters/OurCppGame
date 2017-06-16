@@ -1,4 +1,4 @@
-#ifndef Settings_h
+﻿#ifndef Settings_h
 #define Settings_h
 
 #include <string>
@@ -76,7 +76,7 @@ namespace settings {
         constexpr char* direc_string[] = {"up", "down", "left", "right"};
         
         // 碰撞格子大小
-//        constexpr int grid_size = 40;
+        //        constexpr int grid_size = 40;
         
         /****爆炸图片****/
         constexpr char* boom_v = "BubbleImages/images/vertical_demo.png";        // 水平爆炸
@@ -96,7 +96,11 @@ namespace settings {
             "PropResource/PropItems.plist",
             "PropResource/Gift_Rowl.plist",
             "GamePlayer/unit_guard.plist",
-            "PropResource/Gift_Mpower.plist"
+            "PropResource/Gift_Mpower.plist",
+            "PropResource/Vehicle.plist",
+            
+            "GamePlayer/Rowl.plist",
+            "GamePlayer/Rtutle.plist"
         };
         
         // 人物
@@ -107,11 +111,11 @@ namespace settings {
             "GamePlayer/CharaStucked.plist"
         };
         
+        constexpr char* to_load_music[] = { "music/Temple of Time.mp3","music/MEGALOVANIA.mp3","music/When The Morning Comes.mp3" };
+        constexpr char* load_effect[] = { "effect/explore.wav","effect/get.wav","effect/win.wav","effect/lose.wav" };
+        
         // bubbles
         constexpr char* bubbles_animation = "BubbleImages/images/stable/bubble_bump.plist";
-        
-        constexpr char* to_load_music = "music/Temple of Time.mp3";
-        
         
         constexpr int delayFrame = 100;
         constexpr float delaytime = 0.5f;
@@ -120,10 +124,10 @@ namespace settings {
     namespace Bubbles {
         constexpr char* bubbles_file = "BubbleImages/images/stable/Popo_01.png";
     }
-
-	namespace PropLayer {
-		constexpr char* gridBkg = "riding/PropBkg.jpg";
-	}
+    
+    namespace PropLayer {
+        constexpr char* gridBkg = "riding/PropBkg.jpg";
+    }
     
     namespace Items {
         // items and it resources
@@ -139,7 +143,9 @@ namespace settings {
             "Gift_RspeedUp",
             "Gift_needle",
             "Gift_guard",
-            "Gift_upper"
+            "Gift_upper",
+            "GiftOwl",
+            "GiftTutle"
         };
     }
     

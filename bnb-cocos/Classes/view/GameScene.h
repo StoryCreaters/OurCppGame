@@ -4,8 +4,9 @@
 #include "cocos2d.h"
 #include "Settings.h"
 #include <array>
-#include <string>
 #include "../model/GameItem.h"
+#include <thread>
+#include "../web client/WebGameScene.h"
 
 class character;
 class Bubbles;
@@ -16,9 +17,8 @@ class GameScene : public cocos2d::Layer
 public:
     friend class PlayerController;
     friend class CharStuck;
-	friend class WebGameScene;  //声明为友元类，毕竟web的很多内容必须使用GameScene的
+    friend class character;
 	friend class GameClient;
-	friend class BubbleController;
     using tilePosition = cocos2d::Vec2;
     
     // 返回gameScene对象
@@ -32,6 +32,8 @@ public:
     // implement the "static create()" method manually
     CREATE_FUNC(GameScene);
     
+	void addPlayer(character::characterType T, int index, bool isMyPlayer = false);
+
     void setViewPointCenter(cocos2d::Vec2 position);
     
     void addCloseMenu();
@@ -53,14 +55,14 @@ public:
     cocos2d::Vec2 PositionForTileCoord(cocos2d::Vec2 pos);
     bool hasCollisionInGridPos(cocos2d::Vec2 pos);
     
-	/** create a character **/
-	bool addCharacter(float x, float y, character::characterType Type,std::string setname);
+    
     /** clear a character **/
     void RemoveCharacter(character* chara);
     
     /********泡泡释放*************/
-    void setBubble(character* chara,Vec2 pos);
+    void setBubble(character* chara,Vec2 Pos);
     void BubbleBoom(Ref* sender);
+    Bubbles* hasCollideableBubble(cocos2d::Vec2 tilePos);
     Bubbles* hasBubble(cocos2d::Vec2 tilePos);
     
     // normal
@@ -68,13 +70,13 @@ public:
     bool checkCollisionWithOther(character* chara);
     void CharacterMove(character* chara);
     
-	
 private:
     // SIZE OF SCREEN
     cocos2d::Size visibleSize;
     float offx;
     float offy;
-    
+    // TODO: restore controlls
+    Layer* controllers[2];
     
     
     /***** tilemap的大小变化率*****/
@@ -85,22 +87,21 @@ private:
     void tileLoadProps();
     // 瓦片地图上的道具们
     std::array<std::array<int, 15>, 15> prop_on_map;
+    std::array<std::array<bool, 15>, 15> prop_gotton;
     
     /**** player的属性, 和自己的player的属性, 可以考虑fsm和vector ****/
-
-	character * _myplayer;
+    character* _myplayer;
     cocos2d::Vector<character*> _game_players;
     
-	std::vector <int> _player_bubbles;
+    int _my_bubbles;
     
     // 表示自己运动状况的量, true就开始运动, 共有四个方向
     enum _optionCode {
-        GO_UP, GO_DOWN, GO_LEFT, GO_RIGHT, BUBBLE,DEFAULT
+        GO_UP, GO_DOWN, GO_LEFT, GO_RIGHT, DEFAULT
     } _direction;
     std::array<bool, 4> _my_sprite_move;
     
     /**** 爆炸相关 ****/
-	bool OnBubble;
     enum boom_vec {
         HORIZONTAL, VERTICAL
     };
@@ -109,6 +110,8 @@ private:
     std::map<cocos2d::Vec2, Bubbles*> _map_screen_bubbles;
     // items on game scene
     std::map<cocos2d::Vec2, GameItem*> screenItems;
+    // pass in and position
+    void removePositionItem(const Vec2 pos);
     
     bool check_chain_boom(cocos2d::Vec2 coordPos);
     
@@ -129,6 +132,9 @@ private:
     /*** add item to the game ***/
     void addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools tool);
     
+    void Win(character* chara);
+    void Lose(character* chara);
+    void gameOver(const std::string &message);
 };
 
 #endif /* GameTheme_hpp */

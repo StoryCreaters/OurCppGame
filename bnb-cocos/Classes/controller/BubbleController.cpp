@@ -15,13 +15,10 @@ void BubbleController::myKeyboardOff(cocos2d::EventKeyboard::KeyCode keyCode, co
         return;
     auto gameLayer = GameScene::getCurrentMap();
     auto mychara = dynamic_cast<character*>(gameLayer->getChildByName("myplayer"));
-	gameLayer->OnBubble = true;
+	mychara->_chara_bubble = true;
+	Vec2 Pos = mychara->getPosition();
+    if (checkStateWalkAble(mychara))
+        gameLayer->setBubble(mychara, Pos);
+	mychara->_chara_bubble = false;
 
-	if (checkStateWalkAble(mychara))
-	{
-		Vec2 pos = gameLayer->getPosition();
-		gameLayer->setBubble(mychara, pos);
-	}
-        
-	
 }

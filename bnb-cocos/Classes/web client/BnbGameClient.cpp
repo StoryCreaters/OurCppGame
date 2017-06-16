@@ -4,7 +4,6 @@
 #include <string>
 #include <winsock2.h>
 #include <fstream>
-#include "WebGameScene.h"
 #include "../view/GameScene.h"
 #include "../controller/PlayerController.h"
 #include "../controller/CharacterFSM.h"
@@ -30,10 +29,14 @@ static inline GameScene* getGameScene() {
 	return dynamic_cast<GameScene*>(scene->getChildByTag(10));
 }
 
+/*
+名称：初始化
+描述：主要负责连接到服务端
+*/
 bool GameClient::init()
 {
 	std::fstream outfile;
-	outfile.open("e:\\log2.txt",std::ios::app);
+	outfile.open("e:\\log2.txt", std::ios::app);
 
 	WSADATA wsaData;
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
@@ -54,7 +57,7 @@ bool GameClient::init()
 	unsigned long ul = 1;
 	int ret = ioctlsocket(ClientSocket, FIONBIO, (unsigned long*)&ul); //设置成非阻塞
 	if (ret == SOCKET_ERROR)  //设置失败
-	{ 
+	{
 		outfile << "设置非阻塞失败\n";
 		closesocket(ClientSocket); //关闭套接字  
 		WSACleanup(); //释放套接字资源  
@@ -88,14 +91,14 @@ bool GameClient::init()
 }
 
 
-//-----------------------------------------------------------------------------  
-//函数名：  
-//描述：用于调度  
-//  
-//-----------------------------------------------------------------------------  
+/*
+名称：线程处理
+描述：主要负责两大线程的处理，一个是收发数据的线程，一个是消费者线程
+本函数受到WebGameScene的schedule制约，每一帧执行一次
+*/
 void  GameClient::ClientProcess()
 {
-	
+
 	static bool flag = false;
 
 	if (!runningGameScene) {
@@ -104,7 +107,7 @@ void  GameClient::ClientProcess()
 			return;
 		}
 	}
-	
+
 	if (flag == false)
 	{
 		acceptProps();
@@ -113,12 +116,12 @@ void  GameClient::ClientProcess()
 	HANDLE hThread1;
 	HANDLE hThread2;
 	hThread1 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)sendAndRecv, this, 0, NULL);
-	
-	hThread2 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)control, this, 0, NULL);
+
+	hThread2 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)comsumer, this, 0, NULL);
 	CloseHandle(hThread1);
 	CloseHandle(hThread2);
 
-	
+
 	hMutex = CreateMutex(nullptr, TRUE, TEXT("Control"));
 	if (hMutex)
 	{
@@ -133,6 +136,10 @@ void  GameClient::ClientProcess()
 }
 
 
+/*
+名称：收发函数
+描述：专门处理收发数据的线程函数，采用异步、非阻塞模式。
+*/
 DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 {
 	GameClient *Client = (GameClient *)lpParam;
@@ -171,10 +178,10 @@ DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 
 				int put_bubble_1 = 0;
 
-				if (Client->runningGameScene->OnBubble == true)
+				if (myplayer->_chara_bubble== true)
 					put_bubble_1 = 1;
 
-				
+
 				Vec2 pos = myplayer->getPosition();
 				//Vec2 broken_tile = runningGameScene->next_ps;
 
@@ -186,17 +193,17 @@ DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 					direct, put_bubble_1);
 
 				//发送
-			
+
 				int sendByte = 0;
 				while (sendByte < PACKAGE)
 				{
 					int ret = send(Client->ClientSocket, sendData, strlen(sendData) + sizeof(char), 0);
 					sendByte += ret;
 				}
-				
+
 			}
-			
-			
+
+
 			if (FD_ISSET(Client2->ClientSocket, &rfd))
 			{
 				/*
@@ -218,62 +225,26 @@ DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 					ret = recv(Client2->ClientSocket, recvData, PACKAGE * 100, 0);
 					recvByte += ret;
 				}
-			
-	
+
+
 				int len = recvByte / PACKAGE;
 				recvData[PACKAGE] = '\0';
-		
+
+				/*
+				producer
+				*/
 				for (int i = 0; i < len; i++)
 				{
 					recvInfo temp;
-					sscanf(recvData + i*PACKAGE, "%f %f %d %d %d",&temp.Posx,&temp.Posy,
-						&temp.still,&temp.direct,&temp.putBubble);
-					
+					sscanf(recvData + i*PACKAGE, "%f %f %d %d %d", &temp.Posx, &temp.Posy,
+						&temp.still, &temp.direct, &temp.putBubble);
+
 					recvQueue.push(temp);
 				}
 
-			
-
-				/*
-				if (still_2 == true)
-				{
-					Client->runningGameScene->_game_players.at(1)->changeState(std::make_shared<CharStand>());
-				}
-				else
-				{
-					for (int i = 0; i < 4; i++)
-						Client->runningGameScene->_game_players.at(1)->_chara_move[i] = false;
-					if (direct_2 < 4)
-					{
-						Client->runningGameScene->_game_players.at(1)->_chara_move[direct_2] = true;
-						GameScene::_optionCode code = GameScene::_optionCode::DEFAULT;
-						switch (direct_2)
-						{
-						case 0:
-							code = GameScene::_optionCode::GO_UP;
-							break;
-						case 1:
-							code = GameScene::_optionCode::GO_DOWN;
-							break;
-						case 2:
-							code = GameScene::_optionCode::GO_LEFT;
-							break;
-						case 3:
-							code = GameScene::_optionCode::GO_RIGHT;
-							break;
-						default:
-							break;
-						}
-						//DEBUG 
-						
-						//if (code != GameScene::_optionCode::DEFAULT)
-						//	Client->runningGameScene->_game_players.at(1)->changeState(std::make_shared<CharMove>(static_cast<int>(code)));
-						//Client->runningGameScene->CharacterMove(Client->runningGameScene->_game_players.at(1));
-					}
-				}*/
 			}
 		}
-		
+
 		ReleaseMutex(Client->hMutex);
 	}
 
@@ -282,16 +253,23 @@ DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 	return 1;
 }
 
-DWORD WINAPI GameClient::control(LPVOID lpParam)
+
+
+
+/*
+名称：消费者
+描述：开的新线程，专门用来pop队列，来达到控制角色的目的
+*/
+DWORD WINAPI GameClient::comsumer(LPVOID lpParam)
 {
 	GameClient *Client = (GameClient *)lpParam;
-	
+
 	if (recvQueue.empty() == true)
 	{
 		return 0;
 	}
 
-	character * player2 = dynamic_cast<character*>(Client->runningGameScene->getChildByName("player2"));
+	character * player2 = dynamic_cast<character*>(Client->runningGameScene->getChildByName("player4"));
 
 	//fstream outfile("e:\\text.txt");
 	WaitForSingleObject(Client->hMutex, INFINITE);
@@ -305,49 +283,57 @@ DWORD WINAPI GameClient::control(LPVOID lpParam)
 			ReleaseMutex(Client->hMutex);
 			break;
 		}
-			
+
+
+		Vec2 Pos(temp.Posx, temp.Posy);
+
+		if (temp.putBubble &&
+			player2->_currentBubbles <=
+			player2->_maxBubbles)
+			Client->runningGameScene->setBubble(player2, Pos);
+
 		/*
 		outfile << "queue size: " << recvQueue.size() << " |";
 		outfile << "消费者: " << temp.Posx << " " << temp.Posy << " "
-			<< temp.still << " " << temp.direct << " " << temp.putBubble << endl;
+		<< temp.still << " " << temp.direct << " " << temp.putBubble << endl;
 		*/
 
 		if (temp.Posx > 0 && temp.Posy > 0)  //判断一下，万一传输错了
 		{
-			
+
 			player2->setPosition(temp.Posx, temp.Posy);
 			/*
 			if (temp.still == true)
 			{
-				player2->changeState(std::make_shared<CharStand>());
+			player2->changeState(std::make_shared<CharStand>());
 			}
 			else
 			{
-				if (temp.direct < 4)
-				{
-					GameScene::_optionCode code = GameScene::_optionCode::DEFAULT;
-					switch (temp.direct)
-					{
-					case 0:
-						code = GameScene::_optionCode::GO_UP;
-						break;
-					case 1:
-						code = GameScene::_optionCode::GO_DOWN;
-						break;
-					case 2:
-						code = GameScene::_optionCode::GO_LEFT;
-						break;
-					case 3:
-						code = GameScene::_optionCode::GO_RIGHT;
-						break;
-					default:
-						break;
-					}
-					//DEBUG
+			if (temp.direct < 4)
+			{
+			GameScene::_optionCode code = GameScene::_optionCode::DEFAULT;
+			switch (temp.direct)
+			{
+			case 0:
+			code = GameScene::_optionCode::GO_UP;
+			break;
+			case 1:
+			code = GameScene::_optionCode::GO_DOWN;
+			break;
+			case 2:
+			code = GameScene::_optionCode::GO_LEFT;
+			break;
+			case 3:
+			code = GameScene::_optionCode::GO_RIGHT;
+			break;
+			default:
+			break;
+			}
+			//DEBUG
 
-					if (code != GameScene::_optionCode::DEFAULT)
-						player2->changeState(std::make_shared<CharMove>(static_cast<int>(code)));
-				}
+			if (code != GameScene::_optionCode::DEFAULT)
+			player2->changeState(std::make_shared<CharMove>(static_cast<int>(code)));
+			}
 			}*/
 		}
 		else
@@ -355,14 +341,9 @@ DWORD WINAPI GameClient::control(LPVOID lpParam)
 			ReleaseMutex(Client->hMutex);
 			break;
 		}
-		
-		Vec2 Pos(temp.Posx, temp.Posy);
 
-		if (temp.putBubble && 
-			player2->_currentBubbles <=
-			player2->_maxBubbles)
-			Client->runningGameScene->setBubble(player2, Pos);
 		
+
 		if (!recvQueue.empty())
 			recvQueue.pop();
 		else
@@ -370,8 +351,8 @@ DWORD WINAPI GameClient::control(LPVOID lpParam)
 			ReleaseMutex(Client->hMutex);
 			break;
 		}
-		
-		
+
+
 	}
 	ReleaseMutex(Client->hMutex);
 	//outfile.close();
@@ -382,6 +363,11 @@ DWORD WINAPI GameClient::control(LPVOID lpParam)
 }
 
 
+/*
+名称：接受道具
+描述：专门用来接受道具分布信息的函数
+作用单一，只执行一次
+*/
 void GameClient::acceptProps()
 {
 
@@ -412,6 +398,11 @@ void GameClient::acceptProps()
 			}
 }
 
+
+/*
+名称：析构函数
+描述：释放套接字，清理内存
+*/
 GameClient::~GameClient()
 {
 	delete[]prop;

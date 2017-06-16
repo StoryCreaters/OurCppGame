@@ -6,6 +6,7 @@
 #include "Settings.h"
 #include <array>
 #include "../controller/BaseFSM.h"
+#include "Vehicle.h"
 
 class State;
 
@@ -47,7 +48,8 @@ public:
     
     
     std::array<bool, 4> _chara_move;
-	bool _chara_still;    //是否静止
+	bool _chara_still;       //是否静止
+	bool _chara_bubble;      //是否在放BUBBLE
     /*****碰撞点******/
     // 根据方向给出一对碰撞点
     std::pair<cocos2d::Vec2, cocos2d::Vec2> get_collection_point(int direction);
@@ -65,11 +67,18 @@ public:
     void setGuard();         // 道具-护盾
     bool isGuard();
     void powerup();         // 道具-人参果
-    void RideOn();
+    void RideOn(Vehicle::VehicleType);
     bool isRiding();
     bool isStucked();
     void UseNeedle();
     void rideSpeedUp();
+    void offRiding();
+    void isOnTutle();
+    // return the attr of riding 
+    int getRidingSpeed();
+    int getRidingBubbles();
+    // 玩家被爆炸波及
+    void charaFired();
 private:
     int _type_index;
     bool _isRiding;

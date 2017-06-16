@@ -75,7 +75,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     register_all_packages();
     
-   // FileUtils::getInstance()->addSearchPath("Classes/view");
+    FileUtils::getInstance()->addSearchPath("Classes/view");
     
     // create a scene. it's an autorelease object
     auto scene = PreLoadScene::createScene();

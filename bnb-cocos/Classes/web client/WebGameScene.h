@@ -2,22 +2,27 @@
 
 #include "cocos2d.h"
 #include "BnbGameClient.h"
+#include "../model/Character.h"
+
 #include <vector>
 
-class GameScene;
 class character;
+class GameClient;
 
-class WebGameScene : public cocos2d::Layer 
+extern "C" GameClient client;
+
+class WebGameScene : public cocos2d::Layer
 {
 public:
 	static cocos2d::Scene* createScene();
-	virtual bool init();    
+	virtual bool init();
 	~WebGameScene();
 	void update(float dt);
 	bool checkSyn();
 	CREATE_FUNC(WebGameScene);
 private:
-	GameClient client;
-	character* mychara;
 	
+
+	character * mychara;
+
 };

@@ -2,6 +2,7 @@
 #include "../view/GameScene.h"
 #include "../controller/PlayerController.h"
 #include "../controller/CharacterFSM.h"
+#include "../view/CharacterSelect.h"
 #include <random>
 
 USING_NS_CC;
@@ -20,21 +21,21 @@ bool WebGameScene::init()
 	{
 		return false;
 	}
-
+	
 	//初始化服务端
-	client.init();
+	//client.init();
 
 	this->schedule(schedule_selector(WebGameScene::update));
 
-	
+
 	return true;
-	
+
 }
 
 void WebGameScene::update(float dt) {
-	
+
 	client.ClientProcess();
-	
+
 }
 
 bool WebGameScene::checkSyn()

@@ -1,7 +1,7 @@
 ﻿#include "PropLayer.h"
-#include "model/GameItem.h"
+#include "../model/GameItem.h"
 #include "Settings.h"
-#include "view/GameScene.h"
+#include "GameScene.h"
 using namespace ui;
 using namespace std;
 // find out the rule of lambda
