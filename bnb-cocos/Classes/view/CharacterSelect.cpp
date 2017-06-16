@@ -31,6 +31,7 @@ bool Players::init() {
 	auto backGround = cocos2d::Sprite::create("BackGround/Character_Select.png");
 	backGround->setPosition(cocos2d::Vec2(visibleSize.width / 2, visibleSize.height / 2));
 	this->addChild(backGround, 0);
+
 	//Player1
 	auto first_button = Button::create("GameUI/button.png");
 	first_button->setScale(2);
@@ -103,12 +104,18 @@ bool Players::init() {
 			removeChild(ok_button);
 			auto cancel_button = Button::create("GameUI/button2.png");
 			cancel_button->setPosition(Vec2(visibleSize.width *0.20, visibleSize.height*0.18));
+			cancel_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
+				if (type == Widget::TouchEventType::ENDED) {
+					//留白
+				}
+			});
 			this->addChild(cancel_button);
 			// 切换到GameScene场景
 			auto transition = TransitionFadeBL::create(2.0, GameScene::createScene());
 			Director::getInstance()->replaceScene(transition);
 		}
 	});
+
 	
 	return true;
 }
