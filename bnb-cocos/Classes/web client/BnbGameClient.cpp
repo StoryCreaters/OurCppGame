@@ -158,6 +158,8 @@ DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 				发送数据
 				*/
 				character * myplayer = dynamic_cast<character*>(Client->runningGameScene->getChildByName("myplayer"));
+				if (myplayer == nullptr)
+					return 0;
 
 				int direct;
 				for (direct = 0; direct < 4; ++direct) {
@@ -291,34 +293,69 @@ DWORD WINAPI GameClient::control(LPVOID lpParam)
 
 	character * player2 = dynamic_cast<character*>(Client->runningGameScene->getChildByName("player2"));
 
-	fstream outfile("e:\\text.txt");
-	while (!recvQueue.empty())
+	//fstream outfile("e:\\text.txt");
+	WaitForSingleObject(Client->hMutex, INFINITE);
+	while (true)
 	{
-		WaitForSingleObject(Client->hMutex, INFINITE);
-
 		recvInfo temp;
 		if (!recvQueue.empty())
 			temp = recvQueue.front();
 		else
 		{
 			ReleaseMutex(Client->hMutex);
-			return 0;
+			break;
 		}
 			
-
+		/*
 		outfile << "queue size: " << recvQueue.size() << " |";
 		outfile << "消费者: " << temp.Posx << " " << temp.Posy << " "
 			<< temp.still << " " << temp.direct << " " << temp.putBubble << endl;
-
+		*/
 
 		if (temp.Posx > 0 && temp.Posy > 0)  //判断一下，万一传输错了
+		{
+			
 			player2->setPosition(temp.Posx, temp.Posy);
+			/*
+			if (temp.still == true)
+			{
+				player2->changeState(std::make_shared<CharStand>());
+			}
+			else
+			{
+				if (temp.direct < 4)
+				{
+					GameScene::_optionCode code = GameScene::_optionCode::DEFAULT;
+					switch (temp.direct)
+					{
+					case 0:
+						code = GameScene::_optionCode::GO_UP;
+						break;
+					case 1:
+						code = GameScene::_optionCode::GO_DOWN;
+						break;
+					case 2:
+						code = GameScene::_optionCode::GO_LEFT;
+						break;
+					case 3:
+						code = GameScene::_optionCode::GO_RIGHT;
+						break;
+					default:
+						break;
+					}
+					//DEBUG
+
+					if (code != GameScene::_optionCode::DEFAULT)
+						player2->changeState(std::make_shared<CharMove>(static_cast<int>(code)));
+				}
+			}*/
+		}
 		else
 		{
 			ReleaseMutex(Client->hMutex);
-			return 0;
+			break;
 		}
-
+		
 		Vec2 Pos(temp.Posx, temp.Posy);
 
 		if (temp.putBubble && 
@@ -331,12 +368,13 @@ DWORD WINAPI GameClient::control(LPVOID lpParam)
 		else
 		{
 			ReleaseMutex(Client->hMutex);
-			return 0;
+			break;
 		}
-
-		ReleaseMutex(Client->hMutex);
+		
+		
 	}
-	outfile.close();
+	ReleaseMutex(Client->hMutex);
+	//outfile.close();
 
 	WaitForSingleObject(Client->hMutex, INFINITE);
 	return 1;

@@ -216,27 +216,31 @@ DWORD WINAPI GameServer::ListenThread(void *data) //传进来具体哪个AcceptS
 
 	while (true)
 	{
+		cout << "DEBUG:新的收发循环\n";
 		//接收命令 
 
-		char recvBuf[1024];
+		char recvBuf[28000];
 
 		fd_set Read;//基于select模式对IO进行管理  
 
+		cout << "DEBUG:xxxxxxxxx\n";
 		FD_ZERO(&Read);    //初始化为0
 		FD_SET(GameSocket->ClientSock, &Read); //将ClientSock加入队列
-
-		//we only care read
-		select(0, &Read, NULL, NULL, NULL);   
-
+		cout << "DEBUG:yyyyyyyyy\n";
+		//we only care reads
+		int sel = select(0, &Read, NULL, NULL, NULL);
+	
+		cout << "DEBUG:select之后\n";
 		if (FD_ISSET(GameSocket->ClientSock, &Read))  
 		{
 			//接受客户端的数据
+			cout << "DEBUG:执行recv前\n";
 			int result = recv(GameSocket->ClientSock, recvBuf, sizeof(recvBuf), 0);
 			cout << "recv 返回值: " << result << "\n";
 			fflush(stdout);
 			if (result > 0)
 			{
-				recvBuf[result] = 0;
+				recvBuf[result] = '\0';
 				cout <<	"玩家" << GameSocket->ID << "发送了消息:"
 					<< recvBuf << "\n";
 				fflush(stdout);
@@ -244,12 +248,12 @@ DWORD WINAPI GameServer::ListenThread(void *data) //传进来具体哪个AcceptS
 			if (result == SOCKET_ERROR)
 			{
 				CleanSocket(GameSocket->ID);
-
+				break;
 			}
 		}
 		
 		//发送命令 
-		char sendBuf[1024];
+		char sendBuf[28000];
 		fd_set write;//基于select模式对IO进行管理  
 		FD_ZERO(&write);    //初始化为0
 		FD_SET(GameSocket->ClientSock, &write); //将ClientSock加入队列
@@ -262,8 +266,9 @@ DWORD WINAPI GameServer::ListenThread(void *data) //传进来具体哪个AcceptS
 			strcpy(sendBuf, recvBuf);
 			//cout << "Just Before Enter TOALL func, AcceptSocket[ID].ClientSock: " << GameSocket->ClientSock << "\n";
 			SendMessageToAllClient(sendBuf, GameSocket->ID);
+			
 		}
-
+		
 	}
 	return 1;
 }
