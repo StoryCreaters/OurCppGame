@@ -1,7 +1,8 @@
 ﻿#include "RoomChooseScene.h"
-#include "Character.h"
+#include "../model/Character.h"
 #include "GameScene.h"
 #include "CharacterSelect.h"
+#include "../web client/BnbGameClient.h"
 
 USING_NS_CC;
 using namespace ui;
@@ -17,11 +18,18 @@ Scene* RoomChoose::createScene() {
 	return scene;
 }
 
+GameClient client;
+
 bool RoomChoose::init() {
 	// 调用父类的init方法
 	if (!Layer::init()) {
 		return false;
 	}
+
+	//网络初始化
+	client.init();
+
+
 	// 获得设备可见视图大小
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	auto backGround = cocos2d::Sprite::create("BackGround/Gray World.jpg");
@@ -52,6 +60,10 @@ bool RoomChoose::init() {
 	UImenus->alignItemsVertically();
 	addChild(UImenus);
 
+
+	this->schedule(schedule_selector(RoomChoose::update), 3.0); //每3s更新一次人数信息
+
+
 	return true;
 }
 
@@ -66,4 +78,17 @@ void RoomChoose::ToRoomThree(Ref *sender) {
 }
 void RoomChoose::ToRoomFour(Ref *sender) {
 	Director::getInstance()->replaceScene(Players::createScene());
+}
+
+
+/*
+名称：更新
+描述：每3秒更新一次人数信息
+*/
+void RoomChoose::update(float dt)
+{
+	int val;
+	std::string msg = "Current number of people online：" + std::to_string(val);
+	auto * label = LabelTTF::create(msg, "Arial", 32);
+	label->setPosition(100, 100);
 }

@@ -1,8 +1,8 @@
 #include "GameItem.h"
 #include "Settings.h"
 #include <string>
-#include "PropLayer.h"
-#include "GameScene.h"
+#include "../view/PropLayer.h"
+#include "../view/GameScene.h"
 #include "Vehicle.h"
 
 // TODO : figure out how to deal with derived create
@@ -65,7 +65,7 @@ void GameItem::getItem(character* chara) {
     } else if (type != GameItem::OWL && type != GameItem::TUTLE){
         auto prop_layer = dynamic_cast<PropLayer*>(GameScene::getCurrentMap()->getChildByName("PropLayer"));
         if (prop_layer == nullptr) {
-            log("呜呜呜");
+           // log("呜呜呜");
         }
         prop_layer->addProp(static_cast<int>(type) - 4);
     } else {

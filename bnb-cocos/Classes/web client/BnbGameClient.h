@@ -9,6 +9,8 @@
 #pragma comment(lib,"ws2_32.lib")
 #include <queue>      //存放数据的队列
 
+class GameScene;
+
 
 struct recvInfo {
 	float Posx;
@@ -28,19 +30,17 @@ public:
 	void ClientProcess();    //启动客户处理
 
 	static DWORD WINAPI sendAndRecv(LPVOID lpParam);   //收发消息
-	static DWORD WINAPI control(LPVOID lpParam);
+	static DWORD WINAPI comsumer(LPVOID lpParam);
 	//SOCKET相关
 public:
 	SOCKET ClientSocket;
 	struct sockaddr_in ServerAddr;
 
-	char RecvBuf[1024];
-	char SendBuf[1024];
 	//网络数据处理
 
 private:
 	static std::queue <recvInfo> recvQueue;
 	HANDLE hMutex;
-	GameScene* runningGameScene;
+	GameScene * runningGameScene;
 	char *prop;
 };

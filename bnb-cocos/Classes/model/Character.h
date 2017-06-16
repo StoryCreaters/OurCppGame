@@ -5,7 +5,7 @@
 #include <utility>
 #include "Settings.h"
 #include <array>
-#include "BaseFSM.h"
+#include "../controller/BaseFSM.h"
 #include "Vehicle.h"
 
 class State;
@@ -48,6 +48,8 @@ public:
     
     
     std::array<bool, 4> _chara_move;
+	bool _chara_still;       //是否静止
+	bool _chara_bubble;      //是否在放BUBBLE
     /*****碰撞点******/
     // 根据方向给出一对碰撞点
     std::pair<cocos2d::Vec2, cocos2d::Vec2> get_collection_point(int direction);

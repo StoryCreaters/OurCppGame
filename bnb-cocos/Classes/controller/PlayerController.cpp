@@ -1,5 +1,5 @@
 #include "PlayerController.h"
-#include "GameScene.h"
+#include "../view/GameScene.h"
 #include "../model/Character.h"
 #include "Settings.h"
 #include "CharacterFSM.h"
@@ -30,14 +30,21 @@ void PlayerController::myKeyboardPressed(cocos2d::EventKeyboard::KeyCode keyCode
         default:
             break;
     }
+	
     auto _myplayer = getMyplayer();
     if (code != GameScene::_optionCode::DEFAULT) {
+		_myplayer->_chara_still = false;
         _myplayer->changeState(std::make_shared<CharMove>(static_cast<int>(code)));
-    }
+	}
+	else {
+		_myplayer->_chara_still = true;
+	}
 }
 
 void PlayerController::myKeyboardOff(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
     auto mychara = getMyplayer();
+	mychara->_chara_still = true;
+
     GameScene::_optionCode key;
     switch (keyCode) {
         case cocos2d::EventKeyboard::KeyCode::KEY_UP_ARROW:

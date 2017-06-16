@@ -1,10 +1,10 @@
 #include "Character.h"
 #include "Settings.h"
 #include "CommonUse.h"
-#include "CharacterFSM.h"
-#include "GameScene.h"
-#include "BubbleController.h"
-#include "PlayerController.h"
+#include "../controller/CharacterFSM.h"
+#include "../view/GameScene.h"
+#include "../controller/BubbleController.h"
+#include "../controller/PlayerController.h"
 
 
 using namespace settings::Character;

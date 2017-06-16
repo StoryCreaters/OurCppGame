@@ -1,5 +1,5 @@
 ﻿#include "PropLayer.h"
-#include "GameItem.h"
+#include "../model/GameItem.h"
 #include "Settings.h"
 #include "GameScene.h"
 using namespace ui;

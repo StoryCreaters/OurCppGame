@@ -1,9 +1,11 @@
 ﻿#include "CharacterSelect.h"
-#include "Character.h"
+#include "../model/Character.h"
 #include "GameScene.h"
 #include "RoomChooseScene.h"
 #include "TextField.h"
 #include "ChatBox.h"
+#include "../web client/BnbGameClient.h"
+
 
 USING_NS_CC;
 using namespace ui;
@@ -23,11 +25,19 @@ Players* Players::getCurrent() {
 	auto currentScene = Director::getInstance()->getRunningScene();
 	return dynamic_cast<Players*>(currentScene->getChildByName("Players"));
 }
+
+
+extern "C" GameClient client;
+
+
 bool Players::init() {
 	// 调用父类的init方法
 	if (!Layer::init()) {
 		return false;
 	}
+	//网络初始化
+	
+
 	// 获得设备可见视图大小
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	auto backGround = cocos2d::Sprite::create("BackGround/temple of times.png");
@@ -113,5 +123,7 @@ bool Players::init() {
 		}
 	});
 	
+	
+
 	return true;
 }

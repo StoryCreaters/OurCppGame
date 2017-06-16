@@ -4,8 +4,9 @@
 #include "cocos2d.h"
 #include "Settings.h"
 #include <array>
-#include "GameItem.h"
+#include "../model/GameItem.h"
 #include <thread>
+#include "../web client/WebGameScene.h"
 
 class character;
 class Bubbles;
@@ -17,6 +18,7 @@ public:
     friend class PlayerController;
     friend class CharStuck;
     friend class character;
+	friend class GameClient;
     using tilePosition = cocos2d::Vec2;
     
     // 返回gameScene对象
@@ -30,6 +32,8 @@ public:
     // implement the "static create()" method manually
     CREATE_FUNC(GameScene);
     
+	void addPlayer(character::characterType T, int index, bool isMyPlayer = false);
+
     void setViewPointCenter(cocos2d::Vec2 position);
     
     void addCloseMenu();
@@ -56,7 +60,7 @@ public:
     void RemoveCharacter(character* chara);
     
     /********泡泡释放*************/
-    void setBubble(character* chara);
+    void setBubble(character* chara,Vec2 Pos);
     void BubbleBoom(Ref* sender);
     Bubbles* hasCollideableBubble(cocos2d::Vec2 tilePos);
     Bubbles* hasBubble(cocos2d::Vec2 tilePos);

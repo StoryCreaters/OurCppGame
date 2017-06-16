@@ -1,9 +1,9 @@
 #include "CharacterFSM.h"
 #include "CommonUse.h"
-#include "GameScene.h"
-#include "Character.h"
+#include "../view/GameScene.h"
+#include "../model/Character.h"
 #include "CommonUse.h"
-#include "BaseController.h"
+#include "../controller/BaseController.h"
 #include "Vehicle.h"
 
 class GameScene;

@@ -1,7 +1,7 @@
 #include "Bubbles.h"
 #include "Settings.h"
 #include "Character.h"
-#include "GameScene.h"
+#include "../view/GameScene.h"
 
 USING_NS_CC;
 
