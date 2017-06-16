@@ -4,6 +4,7 @@
 // 与web交互 选择房间的scene
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
+#include <vector>
 using namespace cocos2d;
 class RoomChoose : public cocos2d::Layer
 {
@@ -28,7 +29,13 @@ public:
 	void ToRoomTwo(cocos2d::Ref* sender);
 	void ToRoomThree(cocos2d::Ref* sender);
 	void ToRoomFour(cocos2d::Ref* sender);
-
+	//增加房间数
+	void addroom(cocos2d::Ref* sender);
+	//减少房间数
+	void poproom(cocos2d::Ref* sender);
+	//房间数
+	std::vector<int> vecs ;
+	//每个房间规定人数
 private:
 	Menu* UImenus = nullptr;
 };
