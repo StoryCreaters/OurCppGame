@@ -10,8 +10,9 @@ using std::string;
 volatile static int count = 0;
 static int playerNum = 0;     //玩家总数
 int GameServer::prog_map[15][15];
+std::vector <RoomInfo> GameServer::Rooms;
 
-BnbClientInformation GameServer::AcceptSocket[2];
+BnbClientInformation GameServer::AcceptSocket[GameServer::MAX_NUM];
 /*
 名称：构造函数
 描述：用于Socket初始化
@@ -61,7 +62,7 @@ GameServer::GameServer()
 		<< " 端口号为: " << port << "\n";
 	fflush(stdout);
 	//监听   有listen就有accept
-	if (listen(ListenSocket, 5) == SOCKET_ERROR)
+	if (listen(ListenSocket, 10) == SOCKET_ERROR)
 	{
 		cout<<"监听出错，错误号："<< WSAGetLastError() << "\n";
 		fflush(stdout);
@@ -75,7 +76,15 @@ GameServer::GameServer()
 	cout << "网络初始化成功\n";
 	fflush(stdout);
 
-	playerNum = 0;
+	//其他初始化操作
+	playerNum = 0;       
+	Rooms.resize(4);   
+	for (int i = 0; i < 4; i++)
+	{
+		Rooms[i].name = "Room" + std::to_string(i);   
+		Rooms[i].id = 100 + i;
+		Rooms[i].curNum = 0;    
+	}
 	GenerateProps();
 	return;
 }
@@ -127,8 +136,6 @@ int GameServer::ProcessGameServer()
 
 		if (index != -1) //玩家未满
 		{
-			
-			//对应前面的listen，这里是对应操作accept
 		
 			cout << "等待Client连接...\n";
 			fflush(stdout);
@@ -136,7 +143,7 @@ int GameServer::ProcessGameServer()
 				ListenSocket, 
 				(struct sockaddr*)&AcceptSocket[index].Client,
 				&ClntLen);
-			//cout << "#1 AcceptSocket[index].ClientSock: " << AcceptSocket[index].ClientSock << "\n";
+
 			AcceptSocket[index].ID = index;       //记录这个Client的ID啊，以后要寻找它
 			AcceptSocket[index].Active = false;
 			
@@ -146,11 +153,16 @@ int GameServer::ProcessGameServer()
 				fflush(stdout);
 				break;
 			}
-			//cout << "#2 AcceptSocket[index].ClientSock: " << AcceptSocket[index].ClientSock << "\n";
+			
+			//传输ID，其他的不用
+			std::string msg = std::to_string(AcceptSocket[index].ID);
+			SendMessageToOneClient(AcceptSocket[index].ID, msg);
+			cout << "#ID :" << msg << "\n";
+
 			cout << "连接成功\n";
 			fflush(stdout);
 			playerNum++;
-			//至此client与server连接成功,欢呼
+			//至此client与server连接成功
 
 			cout << "新玩家加入，IP地址为：" << inet_ntoa(AcceptSocket[index].Client.sin_addr)
 				  << "  端口号为：" << ntohs(AcceptSocket[index].Client.sin_port) << "\n";
@@ -159,15 +171,15 @@ int GameServer::ProcessGameServer()
 
 
 			CreateThread(NULL, 0,
-				(LPTHREAD_START_ROUTINE)(GameServer::sendPeopleNum), //线程点函数
+				(LPTHREAD_START_ROUTINE)(GameServer::sendRoomInfo), //线程点函数
 				(LPVOID)&AcceptSocket[index], 0,              //参数
 				nullptr
 			);
 
 			
-			while (playerNum == 2)
+			while (playerNum == MAX_NUM)
 			{
-				if (count == 2)
+				if (count == MAX_NUM)
 				{
 					int ThreadID;     //线程ID
 
@@ -189,7 +201,6 @@ int GameServer::ProcessGameServer()
 
 					cout << "新玩家" << index << "的接受线程创建成功\n";
 					fflush(stdout);
-					//cout << "#3 AcceptSocket[index].ClientSock: " << AcceptSocket[index].ClientSock << "\n";
 					break;
 				}
 				else
@@ -236,7 +247,7 @@ int GameServer::ProcessGameServer()
 DWORD WINAPI GameServer::ListenThread(void *data) //传进来具体哪个AcceptSocket[xx]的地址
 {
 
-	BnbClientInformation *GameSocket = (BnbClientInformation *)data;
+	BnbClientInformation *GameSocket = static_cast<BnbClientInformation *>(data);
 	sendProps(GameSocket->ID);
 
 	while (true)
@@ -312,7 +323,6 @@ int GameServer::SendMessageToOneClient(int ID, const string  str)
 	{
 		cout << "向玩家" << ID << "发送消息失败\n";
 		fflush(stdout);
-		//cout << "#5  ，AcceptSocket[index].ClientSock: " << AcceptSocket[ID].ClientSock << "\n";
 		return 0;
 	}
 
@@ -346,24 +356,32 @@ void GameServer::SendMessageToAllClient(const string  str, int ID)
 }
 
 
-DWORD WINAPI GameServer::sendPeopleNum(void *data)
+DWORD WINAPI GameServer::sendRoomInfo(void *data)
 {
-	BnbClientInformation *GameSocket = (BnbClientInformation *)data;
+	BnbClientInformation *GameSocket = static_cast<BnbClientInformation*>(data);
+
 	int flag = 0;
-	char buf[8];
+	int whichRoom = -1;
+	char buf[16];
 	while (true)
 	{
-		string val = std::to_string(playerNum);
 		ZeroMemory(buf, sizeof(buf));
 		int result = recv(GameSocket->ClientSock, buf, sizeof(buf), 0);
 		cout << "#buf:" << buf << "\n";
-		sscanf(buf, "%d", &flag);
+		sscanf(buf, "%d %d", &flag,&whichRoom);
+		if (whichRoom != -1)
+		{
+			Rooms[whichRoom].curNum++;
+		}
+			
 
+		std::string myRoom = std::to_string(playerNum);
+		for (int i = 0; i < 4; i++)
+			myRoom += " " + std::to_string(Rooms[i].curNum);
 		
-		cout << "当前在线人数：" << val << "\n";
-		cout << "是否离开RoomChoose:" << flag << "\n";
-		cout << "count :" << count << "\n";
-		if (SendMessageToOneClient(GameSocket->ID, val) && !flag)
+		cout << "myRoom :" << myRoom << "\n";
+		cout << "myRoom size:" << myRoom.size() << "\n";
+		if (SendMessageToOneClient(GameSocket->ID, myRoom) && !flag)
 			continue;
 		else
 			break;
@@ -394,7 +412,6 @@ void GameServer::CleanSocket(int ID)
 	AcceptSocket[ID].Active = false;
 	closesocket(AcceptSocket[ID].ClientSock);
 	AcceptSocket[ID].ClientSock = INVALID_SOCKET;
-	//cout << "即将销毁,你怎么会进到这里？？？！.....AcceptSocket[i].ClientSock :" << AcceptSocket[ID].ClientSock << "\n";
 
 	cout << "正在关闭其接受线程:" << AcceptSocket[ID].RecvThreadID << "\n";
 	fflush(stdout);
@@ -407,7 +424,7 @@ void GameServer::CleanSocket(int ID)
 }
 
 
-void GameServer::GenerateProps()
+ void GameServer::GenerateProps()
 {
 	static std::random_device rd;
 	static std::uniform_int_distribution<int> dist(1,6);

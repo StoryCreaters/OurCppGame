@@ -55,7 +55,7 @@ public:
 	void acceptProps();
 	~GameClient();
 	void ClientProcess();    //启动客户处理
-	int ClientProcessBefore(int flag);
+	int ClientProcessBefore(int flag, int which);
 
 	static DWORD WINAPI sendAndRecv(LPVOID lpParam);   //收发消息
 	static DWORD WINAPI comsumer(LPVOID lpParam);

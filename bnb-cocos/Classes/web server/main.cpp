@@ -5,4 +5,5 @@ GameServer gc;
 int main()
 {
 	gc.ProcessGameServer();
+	return 0;
 }

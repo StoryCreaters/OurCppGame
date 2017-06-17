@@ -28,7 +28,7 @@ Players* Players::getCurrent() {
 
 
 extern "C" GameClient client;
-
+extern std::vector <RoomInfo> Rooms; 
 
 bool Players::init() {
 	// 调用父类的init方法

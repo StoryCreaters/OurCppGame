@@ -11,6 +11,7 @@ using namespace ui;
 Size visibleSize;
 std::vector <RoomInfo> Rooms;  //房间列表
 GameClient client;  
+extern struct PlayerInfo myPlayerInfo;
 
 Scene* RoomChoose::createScene() {
 	// 创建一个场景对象，该对象将会由自动释放池管理内存的释放
@@ -114,22 +115,33 @@ bool RoomChoose::init() {
 
 void RoomChoose::ToRoomOne(Ref *sender) {
 	isOut = true;
-	client.ClientProcessBefore(isOut);
+	client.ClientProcessBefore(isOut,0);
+	Rooms[0].playerList.push_back(myPlayerInfo);
+	Rooms[0].curNum++;
 	Director::getInstance()->replaceScene(Players::createScene());
 }
+
 void RoomChoose::ToRoomTwo(Ref *sender) {
 	isOut = true;
-	client.ClientProcessBefore(isOut);
+	client.ClientProcessBefore(isOut,1);
+	Rooms[1].playerList.push_back(myPlayerInfo);
+	Rooms[1].curNum++;
 	Director::getInstance()->replaceScene(Players::createScene());
 }
+
 void RoomChoose::ToRoomThree(Ref *sender) {
 	isOut = true;
-	client.ClientProcessBefore(isOut);
+	client.ClientProcessBefore(isOut,2);
+	Rooms[2].playerList.push_back(myPlayerInfo);
+	Rooms[2].curNum++;
 	Director::getInstance()->replaceScene(Players::createScene());
 }
+
 void RoomChoose::ToRoomFour(Ref *sender) {
 	isOut = true;
-	client.ClientProcessBefore(isOut);
+	client.ClientProcessBefore(isOut,3);
+	Rooms[3].playerList.push_back(myPlayerInfo);
+	Rooms[3].curNum++;
 	Director::getInstance()->replaceScene(Players::createScene());
 }
 
@@ -153,7 +165,7 @@ void RoomChoose::update(float dt)
 	removeChild(label3);
 	removeChild(label4);
 
-	int val = client.ClientProcessBefore(isOut);
+	int val = client.ClientProcessBefore(isOut,-1);
 
 	std::string msg = std::to_string(val);
 	std::string msg1 = std::to_string(Rooms[0].curNum);

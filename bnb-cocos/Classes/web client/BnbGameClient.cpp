@@ -90,7 +90,7 @@ bool GameClient::init()
 	for (int i = 0; i < 4; i++)
 	{
 		Rooms[i].name = "Room" + std::to_string(i);
-		Rooms[i].id = 100000 + i;
+		Rooms[i].id = 10 + i;
 		Rooms[i].curNum = 0;
 	}
 	char tempBuf[8];
@@ -418,15 +418,20 @@ void GameClient::acceptProps()
 名称: 处理线程在游戏开始之前
 描述: 顾名思义
 */
-int GameClient::ClientProcessBefore(int flag)
+int GameClient::ClientProcessBefore(int flag,int which)
 {
 	static int curNum;
 
-	char buff[8];
+	int whichRoom = -1;
+	if (flag == 1)
+		whichRoom = which;
+
+	char buff[16];
 	ZeroMemory(buff, sizeof(buff));
-	sprintf(buff, "%d", flag);
+	sprintf(buff, "%d %d", flag , whichRoom);
 	int sec = send(ClientSocket, buff, strlen(buff)+sizeof(char), 0);
 	
+
 	std::fstream outfile("e:\\text.txt",std::ios::app);
 	outfile << "sec :" << sec << " flag:" << flag << "\n";
 	outfile.close();
