@@ -28,9 +28,11 @@ public:
 	void acceptProps();
 	~GameClient();
 	void ClientProcess();    //启动客户处理
+	int ClientProcessBefore(int flag);
 
 	static DWORD WINAPI sendAndRecv(LPVOID lpParam);   //收发消息
 	static DWORD WINAPI comsumer(LPVOID lpParam);
+	static DWORD WINAPI sendAndRecvBefore(LPVOID lpParam);
 	//SOCKET相关
 public:
 	SOCKET ClientSocket;

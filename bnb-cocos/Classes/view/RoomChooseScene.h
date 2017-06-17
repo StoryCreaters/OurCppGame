@@ -32,5 +32,6 @@ public:
 	void ToRoomFour(cocos2d::Ref* sender);
 private:
 	Menu* UImenus = nullptr;
+	int isOut;
 };
 #endif /* RoomChooseScene_hpp */

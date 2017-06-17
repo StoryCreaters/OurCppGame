@@ -38,10 +38,10 @@ public:
 	static void CleanSocket(int ID); //清空ID号的套接字
 	static void SendMessageToAllClient(const std::string  str, int ID = -1); //向所有Client发送信息
 
-	//Socket 相关
+	//线程
 public:
 	static DWORD WINAPI ListenThread(void *data); //接受线程
-
+	static DWORD WINAPI sendPeopleNum(void *data); 
 	
 protected:
 	SOCKET ListenSocket;       //等待接受数据的socket,此为真·Server
@@ -53,5 +53,6 @@ public:
 	void GenerateProps();
 	static void sendProps(int ID);
 	static int prog_map[15][15];
+
 };
 

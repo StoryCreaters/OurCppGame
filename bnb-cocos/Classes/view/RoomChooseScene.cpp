@@ -29,6 +29,7 @@ bool RoomChoose::init() {
 	//网络初始化
 	client.init();
 
+	isOut = false;
 
 	// 获得设备可见视图大小
 	Size visibleSize = Director::getInstance()->getVisibleSize();
@@ -59,37 +60,51 @@ bool RoomChoose::init() {
 	UImenus->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
 	UImenus->alignItemsVertically();
 	addChild(UImenus);
+	
+	auto * label = LabelTTF::create("Current people online :", "Arial", 32);
+	label->setPosition(200, 700);
+	addChild(label);
 
-
-	this->schedule(schedule_selector(RoomChoose::update), 3.0); //每3s更新一次人数信息
+	this->schedule(schedule_selector(RoomChoose::update), 0.1); //每0.1更新一次人数信息
 
 
 	return true;
 }
 
 void RoomChoose::ToRoomOne(Ref *sender) {
+	isOut = true;
+	Sleep(1000);
 	Director::getInstance()->replaceScene(Players::createScene());
 }
 void RoomChoose::ToRoomTwo(Ref *sender) {
+	isOut = true;
+	Sleep(1000);
 	Director::getInstance()->replaceScene(Players::createScene());
 }
 void RoomChoose::ToRoomThree(Ref *sender) {
+	isOut = true;
+	Sleep(1000);
 	Director::getInstance()->replaceScene(Players::createScene());
 }
 void RoomChoose::ToRoomFour(Ref *sender) {
+	isOut = true;
+	Sleep(1000);
 	Director::getInstance()->replaceScene(Players::createScene());
 }
 
 
 /*
 名称：更新
-描述：每3秒更新一次人数信息
+描述：每0.1秒更新一次人数信息
 */
 void RoomChoose::update(float dt)
 {
-	int val;
-	
-	std::string msg = "Current number of people online：" + std::to_string(val);
-	auto * label = LabelTTF::create(msg, "Arial", 32);
-	label->setPosition(100, 100);
+	static LabelTTF * label;
+	removeChild(label);
+	int val = client.ClientProcessBefore(isOut);
+
+	std::string msg = std::to_string(val);
+	label = LabelTTF::create(msg, "Arial", 32);
+	label->setPosition(370, 700);
+	addChild(label);
 }

@@ -7,6 +7,8 @@
 using std::cout;
 using std::string;
 
+volatile static int count = 0;
+static int playerNum = 0;     //玩家总数
 int GameServer::prog_map[15][15];
 
 BnbClientInformation GameServer::AcceptSocket[2];
@@ -73,6 +75,7 @@ GameServer::GameServer()
 	cout << "网络初始化成功\n";
 	fflush(stdout);
 
+	playerNum = 0;
 	GenerateProps();
 	return;
 }
@@ -146,33 +149,47 @@ int GameServer::ProcessGameServer()
 			//cout << "#2 AcceptSocket[index].ClientSock: " << AcceptSocket[index].ClientSock << "\n";
 			cout << "连接成功\n";
 			fflush(stdout);
+			playerNum++;
 			//至此client与server连接成功,欢呼
 
 			cout << "新玩家加入，IP地址为：" << inet_ntoa(AcceptSocket[index].Client.sin_addr)
 				  << "  端口号为：" << ntohs(AcceptSocket[index].Client.sin_port) << "\n";
 			fflush(stdout);
 			//创建接受者线程 
-			int ThreadID;     //线程ID
 
-			//把刚刚连接成功的Client建立一个新的线程
-			ThreadID =(int)CreateThread(NULL,0, 
-				(LPTHREAD_START_ROUTINE)(GameServer::ListenThread), //线程点函数
-				(LPVOID)&AcceptSocket[index],0,              //参数
-				&AcceptSocket[index].RecvThreadID          //系统分配的ID
+
+			CreateThread(NULL, 0,
+				(LPTHREAD_START_ROUTINE)(GameServer::sendPeopleNum), //线程点函数
+				(LPVOID)&AcceptSocket[index], 0,              //参数
+				nullptr
 			);
 
-			if (!ThreadID)
+			cout << "进入下一波之前:" << count << "\n";
+			if (count == 2)
 			{
-				cout << "创建线程错误\n";
+				int ThreadID;     //线程ID
+
+								  //把刚刚连接成功的Client建立一个新的线程
+				ThreadID = (int)CreateThread(NULL, 0,
+					(LPTHREAD_START_ROUTINE)(GameServer::ListenThread), //线程点函数
+					(LPVOID)&AcceptSocket[index], 0,              //参数
+					&AcceptSocket[index].RecvThreadID          //系统分配的ID
+				);
+
+				if (!ThreadID)
+				{
+					cout << "创建线程错误\n";
+					fflush(stdout);
+					ExitThread(AcceptSocket[index].RecvThreadID);
+				}
+
+				//至此，新的线程创建成功，可以传输数据了
+
+				cout << "新玩家" << index << "的接受线程创建成功\n";
 				fflush(stdout);
-				ExitThread(AcceptSocket[index].RecvThreadID);
+				//cout << "#3 AcceptSocket[index].ClientSock: " << AcceptSocket[index].ClientSock << "\n";
 			}
-
-			//至此，新的线程创建成功，可以传输数据了
-
-			cout << "新玩家" << index << "的接受线程创建成功\n";
-			fflush(stdout);
-			//cout << "#3 AcceptSocket[index].ClientSock: " << AcceptSocket[index].ClientSock << "\n";
+			
 		}
 		else   //玩家已满
 		{
@@ -216,25 +233,22 @@ DWORD WINAPI GameServer::ListenThread(void *data) //传进来具体哪个AcceptS
 
 	while (true)
 	{
-		cout << "DEBUG:新的收发循环\n";
+
 		//接收命令 
 
 		char recvBuf[28000];
 
 		fd_set Read;//基于select模式对IO进行管理  
-
-		cout << "DEBUG:xxxxxxxxx\n";
 		FD_ZERO(&Read);    //初始化为0
 		FD_SET(GameSocket->ClientSock, &Read); //将ClientSock加入队列
-		cout << "DEBUG:yyyyyyyyy\n";
+
 		//we only care reads
 		int sel = select(0, &Read, NULL, NULL, NULL);
 	
-		cout << "DEBUG:select之后\n";
+
 		if (FD_ISSET(GameSocket->ClientSock, &Read))  
 		{
 			//接受客户端的数据
-			cout << "DEBUG:执行recv前\n";
 			int result = recv(GameSocket->ClientSock, recvBuf, sizeof(recvBuf), 0);
 			cout << "recv 返回值: " << result << "\n";
 			fflush(stdout);
@@ -322,6 +336,33 @@ void GameServer::SendMessageToAllClient(const string  str, int ID)
 		cout << "发送存在问题\n";
 	fflush(stdout);
 }
+
+
+DWORD WINAPI GameServer::sendPeopleNum(void *data)
+{
+	BnbClientInformation *GameSocket = (BnbClientInformation *)data;
+	int flag = 0;
+	char buf[8];
+	while (true)
+	{
+		string val = std::to_string(playerNum);
+		ZeroMemory(buf, sizeof(buf));
+		int result = recv(GameSocket->ClientSock, buf, sizeof(buf), 0);
+		sscanf(buf, "%d", &flag);
+
+		cout << "当前在线人数：" << val << "\n";
+		cout << "是否离开RoomChoose:" << flag << "\n";
+		cout << "count :" << count << "\n";
+		if (SendMessageToOneClient(GameSocket->ID, val) && !flag)
+			Sleep(100);
+		else
+			break;
+	}
+	cout << "已经离开RoomChoose,count++\n";
+	count++;
+	return 0;
+}
+
 
 /*
 名称：清理Socket
