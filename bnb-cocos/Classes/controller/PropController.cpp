@@ -1,5 +1,9 @@
 #include "PropController.h"
+<<<<<<< HEAD
 #include "PropLayer.h"
+=======
+#include "../view/PropLayer.h"
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 
 // propType in prop layer
 //enum PropType {

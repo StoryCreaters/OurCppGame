@@ -4,8 +4,14 @@
 #include "cocos2d.h"
 #include "Settings.h"
 #include <array>
+<<<<<<< HEAD:bnb-cocos/Classes/view/GameScene.h
 #include "GameItem.h"
 #include <thread>
+=======
+#include "../model/GameItem.h"
+#include <thread>
+#include "../web client/WebGameScene.h"
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d:bnb-cocos/Classes/view/GameScene.h
 
 class character;
 class Bubbles;
@@ -17,6 +23,10 @@ public:
     friend class PlayerController;
     friend class CharStuck;
     friend class character;
+<<<<<<< HEAD:bnb-cocos/Classes/view/GameScene.h
+=======
+	friend class GameClient;
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d:bnb-cocos/Classes/view/GameScene.h
     using tilePosition = cocos2d::Vec2;
     
     // 返回gameScene对象
@@ -30,6 +40,8 @@ public:
     // implement the "static create()" method manually
     CREATE_FUNC(GameScene);
     
+	void addPlayer(character::characterType T, int index, bool isMyPlayer = false);
+
     void setViewPointCenter(cocos2d::Vec2 position);
     
     void addCloseMenu();
@@ -56,7 +68,11 @@ public:
     void RemoveCharacter(character* chara);
     
     /********泡泡释放*************/
+<<<<<<< HEAD:bnb-cocos/Classes/view/GameScene.h
     void setBubble(character* chara);
+=======
+    void setBubble(character* chara,Vec2 Pos);
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d:bnb-cocos/Classes/view/GameScene.h
     void BubbleBoom(Ref* sender);
     Bubbles* hasCollideableBubble(cocos2d::Vec2 tilePos);
     Bubbles* hasBubble(cocos2d::Vec2 tilePos);

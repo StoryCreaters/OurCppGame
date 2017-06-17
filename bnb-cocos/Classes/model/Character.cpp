@@ -1,10 +1,17 @@
 #include "Character.h"
 #include "Settings.h"
 #include "CommonUse.h"
+<<<<<<< HEAD
 #include "CharacterFSM.h"
 #include "GameScene.h"
 #include "BubbleController.h"
 #include "PlayerController.h"
+=======
+#include "../controller/CharacterFSM.h"
+#include "../view/GameScene.h"
+#include "../controller/BubbleController.h"
+#include "../controller/PlayerController.h"
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 
 
 using namespace settings::Character;

@@ -1,8 +1,19 @@
 ﻿#include "CharacterSelect.h"
+<<<<<<< HEAD
 #include "Character.h"
 #include "GameScene.h"
 #include "RoomChooseScene.h"
 #include "TextField.h"
+=======
+#include "../model/Character.h"
+#include "GameScene.h"
+#include "RoomChooseScene.h"
+#include "TextField.h"
+#include "ChatBox.h"
+#include "../web client/BnbGameClient.h"
+
+
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 USING_NS_CC;
 using namespace ui;
 
@@ -21,17 +32,35 @@ Players* Players::getCurrent() {
 	auto currentScene = Director::getInstance()->getRunningScene();
 	return dynamic_cast<Players*>(currentScene->getChildByName("Players"));
 }
+<<<<<<< HEAD
+=======
+
+
+extern "C" GameClient client;
+
+
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 bool Players::init() {
 	// 调用父类的init方法
 	if (!Layer::init()) {
 		return false;
 	}
+<<<<<<< HEAD
 	// 获得设备可见视图大小
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	auto backGround = cocos2d::Sprite::create("BackGround/Character_Select.png");
 	backGround->setPosition(cocos2d::Vec2(visibleSize.width / 2, visibleSize.height / 2));
 	this->addChild(backGround, 0);
 
+=======
+	
+
+	// 获得设备可见视图大小
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+	auto backGround = cocos2d::Sprite::create("BackGround/temple of times.png");
+	backGround->setPosition(cocos2d::Vec2(visibleSize.width / 2, visibleSize.height / 2));
+	this->addChild(backGround, 0);
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 	//Player1
 	auto first_button = Button::create("GameUI/button.png");
 	first_button->setScale(2);
@@ -89,12 +118,22 @@ bool Players::init() {
 	});
 	this->addChild(return_button);
 	//留白
+<<<<<<< HEAD
 	auto layerColor = LayerColor::create(Color4B(41, 36, 33, 200), 400, 400);
 	layerColor->setPosition(208, 150);
 	this->addChild(layerColor);
 	auto textfield = TextFieldTest::create();
 	textfield->setName("TextField");
 	addChild(textfield);
+=======
+    addChild(ChatBox::create());
+//	auto layerColor = LayerColor::create(Color4B(41, 36, 33, 200), 400, 400);
+//	layerColor->setPosition(208, 150);
+//	this->addChild(layerColor);
+//	auto textfield = TextFieldTest::create();
+//	textfield->setName("TextField");
+//	addChild(textfield);
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 	//设OK键
 	auto ok_button = Button::create("GameUI/button1.png");
 	ok_button->setPosition(Vec2(visibleSize.width *0.20, visibleSize.height*0.18));
@@ -104,18 +143,27 @@ bool Players::init() {
 			removeChild(ok_button);
 			auto cancel_button = Button::create("GameUI/button2.png");
 			cancel_button->setPosition(Vec2(visibleSize.width *0.20, visibleSize.height*0.18));
+<<<<<<< HEAD
 			cancel_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
 				if (type == Widget::TouchEventType::ENDED) {
 					//留白
 				}
 			});
+=======
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 			this->addChild(cancel_button);
 			// 切换到GameScene场景
 			auto transition = TransitionFadeBL::create(2.0, GameScene::createScene());
 			Director::getInstance()->replaceScene(transition);
 		}
 	});
+<<<<<<< HEAD
 
 	
+=======
+	
+	
+
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 	return true;
 }

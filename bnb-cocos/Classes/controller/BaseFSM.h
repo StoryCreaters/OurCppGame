@@ -5,7 +5,7 @@
 
 #include "cocos2d.h"
 #include <memory>
-#include "Character.h"
+#include "../model/Character.h"
 
 class BaseFsm;
 

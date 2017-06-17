@@ -2,6 +2,10 @@
 #include "../view/GameScene.h"
 #include "../controller/PlayerController.h"
 #include "../controller/CharacterFSM.h"
+<<<<<<< HEAD
+=======
+#include "../view/CharacterSelect.h"
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 #include <random>
 
 USING_NS_CC;
@@ -20,6 +24,7 @@ bool WebGameScene::init()
 	{
 		return false;
 	}
+<<<<<<< HEAD
 
 	//初始化服务端
 	client.init();
@@ -35,6 +40,23 @@ void WebGameScene::update(float dt) {
 	
 	client.ClientProcess();
 	
+=======
+	
+	//初始化服务端
+	//client.init();
+
+	this->schedule(schedule_selector(WebGameScene::update));
+
+
+	return true;
+
+}
+
+void WebGameScene::update(float dt) {
+
+	client.ClientProcess();
+
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 }
 
 bool WebGameScene::checkSyn()

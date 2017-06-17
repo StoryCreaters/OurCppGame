@@ -4,7 +4,18 @@
 // 与web交互 选择房间的scene
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
+<<<<<<< HEAD
 #include <vector>
+=======
+#include <string>
+#include <vector>
+#include "../web client/BnbGameClient.h"
+
+
+extern "C" GameClient client;
+
+
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 using namespace cocos2d;
 class RoomChoose : public cocos2d::Layer
 {
@@ -19,7 +30,12 @@ public:
 	* 注意：init函数在Cocos2d-x中返回bool值，而不是返回Cocos2d-iPhone中的“id”
 	*/
 	virtual bool init();
+<<<<<<< HEAD
 
+=======
+	
+	void update(float dt)override;
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 	/**
 	* 使用CREATE_FUNC宏创建当前类的对象，返回的对象将会由自动释放池管理内存的释放
 	*/
@@ -29,6 +45,7 @@ public:
 	void ToRoomTwo(cocos2d::Ref* sender);
 	void ToRoomThree(cocos2d::Ref* sender);
 	void ToRoomFour(cocos2d::Ref* sender);
+<<<<<<< HEAD
 	//增加房间数
 	void addroom(cocos2d::Ref* sender);
 	//减少房间数
@@ -38,5 +55,10 @@ public:
 	//每个房间规定人数
 private:
 	Menu* UImenus = nullptr;
+=======
+private:
+	Menu* UImenus = nullptr;
+	int isOut;
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 };
 #endif /* RoomChooseScene_hpp */

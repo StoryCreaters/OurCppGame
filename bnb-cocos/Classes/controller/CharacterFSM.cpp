@@ -1,9 +1,16 @@
 #include "CharacterFSM.h"
 #include "CommonUse.h"
+<<<<<<< HEAD
 #include "GameScene.h"
 #include "Character.h"
 #include "CommonUse.h"
 #include "BaseController.h"
+=======
+#include "../view/GameScene.h"
+#include "../model/Character.h"
+#include "CommonUse.h"
+#include "../controller/BaseController.h"
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 #include "Vehicle.h"
 
 class GameScene;

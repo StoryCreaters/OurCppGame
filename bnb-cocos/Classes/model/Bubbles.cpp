@@ -1,7 +1,11 @@
 #include "Bubbles.h"
 #include "Settings.h"
 #include "Character.h"
+<<<<<<< HEAD
 #include "GameScene.h"
+=======
+#include "../view/GameScene.h"
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 
 USING_NS_CC;
 

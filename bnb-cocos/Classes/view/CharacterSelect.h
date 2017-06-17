@@ -1,9 +1,18 @@
 ﻿#ifndef CharacterSelect_hpp
 #define CharacterSelect_hpp
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
 #include "HelloWorldScene.h"
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 using namespace cocos2d;
 class Players : public cocos2d::Layer
 {
@@ -23,6 +32,11 @@ public:
 	* 使用CREATE_FUNC宏创建当前类的对象，返回的对象将会由自动释放池管理内存的释放
 	*/
 	CREATE_FUNC(Players);
+<<<<<<< HEAD
+=======
+
+	
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 };
 
 

@@ -1,10 +1,11 @@
 // TODO: 改变遮挡关系
 #include "GameScene.h"
-#include "Bubbles.h"
+#include "../model/Bubbles.h"
 #include "Settings.h"
 #include "SimpleAudioEngine.h"
 #include "CommonUse.h"
 #include <random>
+<<<<<<< HEAD:bnb-cocos/Classes/view/GameScene.cpp
 #include "CharacterFSM.h"
 #include "Character.h"
 #include "../controller/WebClient.h"
@@ -14,6 +15,18 @@
 #include "PropController.h"
 #include <chrono>
 #include "OpenScene.h"
+=======
+#include "../controller/CharacterFSM.h"
+#include "../model/Character.h"
+#include "../controller/PlayerController.h"
+#include "../controller/BubbleController.h"
+#include "../view/PropLayer.h"
+#include "../controller/PropController.h"
+#include <chrono>
+#include "OpenScene.h"
+
+#include <fstream>
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d:bnb-cocos/Classes/view/GameScene.cpp
 
 USING_NS_CC;
 using namespace ui;
@@ -27,8 +40,13 @@ Scene* GameScene::createScene()
     
     // 'layer' is an autorelease object
     auto game_layer = GameScene::create();
+<<<<<<< HEAD:bnb-cocos/Classes/view/GameScene.cpp
     
     
+=======
+    
+    
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d:bnb-cocos/Classes/view/GameScene.cpp
     // temporary set it ten
     game_layer->setName("GameScene");
     game_layer->setTag(10);
@@ -79,6 +97,7 @@ bool GameScene::init()
 	addChild(_tileMap, -1);
 
 	// 注意坐标位置差
+<<<<<<< HEAD:bnb-cocos/Classes/view/GameScene.cpp
 	offx = (visibleSize.width - _tileMap->getContentSize().width * _tile_delta_rate) / 2;
 	offy = (visibleSize.height - _tileMap->getContentSize().height * _tile_delta_rate) / 2;
 	TMXObjectGroup *objects = _tileMap->getObjectGroup("player");
@@ -114,6 +133,14 @@ bool GameScene::init()
 	_game_players.pushBack(_myplayer);
 	_my_bubbles = 0;
     // bubbles start from 0
+=======
+
+	/*** add character***/
+	addPlayer(static_cast<character::characterType>(UserDefault::getInstance()->getIntegerForKey("PLAYER")), 1, true);
+
+	addPlayer(character::SHADOWFOX, 4, false);
+	
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d:bnb-cocos/Classes/view/GameScene.cpp
 
 	// add controller
 	auto playerController = PlayerController::create();
@@ -131,12 +158,63 @@ bool GameScene::init()
     propController->setName("PropController");
     addChild(propController);
     
+<<<<<<< HEAD:bnb-cocos/Classes/view/GameScene.cpp
+=======
+
+	auto webPlayer = WebGameScene::create();
+	webPlayer->setName("WebPlayer");
+	this->addChild(webPlayer);
+
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d:bnb-cocos/Classes/view/GameScene.cpp
 	this->scheduleUpdate();
 
 	return true;
 }
 
+void GameScene::addPlayer(character::characterType T, int index, bool isMyPlayer)
+{
+	/*** add character***/
+	std::string spawn_point_index = "SpawnPoint" + std::to_string(index);
+	log("index: %d, str: %s", index, spawn_point_index.c_str());
 
+	offx = (visibleSize.width - _tileMap->getContentSize().width * _tile_delta_rate) / 2;
+	offy = (visibleSize.height - _tileMap->getContentSize().height * _tile_delta_rate) / 2;
+	objects = _tileMap->getObjectGroup("player");
+
+
+	auto spawnPoint = objects->getObject(spawn_point_index);
+
+	CCASSERT(!spawnPoint.empty(), "SpawnPoint object not found");
+
+	float x = spawnPoint["x"].asFloat() * _tile_delta_rate;
+	float y = spawnPoint["y"].asFloat() * _tile_delta_rate;
+	
+	auto newchara = character::create(T);
+	if (isMyPlayer) {
+		_myplayer = newchara;
+		_myplayer->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+		_myplayer->setPosition(offx + x, offy + y);
+		_myplayer->setTag(20);
+		_myplayer->setName("myplayer");
+		_game_players.pushBack(_myplayer);
+		_my_bubbles = 0;
+		_myplayer->_chara_bubble = false;
+	}
+	else
+	{
+		newchara->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+		newchara->setPosition(offx + x, offy + y);
+		newchara->setTag(21);
+		std::string playerName = "player" + std::to_string(index);
+		newchara->setName(playerName);
+		_game_players.pushBack(newchara);
+
+		newchara->_chara_bubble = false;
+	}
+
+	addChild(newchara, 1);
+
+}
 void GameScene::menuCloseCallback(Ref* pSender)
 {
     //Close the cocos2d-x game scene and quit the application
@@ -237,17 +315,27 @@ void GameScene::CharacterMove(character* chara) {
 
 // bubble应该设置在tilemap的grid上
 // bubble渲染问题
+<<<<<<< HEAD:bnb-cocos/Classes/view/GameScene.cpp
 void GameScene::setBubble(character* chara) {
+=======
+void GameScene::setBubble(character* chara,Vec2 Pos) {
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d:bnb-cocos/Classes/view/GameScene.cpp
     if (chara->curSetBubbles >= chara->_currentBubbles) {
         return;
     }
     // TODO: duplicate here!!
+<<<<<<< HEAD:bnb-cocos/Classes/view/GameScene.cpp
     auto pos0 = tileCoordForPosition(chara->getPosition());
     if (chara->getAnchorPoint() != Vec2::ZERO) {
         if (pos0.x > 14) pos0.x = 14;
+=======
+
+    if (chara->getAnchorPoint() != Vec2::ZERO) {
+        if (Pos.x > 14) Pos.x = 14;
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d:bnb-cocos/Classes/view/GameScene.cpp
     }
     // TODO: find out what was wrong
-    if (pos0.y > 14) pos0.y = 14;
+    if (Pos.y > 14) Pos.y = 14;
     
     auto mySpritePos = PositionForTileCoord(tileCoordForPosition(chara->getPosition()));
 
@@ -263,11 +351,16 @@ void GameScene::setBubble(character* chara) {
         newBubble->setPosition(mySpritePos);
         // 动画(是否可以抽象)
         runAnimationByName(newBubble, "Popo_", 0.25, bubble_frame_nums);
+<<<<<<< HEAD:bnb-cocos/Classes/view/GameScene.cpp
         _map_screen_bubbles[pos0] = newBubble;
+=======
+        _map_screen_bubbles[Pos] = newBubble;
+>>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d:bnb-cocos/Classes/view/GameScene.cpp
         addChild(newBubble);
         ++chara->curSetBubbles;
         
     }
+	chara->_chara_bubble = false;
 }
 
 
