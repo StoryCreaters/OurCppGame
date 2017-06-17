@@ -4,6 +4,13 @@
 // 与web交互 选择房间的scene
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
+#include <string>
+#include <vector>
+#include "../web client/BnbGameClient.h"
+
+
+extern "C" GameClient client;
+
 
 using namespace cocos2d;
 class RoomChoose : public cocos2d::Layer

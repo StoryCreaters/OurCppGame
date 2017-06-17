@@ -35,7 +35,6 @@ bool Players::init() {
 	if (!Layer::init()) {
 		return false;
 	}
-	//网络初始化
 	
 
 	// 获得设备可见视图大小

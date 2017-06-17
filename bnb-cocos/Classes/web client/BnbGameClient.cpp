@@ -9,9 +9,6 @@
 #include "../controller/CharacterFSM.h"
 #include <random>
 
-
-
-
 USING_NS_CC;
 using namespace settings::GameScene;
 
@@ -22,7 +19,7 @@ using std::endl;
 
 #define PORTS 1236      //设置端口号，与Server一致
 
-
+extern std::vector <RoomInfo> Rooms;
 std::queue <recvInfo> GameClient::recvQueue;
 
 static inline GameScene* getGameScene() {
@@ -88,6 +85,13 @@ bool GameClient::init()
 
 	outfile << "客户端连接成功!\n";
 	outfile.close();
+	Rooms.resize(4);
+	for (int i = 0; i < 4; i++)
+	{
+		Rooms[i].name = "Room" + std::to_string(i);
+		Rooms[i].id = 100000 + i;
+		Rooms[i].curNum = 0;
+	}
 	return true;
 }
 
@@ -417,11 +421,11 @@ int GameClient::ClientProcessBefore(int flag)
 	outfile << "sec :" << sec << " flag:" << flag << "\n";
 	outfile.close();
 
-	char buf[64];
-	int ret = recv(ClientSocket, buf, 64, 0);
+	char buf[10000];
+	int ret = recv(ClientSocket, buf, sizeof(buf), 0);
 	if (ret > 0)
-		sscanf(buf, "%d", &curNum);
-
+		sscanf(buf, "%d %d %d %d",&curNum, &Rooms[0].curNum, &Rooms[1].curNum, &Rooms[2].curNum, &Rooms[3].curNum);
+		
 	return curNum;
 }
 

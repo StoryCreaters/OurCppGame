@@ -2,10 +2,13 @@
 #include "../model/Character.h"
 #include "GameScene.h"
 #include "CharacterSelect.h"
-#include "../web client/BnbGameClient.h"
+
 
 USING_NS_CC;
 using namespace ui;
+
+std::vector <RoomInfo> Rooms;  //房间列表
+GameClient client;  
 
 Scene* RoomChoose::createScene() {
 	// 创建一个场景对象，该对象将会由自动释放池管理内存的释放
@@ -18,7 +21,7 @@ Scene* RoomChoose::createScene() {
 	return scene;
 }
 
-GameClient client;
+
 
 bool RoomChoose::init() {
 	// 调用父类的init方法
@@ -95,16 +98,29 @@ void RoomChoose::ToRoomFour(Ref *sender) {
 
 /*
 名称：更新
-描述：每0.1秒更新一次人数信息
+描述：每帧更新一次人数信息
 */
 void RoomChoose::update(float dt)
 {
+	//TODO 房间的名字是Rooms[i].name  房间号是 Room[i].id  房间人数是Room[i].curNum 额定最大人数是4人
 	static LabelTTF * label;
+	static LabelTTF * label1;   //房间一的人数
+	static LabelTTF * label2;   //房间二的人数
+	static LabelTTF * label3;  //房间三的人数
+	static LabelTTF * label4;   //房间四的人数
+
 	removeChild(label);
 	int val = client.ClientProcessBefore(isOut);
 
 	std::string msg = std::to_string(val);
+	std::string msg1 = std::to_string(Rooms[0].curNum);
+	std::string msg2 = std::to_string(Rooms[1].curNum);
+	std::string msg3 = std::to_string(Rooms[2].curNum);
+	std::string msg4 = std::to_string(Rooms[3].curNum);
+
 	label = LabelTTF::create(msg, "Arial", 32);
-	label->setPosition(370, 700);
+	label->setPosition(500, 700);
+
+
 	addChild(label);
 }
