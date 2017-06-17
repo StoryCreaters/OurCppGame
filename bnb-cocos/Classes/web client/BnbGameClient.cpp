@@ -21,6 +21,7 @@ using std::endl;
 
 extern std::vector <RoomInfo> Rooms;
 std::queue <recvInfo> GameClient::recvQueue;
+struct PlayerInfo myPlayerInfo;
 
 static inline GameScene* getGameScene() {
 	auto scene = Director::getInstance()->getRunningScene();
@@ -92,6 +93,15 @@ bool GameClient::init()
 		Rooms[i].id = 100000 + i;
 		Rooms[i].curNum = 0;
 	}
+	char tempBuf[8];
+	int retc = recv(ClientSocket, tempBuf, sizeof(tempBuf), 0);
+	int id;
+	sscanf(tempBuf, "%d", &id);
+	myPlayerInfo.clientInfo = { NULL,ServerAddr,id,0,0,0 };
+	myPlayerInfo.nickname = std::to_string(ServerAddr.sin_addr.S_un.S_addr) + " " + 
+		std::to_string(ServerAddr.sin_port) + std::to_string(id);
+
+	
 	return true;
 }
 

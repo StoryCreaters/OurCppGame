@@ -2,6 +2,7 @@
 #include "TextField.h"
 #include "ui/CocosGUI.h"
 #include "RoomChooseScene.h"
+#include <fstream>
 
 USING_NS_CC;
 
@@ -30,12 +31,11 @@ bool LoginScene::init()
     {
         return false;
     }
+
     Size visibleSize = Director::getInstance()->getVisibleSize();
     auto backGround = cocos2d::Sprite::create("BackGround/Gray World.jpg");
     backGround->setPosition(cocos2d::Vec2(visibleSize.width / 2, visibleSize.height / 2));
     this->addChild(backGround, 0);
-    
-    
     
     auto field = TextFieldTest::create();
     field->setPosition(visibleSize.height * 0.15, visibleSize.height* 0.25);
@@ -52,10 +52,17 @@ bool LoginScene::init()
             }
             // 设置玩家自己的名称
             log("%s", field->showInputData().c_str());
+			std::fstream outfile("e:\\name.txt");
+			if (!outfile.is_open())
+			{
+				return;
+			}
+			outfile << field->showInputData() << "\n";
             UserDefault::getInstance()->setStringForKey("MyName", field->showInputData());
             // 切换到Room Choose场景
             auto transition = TransitionShrinkGrow::create(2.0, RoomChoose::createScene());
             Director::getInstance()->replaceScene(transition);
+			outfile.close();
         }
     });
     addChild(return_button);
