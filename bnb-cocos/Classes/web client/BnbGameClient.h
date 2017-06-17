@@ -57,6 +57,8 @@ public:
 	void ClientProcess();    //启动客户处理
 	int ClientProcessBefore(int flag, int which);
 
+	int ClientProcessRoom(int which);
+
 	static DWORD WINAPI sendAndRecv(LPVOID lpParam);   //收发消息
 	static DWORD WINAPI comsumer(LPVOID lpParam);
 	//SOCKET相关

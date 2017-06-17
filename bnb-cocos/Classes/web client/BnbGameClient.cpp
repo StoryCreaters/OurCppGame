@@ -8,6 +8,7 @@
 #include "../controller/PlayerController.h"
 #include "../controller/CharacterFSM.h"
 #include <random>
+#include <cstring>
 
 USING_NS_CC;
 using namespace settings::GameScene;
@@ -98,8 +99,8 @@ bool GameClient::init()
 	int id;
 	sscanf(tempBuf, "%d", &id);
 	myPlayerInfo.clientInfo = { NULL,ServerAddr,id,0,0,0 };
-	myPlayerInfo.nickname = std::to_string(ServerAddr.sin_addr.S_un.S_addr) + " " + 
-		std::to_string(ServerAddr.sin_port) + std::to_string(id);
+	myPlayerInfo.nickname = std::to_string(ServerAddr.sin_addr.S_un.S_addr) + "_" + 
+		std::to_string(ServerAddr.sin_port) + "_" + std::to_string(id);
 
 	
 	return true;
@@ -426,25 +427,79 @@ int GameClient::ClientProcessBefore(int flag,int which)
 	if (flag == 1)
 		whichRoom = which;
 
-	char buff[16];
-	ZeroMemory(buff, sizeof(buff));
-	sprintf(buff, "%d %d", flag , whichRoom);
-	int sec = send(ClientSocket, buff, strlen(buff)+sizeof(char), 0);
+	char sendBuf[16];
+	ZeroMemory(sendBuf, sizeof(sendBuf));
+	sprintf(sendBuf, "%d %d", flag , whichRoom);
+	int sec = send(ClientSocket, sendBuf, strlen(sendBuf)+sizeof(char), 0);
 	
 
 	std::fstream outfile("e:\\text.txt",std::ios::app);
 	outfile << "sec :" << sec << " flag:" << flag << "\n";
 	outfile.close();
 
-	char buf[10000];
-	int ret = recv(ClientSocket, buf, sizeof(buf), 0);
+	char recvBuf[10000];
+	int ret = recv(ClientSocket, recvBuf, sizeof(recvBuf), 0);
 	if (ret > 0)
-		sscanf(buf, "%d %d %d %d",&curNum, &Rooms[0].curNum, &Rooms[1].curNum, &Rooms[2].curNum, &Rooms[3].curNum);
+		sscanf(recvBuf, "%d %d %d %d",&curNum, &Rooms[0].curNum, &Rooms[1].curNum, &Rooms[2].curNum, &Rooms[3].curNum);
 		
 	return curNum;
 }
 
+/*
+名称：线程处理房间相关
+描述：在CharacterSelect中负责收发数据
+*/
+int GameClient::ClientProcessRoom(int which)
+{
+	//发送  内容比较简单，只发送所在房间的号码
+	char sendBuf[8];
+	sprintf(sendBuf, "%d", which);
+	send(ClientSocket, sendBuf, strlen(sendBuf) + sizeof(char), 0);
 
+	//接受   内容稍微复杂
+	/*
+	接受格式 ：int    #size    Rooms[which].playerlist 有几个玩家
+			  string #name    Rooms[which].playerlist.nickname  每个中间以|分隔
+	*/
+
+	char recvBuf[1024];
+	int ret = recv(ClientSocket, recvBuf, sizeof(recvBuf), 0);
+
+	int size;
+	std::string str;
+	char temp[1024];
+	ZeroMemory(temp, sizeof(temp));
+
+	if (ret > 0)
+		sscanf(recvBuf, "%d %s", &size, temp);
+	std::fstream outfile("e:\\a.txt",std::ios::app);
+	
+
+	str = temp;
+	outfile << "str:" << str << "str size:" << str.size() << "\n";
+	//接受数据的处理 需要把收到的数据本地化
+	if (str.size() < 8)
+		return 0;
+
+	if (size <= Rooms[which].playerList.size())  //如果已经接收完毕，就不再处理
+		return 0;
+	
+	for (int i = 0; i < size; i++)
+	{
+		static int pos = 0; 
+		std::string str1;
+		while ( pos < str.size() && str[pos] != '|')
+		{
+			str1 += str[pos];
+			pos++;
+		}
+		pos++;
+		struct PlayerInfo temp;
+		temp.nickname = str1;
+		Rooms[which].playerList.push_back(temp);
+	}
+	outfile.close();
+}
 
 /*
 名称：析构函数

@@ -66,5 +66,6 @@ public:
 	static void sendProps(int ID);
 	static int prog_map[15][15];
 	static std::vector <RoomInfo> Rooms;
+	static std::vector <PlayerInfo> allPlayerInfo;
 };
 

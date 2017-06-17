@@ -9,6 +9,7 @@ using std::string;
 
 volatile static int count = 0;
 static int playerNum = 0;     //玩家总数
+std::vector <PlayerInfo> GameServer::allPlayerInfo;
 int GameServer::prog_map[15][15];
 std::vector <RoomInfo> GameServer::Rooms;
 
@@ -144,16 +145,7 @@ int GameServer::ProcessGameServer()
 				(struct sockaddr*)&AcceptSocket[index].Client,
 				&ClntLen);
 
-			AcceptSocket[index].ID = index;       //记录这个Client的ID啊，以后要寻找它
-			AcceptSocket[index].Active = false;
-			
-			if (AcceptSocket[index].ClientSock == INVALID_SOCKET)
-			{
-				cout << "连接错误\n";
-				fflush(stdout);
-				break;
-			}
-			
+			AcceptSocket[index].ID = index;       
 			//传输ID，其他的不用
 			std::string msg = std::to_string(AcceptSocket[index].ID);
 			SendMessageToOneClient(AcceptSocket[index].ID, msg);
@@ -168,6 +160,11 @@ int GameServer::ProcessGameServer()
 				  << "  端口号为：" << ntohs(AcceptSocket[index].Client.sin_port) << "\n";
 			fflush(stdout);
 			//创建接受者线程 
+			struct PlayerInfo temp;
+			temp.clientInfo = { NULL,AcceptSocket[index].Client,AcceptSocket[index].ID,0,0,0 };
+			temp.nickname = std::to_string(AcceptSocket[index].Client.sin_addr.S_un.S_addr) + "_" +
+				std::to_string(AcceptSocket[index].Client.sin_port) +"_"+ std::to_string(AcceptSocket[index].ID);
+			allPlayerInfo.push_back(temp);
 
 
 			CreateThread(NULL, 0,
@@ -177,6 +174,7 @@ int GameServer::ProcessGameServer()
 			);
 
 			
+
 			while (playerNum == MAX_NUM)
 			{
 				if (count == MAX_NUM)
@@ -360,11 +358,13 @@ DWORD WINAPI GameServer::sendRoomInfo(void *data)
 {
 	BnbClientInformation *GameSocket = static_cast<BnbClientInformation*>(data);
 
-	int flag = 0;
-	int whichRoom = -1;
-	char buf[16];
+	
+	//进入RoomChooseScene
 	while (true)
 	{
+		int flag = 0;
+		int whichRoom = -1;
+		char buf[16];
 		ZeroMemory(buf, sizeof(buf));
 		int result = recv(GameSocket->ClientSock, buf, sizeof(buf), 0);
 		cout << "#buf:" << buf << "\n";
@@ -372,6 +372,7 @@ DWORD WINAPI GameServer::sendRoomInfo(void *data)
 		if (whichRoom != -1)
 		{
 			Rooms[whichRoom].curNum++;
+			Rooms[whichRoom].playerList.push_back(allPlayerInfo.at(GameSocket->ID));
 		}
 			
 
@@ -388,6 +389,24 @@ DWORD WINAPI GameServer::sendRoomInfo(void *data)
 	}
 	cout << "已经离开RoomChoose,count++\n";
 	count++;
+
+	//进入CharacterSelect
+	while (true)
+	{
+		//接受   只需要接受which就行了
+		int which;
+		char recvBuf[8];
+		recv(GameSocket->ClientSock, recvBuf, sizeof(recvBuf), 0);
+		sscanf(recvBuf, "%d", &which);
+		
+		//发送  根据which，发送对应的内容
+		std::string send = std::to_string(Rooms[which].playerList.size()) + " ";
+		for (auto i : Rooms[which].playerList)
+			send += i.nickname + '|';
+		cout << send << "\n";
+		SendMessageToOneClient(GameSocket->ID, send);
+
+	}
 	return 0;
 }
 

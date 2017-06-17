@@ -9,14 +9,16 @@
 
 USING_NS_CC;
 using namespace ui;
+int Players::whichRoom;
 
-Scene* Players::createScene() {
+Scene* Players::createScene(int n) {
 	// 创建一个场景对象，该对象将会由自动释放池管理内存的释放
 	auto scene = Scene::create();
 	// 创建层对象，该对象将会由自动释放池管理内存的释放
 	auto layer = Players::create();
 	// 将GameSet层作为子节点添加到场景
 	scene->addChild(layer);
+	whichRoom = n;
 	// 返回场景对象
 	return scene;
 }
@@ -35,7 +37,6 @@ bool Players::init() {
 	if (!Layer::init()) {
 		return false;
 	}
-	
 
 	// 获得设备可见视图大小
 	Size visibleSize = Director::getInstance()->getVisibleSize();
@@ -122,7 +123,26 @@ bool Players::init() {
 		}
 	});
 	
-	
+	auto * playerListLabel = LabelTTF::create("Player List", "Arial", 32);
+	playerListLabel->setColor(Color3B::BLACK);
+	playerListLabel->setPosition(600, 600);
+	this->addChild(playerListLabel);
+	displayAllPlayers(0);
 
+	this->schedule(schedule_selector(Players::displayAllPlayers));
 	return true;
+}
+
+void Players::displayAllPlayers(float dt)
+{
+	client.ClientProcessRoom(whichRoom);
+	
+	for (int i = 0; i < Rooms[whichRoom].playerList.size(); i++)
+	{
+		std::string msg = "#" + std::to_string(i) + "|" + Rooms[whichRoom].playerList[i].nickname;
+		auto * label = LabelTTF::create(msg, "Arial", 24);
+		label->setColor(Color3B::BLACK);
+		label->setPosition(600, 600 - (i+1) * 30);
+		this->addChild(label);
+	}
 }

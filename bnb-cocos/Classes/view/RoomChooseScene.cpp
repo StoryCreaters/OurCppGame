@@ -116,33 +116,33 @@ bool RoomChoose::init() {
 void RoomChoose::ToRoomOne(Ref *sender) {
 	isOut = true;
 	client.ClientProcessBefore(isOut,0);
-	Rooms[0].playerList.push_back(myPlayerInfo);
+	//Rooms[0].playerList.push_back(myPlayerInfo);
 	Rooms[0].curNum++;
-	Director::getInstance()->replaceScene(Players::createScene());
+	Director::getInstance()->replaceScene(Players::createScene(0));
 }
 
 void RoomChoose::ToRoomTwo(Ref *sender) {
 	isOut = true;
 	client.ClientProcessBefore(isOut,1);
-	Rooms[1].playerList.push_back(myPlayerInfo);
+	//Rooms[1].playerList.push_back(myPlayerInfo);
 	Rooms[1].curNum++;
-	Director::getInstance()->replaceScene(Players::createScene());
+	Director::getInstance()->replaceScene(Players::createScene(1));
 }
 
 void RoomChoose::ToRoomThree(Ref *sender) {
 	isOut = true;
 	client.ClientProcessBefore(isOut,2);
-	Rooms[2].playerList.push_back(myPlayerInfo);
+	//Rooms[2].playerList.push_back(myPlayerInfo);
 	Rooms[2].curNum++;
-	Director::getInstance()->replaceScene(Players::createScene());
+	Director::getInstance()->replaceScene(Players::createScene(2));
 }
 
 void RoomChoose::ToRoomFour(Ref *sender) {
 	isOut = true;
 	client.ClientProcessBefore(isOut,3);
-	Rooms[3].playerList.push_back(myPlayerInfo);
+	//Rooms[3].playerList.push_back(myPlayerInfo);
 	Rooms[3].curNum++;
-	Director::getInstance()->replaceScene(Players::createScene());
+	Director::getInstance()->replaceScene(Players::createScene(3));
 }
 
 
