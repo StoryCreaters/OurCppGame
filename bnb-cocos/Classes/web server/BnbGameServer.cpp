@@ -164,31 +164,39 @@ int GameServer::ProcessGameServer()
 				nullptr
 			);
 
-			cout << "进入下一波之前:" << count << "\n";
-			if (count == 2)
+			
+			while (playerNum == 2)
 			{
-				int ThreadID;     //线程ID
-
-								  //把刚刚连接成功的Client建立一个新的线程
-				ThreadID = (int)CreateThread(NULL, 0,
-					(LPTHREAD_START_ROUTINE)(GameServer::ListenThread), //线程点函数
-					(LPVOID)&AcceptSocket[index], 0,              //参数
-					&AcceptSocket[index].RecvThreadID          //系统分配的ID
-				);
-
-				if (!ThreadID)
+				if (count == 2)
 				{
-					cout << "创建线程错误\n";
+					int ThreadID;     //线程ID
+
+									  //把刚刚连接成功的Client建立一个新的线程
+					ThreadID = (int)CreateThread(NULL, 0,
+						(LPTHREAD_START_ROUTINE)(GameServer::ListenThread), //线程点函数
+						(LPVOID)&AcceptSocket[index], 0,              //参数
+						&AcceptSocket[index].RecvThreadID          //系统分配的ID
+					);
+
+					if (!ThreadID)
+					{
+						cout << "创建线程错误\n";
+						fflush(stdout);
+						ExitThread(AcceptSocket[index].RecvThreadID);
+					}
+
+					//至此，新的线程创建成功，可以传输数据了
+
+					cout << "新玩家" << index << "的接受线程创建成功\n";
 					fflush(stdout);
-					ExitThread(AcceptSocket[index].RecvThreadID);
+					//cout << "#3 AcceptSocket[index].ClientSock: " << AcceptSocket[index].ClientSock << "\n";
+					break;
 				}
-
-				//至此，新的线程创建成功，可以传输数据了
-
-				cout << "新玩家" << index << "的接受线程创建成功\n";
-				fflush(stdout);
-				//cout << "#3 AcceptSocket[index].ClientSock: " << AcceptSocket[index].ClientSock << "\n";
+				else
+					continue;
+					
 			}
+			
 			
 		}
 		else   //玩家已满
@@ -348,13 +356,15 @@ DWORD WINAPI GameServer::sendPeopleNum(void *data)
 		string val = std::to_string(playerNum);
 		ZeroMemory(buf, sizeof(buf));
 		int result = recv(GameSocket->ClientSock, buf, sizeof(buf), 0);
+		cout << "#buf:" << buf << "\n";
 		sscanf(buf, "%d", &flag);
 
+		
 		cout << "当前在线人数：" << val << "\n";
 		cout << "是否离开RoomChoose:" << flag << "\n";
 		cout << "count :" << count << "\n";
 		if (SendMessageToOneClient(GameSocket->ID, val) && !flag)
-			Sleep(100);
+			continue;
 		else
 			break;
 	}

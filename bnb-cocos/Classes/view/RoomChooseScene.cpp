@@ -65,7 +65,7 @@ bool RoomChoose::init() {
 	label->setPosition(200, 700);
 	addChild(label);
 
-	this->schedule(schedule_selector(RoomChoose::update), 0.1); //每0.1更新一次人数信息
+	this->scheduleUpdate(); //每一帧更新一次人数信息
 
 
 	return true;
@@ -73,22 +73,22 @@ bool RoomChoose::init() {
 
 void RoomChoose::ToRoomOne(Ref *sender) {
 	isOut = true;
-	Sleep(1000);
+	client.ClientProcessBefore(isOut);
 	Director::getInstance()->replaceScene(Players::createScene());
 }
 void RoomChoose::ToRoomTwo(Ref *sender) {
 	isOut = true;
-	Sleep(1000);
+	client.ClientProcessBefore(isOut);
 	Director::getInstance()->replaceScene(Players::createScene());
 }
 void RoomChoose::ToRoomThree(Ref *sender) {
 	isOut = true;
-	Sleep(1000);
+	client.ClientProcessBefore(isOut);
 	Director::getInstance()->replaceScene(Players::createScene());
 }
 void RoomChoose::ToRoomFour(Ref *sender) {
 	isOut = true;
-	Sleep(1000);
+	client.ClientProcessBefore(isOut);
 	Director::getInstance()->replaceScene(Players::createScene());
 }
 

@@ -22,7 +22,7 @@ using std::endl;
 
 #define PORTS 1236      //设置端口号，与Server一致
 
-static int curNum;
+
 std::queue <recvInfo> GameClient::recvQueue;
 
 static inline GameScene* getGameScene() {
@@ -406,40 +406,26 @@ void GameClient::acceptProps()
 */
 int GameClient::ClientProcessBefore(int flag)
 {
-	
+	static int curNum;
+
 	char buff[8];
 	ZeroMemory(buff, sizeof(buff));
 	sprintf(buff, "%d", flag);
-	send(ClientSocket, buff, 8, 0);
+	int sec = send(ClientSocket, buff, strlen(buff)+sizeof(char), 0);
 	
-	HANDLE hThread;
-	hThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)sendAndRecvBefore, this, 0, NULL);
-	CloseHandle(hThread);
+	std::fstream outfile("e:\\text.txt",std::ios::app);
+	outfile << "sec :" << sec << " flag:" << flag << "\n";
+	outfile.close();
+
+	char buf[64];
+	int ret = recv(ClientSocket, buf, 64, 0);
+	if (ret > 0)
+		sscanf(buf, "%d", &curNum);
 
 	return curNum;
 }
 
-/*
-名称：接收消息在游戏开始之前
-描述：主要是在GameScene之前的房间列表，对话等发挥作用
-*/
-DWORD WINAPI GameClient::sendAndRecvBefore(LPVOID lpParam)
-{
-	GameClient *Client = (GameClient *)lpParam;
-	
-	
 
-	char buf[64];
-	int ret = recv(Client->ClientSocket, buf, 64 , 0);
-	if (ret > 0)
-	{
-		sscanf(buf, "%d", &curNum);
-
-		return 1;
-	}
-	else
-		return 0;
-}
 
 /*
 名称：析构函数
