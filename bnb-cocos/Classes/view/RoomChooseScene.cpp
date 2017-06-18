@@ -8,7 +8,7 @@
 USING_NS_CC;
 using namespace ui;
 
-Size visibleSize;
+static Size visibleSize;
 std::vector <RoomInfo> Rooms;  //房间列表
 GameClient client;  
 extern struct PlayerInfo myPlayerInfo;

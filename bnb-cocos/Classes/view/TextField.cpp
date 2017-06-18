@@ -15,7 +15,7 @@ bool TextFieldTest::init()
 
 	// 添加一个Text，用于显示文本框事件类型
 	_displayValueLabel = Text::create("Please Touch the textfield", "微软雅黑", 32);
-	_displayValueLabel->setPosition(Vec2(visibleSize.width *0.4, visibleSize.height*0.6));
+	_displayValueLabel->setPosition(Vec2(visibleSize.width *0.4 + 60,  visibleSize.height*0.6));
 	this->addChild(_displayValueLabel);
 	// 添加一个Text，当数据输入结束时，显示输入的数据
     _messageValue = UserDefault::getInstance()->getStringForKey("MyName");
@@ -25,12 +25,12 @@ bool TextFieldTest::init()
     
     _messageValueLabel = Text::create(first_msg, "微软雅黑", 32);
     
-	_messageValueLabel->setPosition(Vec2(visibleSize.width *0.4, visibleSize.height*0.5));
+	_messageValueLabel->setPosition(Vec2(visibleSize.width *0.4 + 60, visibleSize.height*0.5));
 	this->addChild(_messageValueLabel);
 
 	// 创建文本框
 	textField = TextField::create("Please input your NAME", "Arial", 32);
-	textField->setPosition(Vec2(visibleSize.width *0.4, visibleSize.height *0.4));
+	textField->setPosition(Vec2(visibleSize.width *0.4 + 60, visibleSize.height *0.4));
     
 	auto listenerkeyPad = EventListenerKeyboard::create();
 	listenerkeyPad->onKeyReleased = CC_CALLBACK_2(TextFieldTest::onKeyReleased, this);

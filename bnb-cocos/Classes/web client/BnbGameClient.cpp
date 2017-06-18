@@ -433,10 +433,6 @@ int GameClient::ClientProcessBefore(int flag,int which)
 	int sec = send(ClientSocket, sendBuf, strlen(sendBuf)+sizeof(char), 0);
 	
 
-	std::fstream outfile("e:\\text.txt",std::ios::app);
-	outfile << "sec :" << sec << " flag:" << flag << "\n";
-	outfile.close();
-
 	char recvBuf[10000];
 	int ret = recv(ClientSocket, recvBuf, sizeof(recvBuf), 0);
 	if (ret > 0)
@@ -472,18 +468,17 @@ int GameClient::ClientProcessRoom(int which)
 
 	if (ret > 0)
 		sscanf(recvBuf, "%d %s", &size, temp);
-	std::fstream outfile("e:\\a.txt",std::ios::app);
 	
 
 	str = temp;
-	outfile << "str:" << str << "str size:" << str.size() << "\n";
+
 	//接受数据的处理 需要把收到的数据本地化
 	if (str.size() < 8)
 		return 0;
 
-	if (size <= Rooms[which].playerList.size())  //如果已经接收完毕，就不再处理
+	if (size == Rooms[which].playerList.size())  //如果已经接收完毕，就不再处理
 		return 0;
-	
+
 	for (int i = 0; i < size; i++)
 	{
 		static int pos = 0; 
@@ -496,9 +491,11 @@ int GameClient::ClientProcessRoom(int which)
 		pos++;
 		struct PlayerInfo temp;
 		temp.nickname = str1;
+		if (temp.nickname.size() == 0)
+			return 0;
 		Rooms[which].playerList.push_back(temp);
 	}
-	outfile.close();
+
 }
 
 /*
