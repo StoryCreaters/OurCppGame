@@ -1,19 +1,8 @@
 ﻿#include "CharacterSelect.h"
-<<<<<<< HEAD
 #include "Character.h"
 #include "GameScene.h"
 #include "RoomChooseScene.h"
 #include "TextField.h"
-=======
-#include "../model/Character.h"
-#include "GameScene.h"
-#include "RoomChooseScene.h"
-#include "TextField.h"
-#include "ChatBox.h"
-#include "../web client/BnbGameClient.h"
-
-
->>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 USING_NS_CC;
 using namespace ui;
 
@@ -32,84 +21,99 @@ Players* Players::getCurrent() {
 	auto currentScene = Director::getInstance()->getRunningScene();
 	return dynamic_cast<Players*>(currentScene->getChildByName("Players"));
 }
-<<<<<<< HEAD
-=======
-
-
-extern "C" GameClient client;
-
-
->>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 bool Players::init() {
 	// 调用父类的init方法
 	if (!Layer::init()) {
 		return false;
 	}
-<<<<<<< HEAD
 	// 获得设备可见视图大小
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	auto backGround = cocos2d::Sprite::create("BackGround/Character_Select.png");
 	backGround->setPosition(cocos2d::Vec2(visibleSize.width / 2, visibleSize.height / 2));
 	this->addChild(backGround, 0);
-
-=======
-	
-
-	// 获得设备可见视图大小
-	Size visibleSize = Director::getInstance()->getVisibleSize();
-	auto backGround = cocos2d::Sprite::create("BackGround/temple of times.png");
-	backGround->setPosition(cocos2d::Vec2(visibleSize.width / 2, visibleSize.height / 2));
-	this->addChild(backGround, 0);
->>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
+	//吊钩
+	auto ok = Sprite::create("GameUI/ok.png");
+	ok->setTag(666);
+	addChild(ok, 3);
 	//Player1
+	auto player1 = Sprite::create("GamePlayer/player1_animation/player1_down_01.png");
+	player1->setPosition(Vec2(visibleSize.width *0.85, visibleSize.height*0.7));
+	addChild(player1);
+	//按钮
 	auto first_button = Button::create("GameUI/button.png");
 	first_button->setScale(2);
 	first_button->setTitleText("Player 1");
 	first_button->setTitleFontName("微软雅黑");
 	first_button->setTitleFontSize(16);
 	first_button->setPosition(Vec2(visibleSize.width *0.7, visibleSize.height*0.7));
-	first_button->addTouchEventListener([](Ref* pSender, Widget::TouchEventType type) {
+	first_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
 		if (type == Widget::TouchEventType::ENDED) {
 			// 存值
 			UserDefault::getInstance()->setIntegerForKey("PLAYER", 1);
 			int i = UserDefault::getInstance()->getIntegerForKey("PLAYER");
+			if (ok->isVisible()) {
+				ok->removeChildByTag(666);
+				ok->setPosition(Vec2(visibleSize.width *0.85, visibleSize.height*0.7));
+			}
+			else
+				ok->setPosition(Vec2(visibleSize.width *0.85, visibleSize.height*0.7));
 		}
 	});
 	this->addChild(first_button);
 	//Player2
+	auto player2 = Sprite::create("GamePlayer/player2_animation/player2_down_01.png");
+	player2->setPosition(Vec2(visibleSize.width *0.85, visibleSize.height*0.50));
+	addChild(player2);
+	//按钮
 	auto second_button = Button::create("GameUI/button.png");
 	second_button->setScale(2);
 	second_button->setTitleText("Player 2");
 	second_button->setTitleFontName("微软雅黑");
 	second_button->setTitleFontSize(16);
 	second_button->setPosition(Vec2(visibleSize.width *0.7, visibleSize.height*0.50));
-	second_button->addTouchEventListener([](Ref* pSender, Widget::TouchEventType type) {
+	second_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
 		if (type == Widget::TouchEventType::ENDED) {
 			// 存值
 			UserDefault::getInstance()->setIntegerForKey("PLAYER", 2);
 			int i = UserDefault::getInstance()->getIntegerForKey("PLAYER");
+			if (ok->isVisible()) {
+				ok->removeChildByTag(666);
+				ok->setPosition(Vec2(visibleSize.width *0.85, visibleSize.height*0.5));
+			}
+			else
+				ok->setPosition(Vec2(visibleSize.width *0.85, visibleSize.height*0.5));
 		}
 	});
 	this->addChild(second_button);
 	//Player3
+	auto player3 = Sprite::create("GamePlayer/player3_animation/player3_07.png");
+	player3->setPosition(Vec2(visibleSize.width *0.85, visibleSize.height*0.30));
+	addChild(player3);
+	//按钮
 	auto third_button = Button::create("GameUI/button.png");
 	third_button->setScale(2);
 	third_button->setTitleText("Player 3");
 	third_button->setTitleFontName("微软雅黑");
 	third_button->setTitleFontSize(16);
 	third_button->setPosition(Vec2(visibleSize.width *0.7, visibleSize.height*0.30));
-	third_button->addTouchEventListener([](Ref* pSender, Widget::TouchEventType type) {
+	third_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
 		if (type == Widget::TouchEventType::ENDED) {
 			// 存值
 			UserDefault::getInstance()->setIntegerForKey("PLAYER", 3);
 			int i = UserDefault::getInstance()->getIntegerForKey("PLAYER");
+			if (ok->isVisible()) {
+				ok->removeChildByTag(666);
+				ok->setPosition(Vec2(visibleSize.width *0.85, visibleSize.height*0.3));
+			}
+			else
+				ok->setPosition(Vec2(visibleSize.width *0.85, visibleSize.height*0.3));
 		}
 	});
 	this->addChild(third_button);
 	//返回键
 	auto return_button = Button::create("GameUI/b1.png");
 	return_button->setPosition(Vec2(visibleSize.width *0.85, visibleSize.height*0.18));
-	return_button->addTouchEventListener([](Ref* pSender, Widget::TouchEventType type) {
+	return_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
 		if (type == Widget::TouchEventType::ENDED) {
 			// 切换到Room Choose场景
 			auto transition = TransitionShrinkGrow::create(2.0, RoomChoose::createScene());
@@ -118,22 +122,12 @@ bool Players::init() {
 	});
 	this->addChild(return_button);
 	//留白
-<<<<<<< HEAD
 	auto layerColor = LayerColor::create(Color4B(41, 36, 33, 200), 400, 400);
 	layerColor->setPosition(208, 150);
 	this->addChild(layerColor);
 	auto textfield = TextFieldTest::create();
 	textfield->setName("TextField");
 	addChild(textfield);
-=======
-    addChild(ChatBox::create());
-//	auto layerColor = LayerColor::create(Color4B(41, 36, 33, 200), 400, 400);
-//	layerColor->setPosition(208, 150);
-//	this->addChild(layerColor);
-//	auto textfield = TextFieldTest::create();
-//	textfield->setName("TextField");
-//	addChild(textfield);
->>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 	//设OK键
 	auto ok_button = Button::create("GameUI/button1.png");
 	ok_button->setPosition(Vec2(visibleSize.width *0.20, visibleSize.height*0.18));
@@ -143,27 +137,18 @@ bool Players::init() {
 			removeChild(ok_button);
 			auto cancel_button = Button::create("GameUI/button2.png");
 			cancel_button->setPosition(Vec2(visibleSize.width *0.20, visibleSize.height*0.18));
-<<<<<<< HEAD
 			cancel_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
 				if (type == Widget::TouchEventType::ENDED) {
 					//留白
 				}
 			});
-=======
->>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 			this->addChild(cancel_button);
 			// 切换到GameScene场景
-			auto transition = TransitionFadeBL::create(2.0, GameScene::createScene());
+			auto transition = TransitionFadeBL::create(4.0, GameScene::createScene());
 			Director::getInstance()->replaceScene(transition);
 		}
 	});
-<<<<<<< HEAD
 
 	
-=======
-	
-	
-
->>>>>>> 92e3e854e26c5cd8b58ee13989019241d9a68e0d
 	return true;
 }
