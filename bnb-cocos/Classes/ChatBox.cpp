@@ -75,6 +75,7 @@ void ChatBox::alignChat() {
     show_menus->setPosition(Vec2(350, 400));
     // can we do it elegantly?
     show_menus->setName("lines");
+	show_menus->setAnchorPoint(Vec2(0,0));
 	cur_msg.clear();
     addChild(show_menus);
 }

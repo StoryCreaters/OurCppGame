@@ -8,9 +8,12 @@
 
 
 USING_NS_CC;
+
 using namespace ui;
 int Players::whichRoom;
 ChatBox *chatting;
+
+static Size visibleSize;
 
 Scene* Players::createScene(int n) {
 	// 创建一个场景对象，该对象将会由自动释放池管理内存的释放
@@ -23,16 +26,13 @@ Scene* Players::createScene(int n) {
 	// 返回场景对象
 	return scene;
 }
+
+
 // static function, GET CURRENT GAME SCENE
 Players* Players::getCurrent() {
 	auto currentScene = Director::getInstance()->getRunningScene();
 	return dynamic_cast<Players*>(currentScene->getChildByName("Players"));
 }
-
-
-extern GameClient client;
-extern std::vector <RoomInfo> Rooms; 
-static Size visibleSize;
 
 bool Players::init() {
 	// 调用父类的init方法
@@ -170,28 +170,10 @@ bool Players::init() {
 
 
 	chatting = ChatBox::create();
-	client.chat();
+	client.chat(whichRoom);
 	this->addChild(chatting);
 
-
-
-	//this->schedule(schedule_selector(Players::displayAllPlayers));
 	return true;
 }
 
 
-/*
-void Players::displayAllPlayers(float dt)
-{
-	int ret = client.ClientProcessRoomData(whichRoom);
-	
-	for (int i = 0; i < Rooms[whichRoom].playerList.size(); i++)
-	{
-		std::string msg = "#" + std::to_string(i) + "|" + Rooms[whichRoom].playerList[i].nickname;
-		auto * label = LabelTTF::create(msg, "微软雅黑", 24);
-		label->setColor(Color3B::BLACK);
-		label->setPosition(130, visibleSize.height*0.7 - (i+1) * 45);
-		this->addChild(label);
-	}
-}
-*/

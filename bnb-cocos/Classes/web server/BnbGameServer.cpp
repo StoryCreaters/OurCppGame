@@ -84,7 +84,7 @@ GameServer::GameServer()
 	{
 		Rooms[i].name = "Room" + std::to_string(i);   
 		Rooms[i].id = 100 + i;
-		Rooms[i].curNum = 0;    
+		Rooms[i].curNum = 0;   
 	}
 	GenerateProps();
 	return;
@@ -372,7 +372,11 @@ DWORD WINAPI GameServer::sendRoomInfo(void *data)
 		if (whichRoom != -1)
 		{
 			Rooms[whichRoom].curNum++;
+			
 			Rooms[whichRoom].playerList.push_back(allPlayerInfo.at(GameSocket->ID));
+			if (Rooms[whichRoom].playerList.size() == 1)
+				Rooms[whichRoom].playerList.back().order = -1;
+			Rooms[whichRoom].playerList.back().order++;
 		}
 			
 
@@ -389,7 +393,7 @@ DWORD WINAPI GameServer::sendRoomInfo(void *data)
 	}
 	cout << "已经离开RoomChoose,count++\n";
 	count++;
-
+	
 	/*
 	//进入CharacterSelect
 	while (true)
@@ -411,11 +415,13 @@ DWORD WINAPI GameServer::sendRoomInfo(void *data)
 
 	char sendBuf[1024];
 	char recvBuf[1024];
+	char Msg[1024];
 	int ret, left, idx = 0;
 	while (true)
 	{
 		ZeroMemory(sendBuf, sizeof(sendBuf));
 		ZeroMemory(recvBuf, sizeof(recvBuf));
+		ZeroMemory(Msg, sizeof(Msg));
 		cout << "等待接收：\n";
 		ret = recv(GameSocket->ClientSock, recvBuf, sizeof(recvBuf), 0);
 		cout << "ret:" << ret << "\n";
@@ -431,10 +437,18 @@ DWORD WINAPI GameServer::sendRoomInfo(void *data)
 		else
 			cout << "buf is full\n";
 		cout << "收到消息:" << recvBuf << "\n";
-		sprintf(sendBuf, "[%s said]:%s", inet_ntoa(GameSocket->Client.sin_addr), recvBuf);
+		int whichRoom;
+		sscanf(recvBuf, "%d %s", &whichRoom, Msg);
 
-		string Msg = sendBuf;
-		SendMessageToAllClient(sendBuf, GameSocket->ID);
+		sprintf(sendBuf, "[%s said]:%s", inet_ntoa(GameSocket->Client.sin_addr), Msg);
+		string msg = Msg;
+
+		for (int i = 0; i < Rooms[whichRoom].playerList.size(); i++)
+		{
+			if (i == GameSocket->ID)
+				continue;
+			SendMessageToOneClient(Rooms[whichRoom].playerList.at(i).clientInfo.ID, msg);
+		}
 	}
 
 	return 0;

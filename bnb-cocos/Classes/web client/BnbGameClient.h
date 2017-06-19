@@ -64,7 +64,7 @@ public:
 	static DWORD WINAPI comsumer(LPVOID lpParam);   //消费者
 
 	
-	void chat();
+	void chat(int whichRoom);
 	static DWORD WINAPI chatSendThread(LPVOID lpParam);  //聊天室发送消息
 	static DWORD WINAPI chatRecvThread(LPVOID lpParam);  //聊天室接受消息
 

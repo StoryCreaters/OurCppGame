@@ -30,6 +30,8 @@ struct PlayerInfo myPlayerInfo;
 bool getMsg = false;
 std::string Msg;
 extern ChatBox *chatting;
+static int whichRoom;
+
 
 static inline GameScene* getGameScene() {
 	auto scene = Director::getInstance()->getRunningScene();
@@ -278,7 +280,6 @@ DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 
 
 
-
 /*
 名称：消费者
 描述：开的新线程，专门用来pop队列，来达到控制角色的目的
@@ -505,9 +506,14 @@ int GameClient::ClientProcessRoomData(int which)
 
 }
 
-
-void GameClient::chat()
+/*
+名称：聊天室
+描述：聊天数据的线程管理
+*/
+void GameClient::chat(int Room)
 {
+	whichRoom = Room;
+
 	HANDLE sendThread, recvThread;
 	sendThread = CreateThread(NULL, 0, chatSendThread, (LPVOID)this, 0, NULL);
 	CloseHandle(sendThread);
@@ -517,13 +523,16 @@ void GameClient::chat()
 
 }
 
+/*
+名称：聊天发送数据
+描述：专门发送聊天数据的线程，采用select模式管理
+*/
 DWORD WINAPI GameClient::chatSendThread(LPVOID lpParam)  //聊天室发送消息
 {
 	GameClient *Client = static_cast<GameClient *>(lpParam);
 	
 	char sendBuf[CHATPACKAGE];
 	
-
 	while (true)
 	{
 		fd_set write;
@@ -534,7 +543,7 @@ DWORD WINAPI GameClient::chatSendThread(LPVOID lpParam)  //聊天室发送消息
 		{
 			if (FD_ISSET(Client->ClientSocket, &write))
 			{
-				std::fstream outfile("e:\\a.txt", std::ios::app);
+	
 				ZeroMemory(sendBuf, sizeof(sendBuf));
 				char tempMsg[1024];
 				ZeroMemory(tempMsg, sizeof(tempMsg));
@@ -543,19 +552,13 @@ DWORD WINAPI GameClient::chatSendThread(LPVOID lpParam)  //聊天室发送消息
 				{
 					strcpy(tempMsg, chatting->cur_msg.c_str());
 					tempMsg[chatting->cur_msg.size()] = '\0';
-					sprintf(sendBuf, "%s", tempMsg);
+					sprintf(sendBuf, "%d %s", whichRoom, tempMsg);
 				}
 
 				else
 					continue;
 
-				outfile << "我看看我究竟发了什么东西:" << sendBuf << "\n";
-				outfile.close();
-				int sed = send(Client->ClientSocket, sendBuf, strlen(sendBuf) + sizeof(char), 0);
-				if (sed == SOCKET_ERROR)
-					outfile << "发送失败\n";
-				else
-					outfile << "发送成功\n";
+				send(Client->ClientSocket, sendBuf, strlen(sendBuf) + sizeof(char), 0);
 			}
 		
 		}
@@ -565,10 +568,9 @@ DWORD WINAPI GameClient::chatSendThread(LPVOID lpParam)  //聊天室发送消息
 	return 0;
 }
 
-
-
 /*
-必须select模式
+名称：聊天接收数据
+描述：专门接收聊天数据的线程，采用select模式管理
 */
 DWORD WINAPI GameClient::chatRecvThread(LPVOID lpParam)  //聊天室接受消息
 {
@@ -589,17 +591,12 @@ DWORD WINAPI GameClient::chatRecvThread(LPVOID lpParam)  //聊天室接受消息
 				
 				int ret = recv(Client->ClientSocket, recvBuf, CHATPACKAGE, 0);
 				if (ret == SOCKET_ERROR)
-				{
-					//outfile << "错误，死于： " << GetLastError() << "\n";
-					//outfile.close();
 					continue;
-				}
+				
 				Msg = recvBuf;
 					
 			}
-		
 		}
-
 	}
 	return 0;
 }

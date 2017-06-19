@@ -21,6 +21,7 @@ struct  BnbClientInformation           //Client 相关信息
 struct PlayerInfo {
 	std::string nickname;
 	struct  BnbClientInformation clientInfo;
+	int order;
 };
 
 
