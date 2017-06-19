@@ -1,11 +1,11 @@
 ﻿#ifndef CharacterSelect_hpp
 #define CharacterSelect_hpp
 
-
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
 #include "HelloWorldScene.h"
 #include <string>
+#include "../web client/BnbGameClient.h"
 
 using namespace cocos2d;
 class Players : public cocos2d::Layer
@@ -22,6 +22,7 @@ public:
 	* 注意：init函数在Cocos2d-x中返回bool值，而不是返回Cocos2d-iPhone中的“id”
 	*/
 	virtual bool init();
+
 
 	void displayAllPlayers(float dt);
 	/**

@@ -9,7 +9,11 @@
 #include "../controller/CharacterFSM.h"
 #include <random>
 #include <cstring>
+#include "ui/CocosGUI.h"
 
+using namespace ui;
+
+#define CHATPACKAGE 1024
 USING_NS_CC;
 using namespace settings::GameScene;
 
@@ -23,6 +27,9 @@ using std::endl;
 extern std::vector <RoomInfo> Rooms;
 std::queue <recvInfo> GameClient::recvQueue;
 struct PlayerInfo myPlayerInfo;
+bool getMsg = false;
+std::string Msg;
+extern ChatBox *chatting;
 
 static inline GameScene* getGameScene() {
 	auto scene = Director::getInstance()->getRunningScene();
@@ -158,8 +165,8 @@ void  GameClient::ClientProcess()
 */
 DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 {
-	GameClient *Client = (GameClient *)lpParam;
-	GameClient *Client2 = (GameClient *)lpParam;
+	GameClient *Client = static_cast<GameClient *>(lpParam);
+
 	const int PACKAGE = 28;          //每次发送包的长度
 
 	{
@@ -170,7 +177,7 @@ DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 		FD_ZERO(&rfd);
 
 		FD_SET(Client->ClientSocket, &wfd);
-		FD_SET(Client2->ClientSocket, &rfd);
+		FD_SET(Client->ClientSocket, &rfd);
 
 		int sel = select(0, &rfd, &wfd, NULL, NULL);
 		if (sel > 0)
@@ -220,7 +227,7 @@ DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 			}
 
 
-			if (FD_ISSET(Client2->ClientSocket, &rfd))
+			if (FD_ISSET(Client->ClientSocket, &rfd))
 			{
 				/*
 				接收数据
@@ -238,7 +245,7 @@ DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 				int ret;
 				while (recvByte < PACKAGE)
 				{
-					ret = recv(Client2->ClientSocket, recvData, PACKAGE * 100, 0);
+					ret = recv(Client->ClientSocket, recvData, PACKAGE * 100, 0);
 					recvByte += ret;
 				}
 
@@ -278,7 +285,7 @@ DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
 */
 DWORD WINAPI GameClient::comsumer(LPVOID lpParam)
 {
-	GameClient *Client = (GameClient *)lpParam;
+	GameClient *Client = static_cast<GameClient *>(lpParam);
 
 	if (recvQueue.empty() == true)
 	{
@@ -445,7 +452,7 @@ int GameClient::ClientProcessBefore(int flag,int which)
 名称：线程处理房间相关
 描述：在CharacterSelect中负责收发数据
 */
-int GameClient::ClientProcessRoom(int which)
+int GameClient::ClientProcessRoomData(int which)
 {
 	//发送  内容比较简单，只发送所在房间的号码
 	char sendBuf[8];
@@ -498,6 +505,105 @@ int GameClient::ClientProcessRoom(int which)
 
 }
 
+
+void GameClient::chat()
+{
+	HANDLE sendThread, recvThread;
+	sendThread = CreateThread(NULL, 0, chatSendThread, (LPVOID)this, 0, NULL);
+	CloseHandle(sendThread);
+	recvThread = CreateThread(NULL, 0, chatRecvThread, (LPVOID)this, 0, NULL);
+	CloseHandle(recvThread);
+
+
+}
+
+DWORD WINAPI GameClient::chatSendThread(LPVOID lpParam)  //聊天室发送消息
+{
+	GameClient *Client = static_cast<GameClient *>(lpParam);
+	
+	char sendBuf[CHATPACKAGE];
+	
+
+	while (true)
+	{
+		fd_set write;
+		FD_ZERO(&write);
+		FD_SET(Client->ClientSocket, &write);
+		int sel = select(0, NULL, &write, NULL, NULL);
+		if (sel > 0)
+		{
+			if (FD_ISSET(Client->ClientSocket, &write))
+			{
+				std::fstream outfile("e:\\a.txt", std::ios::app);
+				ZeroMemory(sendBuf, sizeof(sendBuf));
+				char tempMsg[1024];
+				ZeroMemory(tempMsg, sizeof(tempMsg));
+
+				if (!chatting->cur_msg.empty())
+				{
+					strcpy(tempMsg, chatting->cur_msg.c_str());
+					tempMsg[chatting->cur_msg.size()] = '\0';
+					sprintf(sendBuf, "%s", tempMsg);
+				}
+
+				else
+					continue;
+
+				outfile << "我看看我究竟发了什么东西:" << sendBuf << "\n";
+				outfile.close();
+				int sed = send(Client->ClientSocket, sendBuf, strlen(sendBuf) + sizeof(char), 0);
+				if (sed == SOCKET_ERROR)
+					outfile << "发送失败\n";
+				else
+					outfile << "发送成功\n";
+			}
+		
+		}
+
+	}
+	
+	return 0;
+}
+
+
+
+/*
+必须select模式
+*/
+DWORD WINAPI GameClient::chatRecvThread(LPVOID lpParam)  //聊天室接受消息
+{
+	GameClient *Client = static_cast<GameClient *>(lpParam);
+	char recvBuf[CHATPACKAGE];
+	while (true)
+	{
+		fd_set read;
+		FD_ZERO(&read);
+		FD_SET(Client->ClientSocket, &read);
+		int sel = select(0, &read, NULL, NULL, NULL);
+		if (sel > 0)
+		{
+			if (FD_ISSET(Client->ClientSocket, &read))
+			{
+				Msg.clear();
+				ZeroMemory(recvBuf, sizeof(recvBuf));
+				
+				int ret = recv(Client->ClientSocket, recvBuf, CHATPACKAGE, 0);
+				if (ret == SOCKET_ERROR)
+				{
+					//outfile << "错误，死于： " << GetLastError() << "\n";
+					//outfile.close();
+					continue;
+				}
+				Msg = recvBuf;
+					
+			}
+		
+		}
+
+	}
+	return 0;
+}
+
 /*
 名称：析构函数
 描述：释放套接字，清理内存
@@ -509,3 +615,5 @@ GameClient::~GameClient()
 
 	WSACleanup();
 }
+
+

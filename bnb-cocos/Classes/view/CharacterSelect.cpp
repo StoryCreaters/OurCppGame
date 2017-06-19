@@ -4,12 +4,13 @@
 #include "RoomChooseScene.h"
 #include "TextField.h"
 #include "ChatBox.h"
-#include "../web client/BnbGameClient.h"
+
 
 
 USING_NS_CC;
 using namespace ui;
 int Players::whichRoom;
+ChatBox *chatting;
 
 Scene* Players::createScene(int n) {
 	// 创建一个场景对象，该对象将会由自动释放池管理内存的释放
@@ -29,7 +30,7 @@ Players* Players::getCurrent() {
 }
 
 
-extern "C" GameClient client;
+extern GameClient client;
 extern std::vector <RoomInfo> Rooms; 
 static Size visibleSize;
 
@@ -137,9 +138,10 @@ bool Players::init() {
 	auto layerColor = LayerColor::create(Color4B(41, 36, 33, 200), 400, 400);
 	layerColor->setPosition(268, 150);
 	this->addChild(layerColor);
-	auto textfield = TextFieldTest::create();
-	textfield->setName("TextField");
-	addChild(textfield);
+
+	
+	
+
 	//设OK键
 	auto ok_button = Button::create("GameUI/button1.png");
 	ok_button->setPosition(Vec2(visibleSize.width *0.20, visibleSize.height*0.18));
@@ -165,15 +167,23 @@ bool Players::init() {
 	playerListLabel->setColor(Color3B::BLACK);
 	playerListLabel->setPosition(130, visibleSize.height*0.7);
 	this->addChild(playerListLabel);
-	displayAllPlayers(0);
 
-	this->schedule(schedule_selector(Players::displayAllPlayers));
+
+	chatting = ChatBox::create();
+	client.chat();
+	this->addChild(chatting);
+
+
+
+	//this->schedule(schedule_selector(Players::displayAllPlayers));
 	return true;
 }
 
+
+/*
 void Players::displayAllPlayers(float dt)
 {
-	client.ClientProcessRoom(whichRoom);
+	int ret = client.ClientProcessRoomData(whichRoom);
 	
 	for (int i = 0; i < Rooms[whichRoom].playerList.size(); i++)
 	{
@@ -184,3 +194,4 @@ void Players::displayAllPlayers(float dt)
 		this->addChild(label);
 	}
 }
+*/

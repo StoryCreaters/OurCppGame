@@ -8,6 +8,7 @@
 #include "cocos2d.h"
 #pragma comment(lib,"ws2_32.lib")
 #include <queue>      //存放数据的队列
+#include "ChatBox.h"
 
 class GameScene;
 
@@ -57,10 +58,16 @@ public:
 	void ClientProcess();    //启动客户处理
 	int ClientProcessBefore(int flag, int which);
 
-	int ClientProcessRoom(int which);
+	int ClientProcessRoomData(int which);
 
 	static DWORD WINAPI sendAndRecv(LPVOID lpParam);   //收发消息
-	static DWORD WINAPI comsumer(LPVOID lpParam);
+	static DWORD WINAPI comsumer(LPVOID lpParam);   //消费者
+
+	
+	void chat();
+	static DWORD WINAPI chatSendThread(LPVOID lpParam);  //聊天室发送消息
+	static DWORD WINAPI chatRecvThread(LPVOID lpParam);  //聊天室接受消息
+
 	//SOCKET相关
 public:
 	SOCKET ClientSocket;
@@ -73,5 +80,6 @@ private:
 	HANDLE hMutex;
 	GameScene * runningGameScene;
 	char *prop;
-
+	
+	
 };

@@ -390,6 +390,7 @@ DWORD WINAPI GameServer::sendRoomInfo(void *data)
 	cout << "已经离开RoomChoose,count++\n";
 	count++;
 
+	/*
 	//进入CharacterSelect
 	while (true)
 	{
@@ -406,7 +407,36 @@ DWORD WINAPI GameServer::sendRoomInfo(void *data)
 		cout << send << "\n";
 		SendMessageToOneClient(GameSocket->ID, send);
 
+	}*/
+
+	char sendBuf[1024];
+	char recvBuf[1024];
+	int ret, left, idx = 0;
+	while (true)
+	{
+		ZeroMemory(sendBuf, sizeof(sendBuf));
+		ZeroMemory(recvBuf, sizeof(recvBuf));
+		cout << "等待接收：\n";
+		ret = recv(GameSocket->ClientSock, recvBuf, sizeof(recvBuf), 0);
+		cout << "ret:" << ret << "\n";
+		if (ret == 0)
+			return 1;
+		if (ret == SOCKET_ERROR)
+		{
+			cout << "接收失败\n";
+			return 1;
+		}
+		if (ret < 1024)
+			recvBuf[ret] = '\0';
+		else
+			cout << "buf is full\n";
+		cout << "收到消息:" << recvBuf << "\n";
+		sprintf(sendBuf, "[%s said]:%s", inet_ntoa(GameSocket->Client.sin_addr), recvBuf);
+
+		string Msg = sendBuf;
+		SendMessageToAllClient(sendBuf, GameSocket->ID);
 	}
+
 	return 0;
 }
 
