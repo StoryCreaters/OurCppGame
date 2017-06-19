@@ -10,7 +10,7 @@
 USING_NS_CC;
 
 using namespace ui;
-int Players::whichRoom;
+extern int whichRoom;
 ChatBox *chatting;
 
 static Size visibleSize;

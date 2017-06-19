@@ -33,7 +33,6 @@ public:
 	CREATE_FUNC(Players);
 
 private:
-	static int whichRoom;   //决定是哪个Room的变量
 	
 };
 

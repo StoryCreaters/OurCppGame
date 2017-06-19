@@ -12,7 +12,7 @@ static Size visibleSize;
 std::vector <RoomInfo> Rooms;  //房间列表
 GameClient client;  
 extern struct PlayerInfo myPlayerInfo;
-
+int whichRoom;
 Scene* RoomChoose::createScene() {
 	// 创建一个场景对象，该对象将会由自动释放池管理内存的释放
 	auto scene = Scene::create();
@@ -118,6 +118,7 @@ void RoomChoose::ToRoomOne(Ref *sender) {
 	client.ClientProcessBefore(isOut,0);
 	//Rooms[0].playerList.push_back(myPlayerInfo);
 	Rooms[0].curNum++;
+	whichRoom = 0;
 	Director::getInstance()->replaceScene(Players::createScene(0));
 }
 
@@ -126,6 +127,7 @@ void RoomChoose::ToRoomTwo(Ref *sender) {
 	client.ClientProcessBefore(isOut,1);
 	//Rooms[1].playerList.push_back(myPlayerInfo);
 	Rooms[1].curNum++;
+	whichRoom = 1;
 	Director::getInstance()->replaceScene(Players::createScene(1));
 }
 
@@ -134,6 +136,7 @@ void RoomChoose::ToRoomThree(Ref *sender) {
 	client.ClientProcessBefore(isOut,2);
 	//Rooms[2].playerList.push_back(myPlayerInfo);
 	Rooms[2].curNum++;
+	whichRoom = 2;
 	Director::getInstance()->replaceScene(Players::createScene(2));
 }
 
@@ -142,6 +145,7 @@ void RoomChoose::ToRoomFour(Ref *sender) {
 	client.ClientProcessBefore(isOut,3);
 	//Rooms[3].playerList.push_back(myPlayerInfo);
 	Rooms[3].curNum++;
+	whichRoom = 3;
 	Director::getInstance()->replaceScene(Players::createScene(3));
 }
 
