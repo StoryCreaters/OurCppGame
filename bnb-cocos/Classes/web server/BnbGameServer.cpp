@@ -174,10 +174,10 @@ int GameServer::ProcessGameServer()
 			);
 
 			
-
-			while (playerNum == MAX_NUM)
+			/*
+			while (playerNum >=  2)
 			{
-				if (count == MAX_NUM)
+				if (count == playerNum)
 				{
 					int ThreadID;     //线程ID
 
@@ -205,7 +205,7 @@ int GameServer::ProcessGameServer()
 					continue;
 					
 			}
-			
+			*/
 			
 		}
 		else   //玩家已满
@@ -242,7 +242,7 @@ int GameServer::ProcessGameServer()
 描述：Select模式
 	首先判断该线程是否可读，如果可读就读取其上的信息
 */
-DWORD WINAPI GameServer::ListenThread(void *data) //传进来具体哪个AcceptSocket[xx]的地址
+DWORD WINAPI GameServer::GameThread(void *data) //传进来具体哪个AcceptSocket[xx]的地址
 {
 
 	BnbClientInformation *GameSocket = static_cast<BnbClientInformation *>(data);
@@ -391,8 +391,7 @@ DWORD WINAPI GameServer::sendRoomInfo(void *data)
 		else
 			break;
 	}
-	cout << "已经离开RoomChoose,count++\n";
-	count++;
+	
 	
 	/*
 	//进入CharacterSelect
@@ -412,7 +411,8 @@ DWORD WINAPI GameServer::sendRoomInfo(void *data)
 		SendMessageToOneClient(GameSocket->ID, send);
 
 	}*/
-
+	
+	
 	char sendBuf[1024];
 	char recvBuf[1024];
 	char Msg[1024];
@@ -430,7 +430,7 @@ DWORD WINAPI GameServer::sendRoomInfo(void *data)
 		if (ret == SOCKET_ERROR)
 		{
 			cout << "接收失败\n";
-			return 1;
+			break;
 		}
 		if (ret < 1024)
 			recvBuf[ret] = '\0';
@@ -439,17 +439,27 @@ DWORD WINAPI GameServer::sendRoomInfo(void *data)
 		cout << "收到消息:" << recvBuf << "\n";
 		int whichRoom;
 		sscanf(recvBuf, "%d %s", &whichRoom, Msg);
-
+		
 		sprintf(sendBuf, "[%s said]:%s", inet_ntoa(GameSocket->Client.sin_addr), Msg);
 		string msg = Msg;
-
+		if (msg == "#GO_TO_GAME_SCENE!")
+			break;
 		for (int i = 0; i < Rooms[whichRoom].playerList.size(); i++)
 		{
 			if (i == GameSocket->ID)
 				continue;
 			SendMessageToOneClient(Rooms[whichRoom].playerList.at(i).clientInfo.ID, msg);
 		}
+		
 	}
+	cout << "已离开CharacterSelect,count++\n";
+	count++;
+
+	CreateThread(NULL, 0,
+		(LPTHREAD_START_ROUTINE)(GameServer::GameThread), //线程点函数
+		(LPVOID)data, 0,              //参数
+		&GameSocket->RecvThreadID         //系统分配的ID
+	);
 
 	return 0;
 }

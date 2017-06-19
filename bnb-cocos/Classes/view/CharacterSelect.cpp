@@ -147,20 +147,11 @@ bool Players::init() {
 	ok_button->setPosition(Vec2(visibleSize.width *0.20, visibleSize.height*0.18));
 	this->addChild(ok_button);
 	ok_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
-		if (type == Widget::TouchEventType::ENDED) {
-			removeChild(ok_button);
-			auto cancel_button = Button::create("GameUI/button2.png");
-			cancel_button->setPosition(Vec2(visibleSize.width *0.20, visibleSize.height*0.18));
-			cancel_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
-				if (type == Widget::TouchEventType::ENDED) {
-					//留白
-				}
-			});
-			this->addChild(cancel_button);
 			// 切换到GameScene场景
 			auto transition = TransitionFadeBL::create(4.0, GameScene::createScene());
+			chatting->cur_msg = "#GO_TO_GAME_SCENE!";
+			//removeChild(chatting);
 			Director::getInstance()->replaceScene(transition);
-		}
 	});
 
 	auto * playerListLabel = LabelTTF::create("Players List", "Arial", 40);
@@ -168,11 +159,11 @@ bool Players::init() {
 	playerListLabel->setPosition(130, visibleSize.height*0.7);
 	this->addChild(playerListLabel);
 
-
+	
 	chatting = ChatBox::create();
 	client.chat(whichRoom);
 	this->addChild(chatting);
-
+	
 	return true;
 }
 

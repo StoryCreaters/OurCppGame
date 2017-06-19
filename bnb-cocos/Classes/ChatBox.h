@@ -9,7 +9,6 @@ USING_NS_CC;
 class ChatBox : public Layer {
 public:
 	friend class GameClient;
-
     virtual bool init();
     mutable ui::TextField* writeText;
     // 根据chatLines 排列
@@ -22,7 +21,7 @@ public:
     void addTextField();
     void addChatLine(const std::string s);
 
-private:
+public:
 	std::string cur_msg;
 	
 };

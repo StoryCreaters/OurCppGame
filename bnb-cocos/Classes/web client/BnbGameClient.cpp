@@ -140,7 +140,7 @@ void  GameClient::ClientProcess()
 	}
 	HANDLE hThread1;
 	HANDLE hThread2;
-	hThread1 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)sendAndRecv, this, 0, NULL);
+	hThread1 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)GameSendAndRecv, this, 0, NULL);
 
 	hThread2 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)comsumer, this, 0, NULL);
 	CloseHandle(hThread1);
@@ -162,10 +162,10 @@ void  GameClient::ClientProcess()
 
 
 /*
-名称：收发函数
-描述：专门处理收发数据的线程函数，采用异步、非阻塞模式。
+名称：游戏数据收发函数
+描述：专门处理游戏收发数据的线程函数，采用异步、非阻塞模式。
 */
-DWORD WINAPI GameClient::sendAndRecv(LPVOID lpParam)
+DWORD WINAPI GameClient::GameSendAndRecv(LPVOID lpParam)
 {
 	GameClient *Client = static_cast<GameClient *>(lpParam);
 
@@ -557,8 +557,10 @@ DWORD WINAPI GameClient::chatSendThread(LPVOID lpParam)  //聊天室发送消息
 
 				else
 					continue;
-
+				
 				send(Client->ClientSocket, sendBuf, strlen(sendBuf) + sizeof(char), 0);
+				if (chatting->cur_msg == "#GO_TO_GAME_SCENE!")
+					break;
 			}
 		
 		}
@@ -578,6 +580,8 @@ DWORD WINAPI GameClient::chatRecvThread(LPVOID lpParam)  //聊天室接受消息
 	char recvBuf[CHATPACKAGE];
 	while (true)
 	{
+		if (chatting->cur_msg == "#GO_TO_GAME_SCENE!")
+			break;
 		fd_set read;
 		FD_ZERO(&read);
 		FD_SET(Client->ClientSocket, &read);
@@ -594,7 +598,8 @@ DWORD WINAPI GameClient::chatRecvThread(LPVOID lpParam)  //聊天室接受消息
 					continue;
 				
 				Msg = recvBuf;
-					
+
+				
 			}
 		}
 	}
