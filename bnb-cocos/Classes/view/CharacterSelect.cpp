@@ -3,11 +3,14 @@
 #include "GameScene.h"
 #include "RoomChooseScene.h"
 #include "TextField.h"
+<<<<<<< HEAD
 #include "ChatBox.h"
 <<<<<<< .merge_file_a93228
 #include "../web client/BnbGameClient.h"
 
 
+=======
+>>>>>>> fcc15ea0b861a694da535b3682b217526dacad50
 USING_NS_CC;
 using namespace ui;
 
@@ -68,9 +71,10 @@ bool Players::init() {
 
 	// 获得设备可见视图大小
 	Size visibleSize = Director::getInstance()->getVisibleSize();
-	auto backGround = cocos2d::Sprite::create("BackGround/temple of times.png");
+	auto backGround = cocos2d::Sprite::create("BackGround/Character_Select.png");
 	backGround->setPosition(cocos2d::Vec2(visibleSize.width / 2, visibleSize.height / 2));
 	this->addChild(backGround, 0);
+
 	//Player1
 =======
 	// 获得设备可见视图大小
@@ -205,6 +209,7 @@ bool Players::init() {
 	});
 	this->addChild(return_button);
 	//留白
+<<<<<<< HEAD
 <<<<<<< .merge_file_a93228
     addChild(ChatBox::create());
 //	auto layerColor = LayerColor::create(Color4B(41, 36, 33, 200), 400, 400);
@@ -222,6 +227,14 @@ bool Players::init() {
 	
 
 >>>>>>> .merge_file_a87168
+=======
+	auto layerColor = LayerColor::create(Color4B(41, 36, 33, 200), 400, 400);
+	layerColor->setPosition(208, 150);
+	this->addChild(layerColor);
+	auto textfield = TextFieldTest::create();
+	textfield->setName("TextField");
+	addChild(textfield);
+>>>>>>> fcc15ea0b861a694da535b3682b217526dacad50
 	//设OK键
 	auto ok_button = Button::create("GameUI/button1.png");
 	ok_button->setPosition(Vec2(visibleSize.width *0.20, visibleSize.height*0.18));
@@ -232,12 +245,18 @@ bool Players::init() {
 			removeChild(ok_button);
 			auto cancel_button = Button::create("GameUI/button2.png");
 			cancel_button->setPosition(Vec2(visibleSize.width *0.20, visibleSize.height*0.18));
+			cancel_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
+				if (type == Widget::TouchEventType::ENDED) {
+					//留白
+				}
+			});
 			this->addChild(cancel_button);
 			// 切换到GameScene场景
 			auto transition = TransitionFadeBL::create(2.0, GameScene::createScene());
 			Director::getInstance()->replaceScene(transition);
 		}
 	});
+
 	
 	
 

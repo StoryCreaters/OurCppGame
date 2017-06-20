@@ -81,8 +81,6 @@ public:
     // return the attr of riding 
     int getRidingSpeed();
     int getRidingBubbles();
-    // 玩家被爆炸波及
-    void charaFired();
 private:
     int _type_index;
     bool _isRiding;

@@ -22,20 +22,14 @@ bool TextFieldTest::init()
 >>>>>>> WebGameLogic
 	this->addChild(_displayValueLabel);
 	// 添加一个Text，当数据输入结束时，显示输入的数据
-    _messageValue = UserDefault::getInstance()->getStringForKey("MyName");
-    std::string first_msg = _messageValue.empty() ?
-    "you Don't input any data" :
-    "Are you " + _messageValue;
-    
-    _messageValueLabel = Text::create(first_msg, "微软雅黑", 32);
-    
+	_messageValueLabel = Text::create("you Don't input any data", "微软雅黑", 32);
 	_messageValueLabel->setPosition(Vec2(visibleSize.width *0.4, visibleSize.height*0.5));
 	this->addChild(_messageValueLabel);
 
 	// 创建文本框
 	textField = TextField::create("Please input your NAME", "Arial", 32);
 	textField->setPosition(Vec2(visibleSize.width *0.4, visibleSize.height *0.4));
-    
+	
 	auto listenerkeyPad = EventListenerKeyboard::create();
 	listenerkeyPad->onKeyReleased = CC_CALLBACK_2(TextFieldTest::onKeyReleased, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listenerkeyPad, this);
@@ -49,6 +43,23 @@ bool TextFieldTest::init()
 		case TextField::EventType::ATTACH_WITH_IME:
 			_displayValueLabel->setString("input beggin");
 			break;
+		//case TextField::EventType::DETACH_WITH_IME:
+		//{
+		//	_displayValueLabel->setString("input finished");
+		//	// 获得文本框输入的数据
+		//	std::string value = textField->getStringValue();
+		//	// 如果数据大于0，显示在_messageValueLabel当中
+		//	if (value.length() > 0)
+		//	{
+		//		_messageValueLabel->setString("your name:" + value);
+		//		textField->setString("          ");
+		//	}
+		//	else
+		//	{
+		//		_messageValueLabel->setString("you Don't input any data!");
+		//	}
+		//}
+		//break;
 		case TextField::EventType::INSERT_TEXT:
 			_displayValueLabel->setString("insert data");
 			break;
@@ -64,20 +75,22 @@ bool TextFieldTest::init()
 	return true;
 }
 void TextFieldTest::onKeyReleased(EventKeyboard::KeyCode keycode, cocos2d::Event*event) {
+	log("text was called");
 	if (keycode == EventKeyboard::KeyCode::KEY_ENTER)
 	{
+		log("回车 was called");
 		_displayValueLabel->setString("input finished");
 		// 获得文本框输入的数据
-		_messageValue = textField->getStringValue();
+		std::string value = textField->getStringValue();
 		// 如果数据大于0，显示在_messageValueLabel当中
-		if (!_messageValue.empty())
+		if (value.length() > 0)
 		{
-			_messageValueLabel->setString("Are you " + _messageValue);
-			textField->setString("");
+			_messageValueLabel->setString("your name:" + value);
+			textField->setString("          ");
 		}
 		else
 		{
-            showDidNotInput();
+			_messageValueLabel->setString("you Don't input any data!");
 		}
 	}
 }

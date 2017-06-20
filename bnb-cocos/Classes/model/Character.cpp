@@ -219,6 +219,7 @@ int character::getRidingBubbles() {
     auto veh = dynamic_cast<Vehicle*>(getChildByName("vehicle"));
     return veh->_tmp_bubbles;
 }
+<<<<<<< HEAD
 
 void character::charaFired() {
 <<<<<<< .merge_file_a68820
@@ -256,3 +257,5 @@ void character::charaFired() {
 	}
 >>>>>>> .merge_file_a65360
 }
+=======
+>>>>>>> fcc15ea0b861a694da535b3682b217526dacad50

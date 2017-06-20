@@ -5,7 +5,6 @@
 #include "MusicSetting.h"
 #include "RoomChooseScene.h"
 #include "CharacterSelect.h"
-#include "LoginScene.h"
 
 USING_NS_CC;
 using namespace ui;
@@ -68,22 +67,8 @@ cocos2d::Menu* OpenScene::setLayOutL1() {
 
 	cocos2d::Vector<cocos2d::MenuItem*> vecs;
 
-	std::string UiNames[] = {
-        "GameUI/ProjectName",
-        "GameUI/PlayOnInternet",
-        "GameUI/Help",
-        "GameUI/Setting",
-        "GameUI/Quit"
-    };
-    
-	ccMenuCallback Uifuncs[] = {
-        nullptr,
-        CC_CALLBACK_1(OpenScene::ToLogIn, this),
-        CC_CALLBACK_1(OpenScene::OnTouchPause, this),
-        CC_CALLBACK_1(OpenScene::GameSetting, this),
-        CC_CALLBACK_1(OpenScene::menuCloseCallback, this)
-    };
-    
+	std::string UiNames[] = { "GameUI/ProjectName", "GameUI/PlayOnInternet", "GameUI/Help","GameUI/Setting","GameUI/Quit" };
+	ccMenuCallback Uifuncs[] = { nullptr, CC_CALLBACK_1(OpenScene::ToStartInGame, this),CC_CALLBACK_1(OpenScene::OnTouchPause, this),CC_CALLBACK_1(OpenScene::GameSetting, this),CC_CALLBACK_1(OpenScene::menuCloseCallback, this) };
 	for (int i = 0; i < 5; ++i) {
 		auto menuI = cocos2d::MenuItemImage::create(UiNames[i] + ".png", UiNames[i] + "Selected.png", Uifuncs[i]);
 		if (i != 0)
@@ -160,8 +145,4 @@ void OpenScene::OnTouchResume() {
 
 void OpenScene::ToStartInGame(Ref *sender) {
 	Director::getInstance()->replaceScene(RoomChoose::createScene());
-}
-
-void OpenScene::ToLogIn(cocos2d::Ref* sender) {
-    Director::getInstance()->replaceScene(LoginScene::createScene());
 }

@@ -3,6 +3,7 @@
 #include "GameScene.h"
 <<<<<<< .merge_file_a93180
 #include "CharacterSelect.h"
+<<<<<<< HEAD
 #include "../web client/BnbGameClient.h"
 =======
 #include "OpenScene.h"
@@ -10,6 +11,10 @@
 
 >>>>>>> .merge_file_a16140
 
+=======
+#include "OpenScene.h"
+#define NUM 4;
+>>>>>>> fcc15ea0b861a694da535b3682b217526dacad50
 USING_NS_CC;
 using namespace ui;
 
@@ -50,7 +55,9 @@ bool RoomChoose::init() {
 <<<<<<< .merge_file_a93180
 
 	// 获得设备可见视图大小
+	vecs = { 0 };
 	Size visibleSize = Director::getInstance()->getVisibleSize();
+<<<<<<< HEAD
 	auto backGround = cocos2d::Sprite::create("BackGround/Gray World.jpg");
 =======
 	isOut = false;
@@ -58,10 +65,14 @@ bool RoomChoose::init() {
 	visibleSize = Director::getInstance()->getVisibleSize();
 	auto backGround = cocos2d::Sprite::create("BackGround/chooseroom.png");
 >>>>>>> .merge_file_a16140
+=======
+	auto backGround = cocos2d::Sprite::create("BackGround/GameOver.png");
+>>>>>>> fcc15ea0b861a694da535b3682b217526dacad50
 	backGround->setPosition(cocos2d::Vec2(visibleSize.width / 2, visibleSize.height / 2));
 	this->addChild(backGround, 0);
 	cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
+<<<<<<< HEAD
 <<<<<<< .merge_file_a93180
 	cocos2d::Vector<cocos2d::MenuItem*> vecs;
 
@@ -149,7 +160,39 @@ bool RoomChoose::init() {
 
 	this->scheduleUpdate(); //每一帧更新一次人数信息
 >>>>>>> .merge_file_a16140
+=======
+	//cocos2d::Vector<cocos2d::MenuItem*> vecs;
+>>>>>>> fcc15ea0b861a694da535b3682b217526dacad50
 
+	auto headline = Sprite::create("GameUI/RoomChoose.png");
+	headline->setPosition(cocos2d::Vec2(visibleSize.width / 2, visibleSize.height*0.75));
+	backGround->addChild(headline);
+	auto room_button = Button::create("GameUI/RoomCreate.png");
+	room_button->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+	room_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
+		if (type == Widget::TouchEventType::ENDED) {
+			// 切换到Character Select场景
+			auto transition = TransitionShrinkGrow::create(2.0, Players::createScene());
+			Director::getInstance()->replaceScene(transition);
+			if (vecs.back() < 4) {
+				vecs.back()++;
+			}
+			else
+				addroom(this);
+		}
+	});
+	addChild(room_button);
+	// 创建“返回“按钮，点击时调用returnToMenu函数
+	auto return_button = Button::create("GameUI/b1.png");
+	return_button->setPosition(Vec2(visibleSize.width *0.85, visibleSize.height*0.18));
+	return_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
+		if (type == Widget::TouchEventType::ENDED) {
+			// 切换到MenuScene场景
+			auto transition = TransitionShrinkGrow::create(2.0, OpenScene::createScene());
+			Director::getInstance()->replaceScene(transition);
+		}
+	});
+	this->addChild(return_button);
 	return true;
 }
 
@@ -157,12 +200,19 @@ void RoomChoose::ToRoomOne(Ref *sender) {
 <<<<<<< .merge_file_a93180
 	Director::getInstance()->replaceScene(Players::createScene());
 }
-void RoomChoose::ToRoomTwo(Ref *sender) {
-	Director::getInstance()->replaceScene(Players::createScene());
+void RoomChoose::addroom(Ref* sender) {
+	if (!vecs.empty()) {
+		vecs.push_back(1);
+		log("vecs[i]=%d", vecs.back());
+	}
 }
-void RoomChoose::ToRoomThree(Ref *sender) {
-	Director::getInstance()->replaceScene(Players::createScene());
+void RoomChoose::poproom( Ref* sender) {
+	if (!vecs.empty()) {
+		vecs.back()--;
+	}
+	
 }
+<<<<<<< HEAD
 void RoomChoose::ToRoomFour(Ref *sender) {
 	Director::getInstance()->replaceScene(Players::createScene());
 }
@@ -272,3 +322,14 @@ void RoomChoose::update(float dt)
 
 >>>>>>> .merge_file_a16140
 }
+=======
+//void RoomChoose::ToRoomTwo(Ref *sender) {
+//	Director::getInstance()->replaceScene(Players::createScene());
+//}
+//void RoomChoose::ToRoomThree(Ref *sender) {
+//	Director::getInstance()->replaceScene(Players::createScene());
+//}
+//void RoomChoose::ToRoomFour(Ref *sender) {
+//	Director::getInstance()->replaceScene(Players::createScene());
+//}
+>>>>>>> fcc15ea0b861a694da535b3682b217526dacad50
