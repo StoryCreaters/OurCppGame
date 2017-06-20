@@ -2,7 +2,7 @@
 #include "PreLoadScene.h"
 #include "SimpleAudioEngine.h"
 #include "Settings.h"
-#include "OpenScene.h"
+#include "view/OpenScene.h"
 
 using namespace settings::PreLoadScene;
 USING_NS_CC;
@@ -69,9 +69,13 @@ void PreLoadScene::loadSpriteFrame() {
 	for (auto s : gifts_animation) {
 		sprite_frame_cache->addSpriteFramesWithFile(s);
 	}
+<<<<<<< HEAD
 	for (auto s : items_animation) {
 		sprite_frame_cache->addSpriteFramesWithFile(s);
 	}
+=======
+	
+>>>>>>> WebGameLogic
 	for (auto s : person_animation) {
 		sprite_frame_cache->addSpriteFramesWithFile(s);
 	}
@@ -79,7 +83,13 @@ void PreLoadScene::loadSpriteFrame() {
 }
 
 void PreLoadScene::loadMusic() {
+<<<<<<< HEAD
 	CocosDenshion::SimpleAudioEngine::getInstance()->preloadBackgroundMusic(to_load_music);
+=======
+	for (int i = 0; i < 3; i++) {
+		CocosDenshion::SimpleAudioEngine::getInstance()->preloadBackgroundMusic(to_load_music[i]);
+	}
+>>>>>>> WebGameLogic
 	for (int i = 0; i < 4; i++) {
 		CocosDenshion::SimpleAudioEngine::getInstance()->preloadEffect(load_effect[i]);
 	}

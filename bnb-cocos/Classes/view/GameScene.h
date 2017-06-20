@@ -11,6 +11,12 @@
 class character;
 class Bubbles;
 class GameItem;
+<<<<<<< .merge_file_a90984
+=======
+
+extern int RoomPlayers;
+extern int whichPlayer;
+>>>>>>> .merge_file_a92668
 
 class GameScene : public cocos2d::Layer
 {
@@ -44,9 +50,14 @@ public:
     // 需要不停移动的...
     // 注意补充下动画逻辑
     void mySpriteMove();
+<<<<<<< .merge_file_a90984
+    
+=======
+>>>>>>> .merge_file_a92668
     
     
-    void update(float dt) override;
+
+	void update(float dt) override;
     /*********碰撞检测*************/
     // 检测人物移动是否可以进行，碰撞检测
     bool accessAble(cocos2d::Vec2);
@@ -61,7 +72,11 @@ public:
     
     /********泡泡释放*************/
     void setBubble(character* chara,Vec2 Pos);
+<<<<<<< .merge_file_a90984
     void BubbleBoom(Ref* sender);
+=======
+	void BubbleBoom(Ref* sender);
+>>>>>>> .merge_file_a92668
     Bubbles* hasCollideableBubble(cocos2d::Vec2 tilePos);
     Bubbles* hasBubble(cocos2d::Vec2 tilePos);
     
@@ -70,7 +85,14 @@ public:
     bool checkCollisionWithOther(character* chara);
     void CharacterMove(character* chara);
     
+<<<<<<< .merge_file_a90984
 private:
+=======
+	void callWeb(float dt);
+	void end(float dt);
+private:      
+
+>>>>>>> .merge_file_a92668
     // SIZE OF SCREEN
     cocos2d::Size visibleSize;
     float offx;

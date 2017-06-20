@@ -7,9 +7,19 @@
 using std::cout;
 using std::string;
 
+<<<<<<< HEAD
 int GameServer::prog_map[15][15];
 
 BnbClientInformation GameServer::AcceptSocket[2];
+=======
+volatile static int count = 0;
+static int playerNum = 0;     //玩家总数
+std::vector <PlayerInfo> GameServer::allPlayerInfo;
+int GameServer::prog_map[15][15];
+std::vector <RoomInfo> GameServer::Rooms;
+
+BnbClientInformation GameServer::AcceptSocket[GameServer::MAX_NUM];
+>>>>>>> WebGameLogic
 /*
 名称：构造函数
 描述：用于Socket初始化
@@ -59,7 +69,11 @@ GameServer::GameServer()
 		<< " 端口号为: " << port << "\n";
 	fflush(stdout);
 	//监听   有listen就有accept
+<<<<<<< HEAD
 	if (listen(ListenSocket, 5) == SOCKET_ERROR)
+=======
+	if (listen(ListenSocket, 10) == SOCKET_ERROR)
+>>>>>>> WebGameLogic
 	{
 		cout<<"监听出错，错误号："<< WSAGetLastError() << "\n";
 		fflush(stdout);
@@ -73,6 +87,18 @@ GameServer::GameServer()
 	cout << "网络初始化成功\n";
 	fflush(stdout);
 
+<<<<<<< HEAD
+=======
+	//其他初始化操作
+	playerNum = 0;       
+	Rooms.resize(4);   
+	for (int i = 0; i < 4; i++)
+	{
+		Rooms[i].name = "Room" + std::to_string(i);   
+		Rooms[i].id = 100 + i;
+		Rooms[i].curNum = 0;   
+	}
+>>>>>>> WebGameLogic
 	GenerateProps();
 	return;
 }
@@ -124,8 +150,11 @@ int GameServer::ProcessGameServer()
 
 		if (index != -1) //玩家未满
 		{
+<<<<<<< HEAD
 			
 			//对应前面的listen，这里是对应操作accept
+=======
+>>>>>>> WebGameLogic
 		
 			cout << "等待Client连接...\n";
 			fflush(stdout);
@@ -133,6 +162,7 @@ int GameServer::ProcessGameServer()
 				ListenSocket, 
 				(struct sockaddr*)&AcceptSocket[index].Client,
 				&ClntLen);
+<<<<<<< HEAD
 			//cout << "#1 AcceptSocket[index].ClientSock: " << AcceptSocket[index].ClientSock << "\n";
 			AcceptSocket[index].ID = index;       //记录这个Client的ID啊，以后要寻找它
 			AcceptSocket[index].Active = false;
@@ -147,11 +177,25 @@ int GameServer::ProcessGameServer()
 			cout << "连接成功\n";
 			fflush(stdout);
 			//至此client与server连接成功,欢呼
+=======
+
+			AcceptSocket[index].ID = index;       
+			//传输ID，其他的不用
+			std::string msg = std::to_string(AcceptSocket[index].ID);
+			SendMessageToOneClient(AcceptSocket[index].ID, msg);
+			cout << "#ID :" << msg << "\n";
+
+			cout << "连接成功\n";
+			fflush(stdout);
+			playerNum++;
+			//至此client与server连接成功
+>>>>>>> WebGameLogic
 
 			cout << "新玩家加入，IP地址为：" << inet_ntoa(AcceptSocket[index].Client.sin_addr)
 				  << "  端口号为：" << ntohs(AcceptSocket[index].Client.sin_port) << "\n";
 			fflush(stdout);
 			//创建接受者线程 
+<<<<<<< HEAD
 			int ThreadID;     //线程ID
 
 			//把刚刚连接成功的Client建立一个新的线程
@@ -173,6 +217,55 @@ int GameServer::ProcessGameServer()
 			cout << "新玩家" << index << "的接受线程创建成功\n";
 			fflush(stdout);
 			//cout << "#3 AcceptSocket[index].ClientSock: " << AcceptSocket[index].ClientSock << "\n";
+=======
+			struct PlayerInfo temp;
+			temp.clientInfo = { NULL,AcceptSocket[index].Client,AcceptSocket[index].ID,0,0,0 };
+			temp.nickname = std::to_string(AcceptSocket[index].Client.sin_addr.S_un.S_addr) + "_" +
+				std::to_string(AcceptSocket[index].Client.sin_port) +"_"+ std::to_string(AcceptSocket[index].ID);
+			allPlayerInfo.push_back(temp);
+
+
+			CreateThread(NULL, 0,
+				static_cast<LPTHREAD_START_ROUTINE>(GameServer::sendRoomInfo), //线程点函数
+				(LPVOID)&AcceptSocket[index], 0,              //参数
+				nullptr
+			);
+
+			
+			/*
+			while (playerNum >=  2)
+			{
+				if (count == playerNum)
+				{
+					int ThreadID;     //线程ID
+
+									  //把刚刚连接成功的Client建立一个新的线程
+					ThreadID = (int)CreateThread(NULL, 0,
+						(LPTHREAD_START_ROUTINE)(GameServer::ListenThread), //线程点函数
+						(LPVOID)&AcceptSocket[index], 0,              //参数
+						&AcceptSocket[index].RecvThreadID          //系统分配的ID
+					);
+
+					if (!ThreadID)
+					{
+						cout << "创建线程错误\n";
+						fflush(stdout);
+						ExitThread(AcceptSocket[index].RecvThreadID);
+					}
+
+					//至此，新的线程创建成功，可以传输数据了
+
+					cout << "新玩家" << index << "的接受线程创建成功\n";
+					fflush(stdout);
+					break;
+				}
+				else
+					continue;
+					
+			}
+			*/
+			
+>>>>>>> WebGameLogic
 		}
 		else   //玩家已满
 		{
@@ -208,20 +301,32 @@ int GameServer::ProcessGameServer()
 描述：Select模式
 	首先判断该线程是否可读，如果可读就读取其上的信息
 */
+<<<<<<< HEAD
 DWORD WINAPI GameServer::ListenThread(void *data) //传进来具体哪个AcceptSocket[xx]的地址
 {
 
 	BnbClientInformation *GameSocket = (BnbClientInformation *)data;
+=======
+DWORD WINAPI GameServer::GameThread(void *data) //传进来具体哪个AcceptSocket[xx]的地址
+{
+
+	BnbClientInformation *GameSocket = static_cast<BnbClientInformation *>(data);
+>>>>>>> WebGameLogic
 	sendProps(GameSocket->ID);
 
 	while (true)
 	{
+<<<<<<< HEAD
 		cout << "DEBUG:新的收发循环\n";
+=======
+
+>>>>>>> WebGameLogic
 		//接收命令 
 
 		char recvBuf[28000];
 
 		fd_set Read;//基于select模式对IO进行管理  
+<<<<<<< HEAD
 
 		cout << "DEBUG:xxxxxxxxx\n";
 		FD_ZERO(&Read);    //初始化为0
@@ -239,12 +344,32 @@ DWORD WINAPI GameServer::ListenThread(void *data) //传进来具体哪个AcceptS
 			cout << "recv 返回值: " << result << "\n";
 			fflush(stdout);
 			if (result > 0)
+=======
+		FD_ZERO(&Read);    //初始化为0
+		FD_SET(GameSocket->ClientSock, &Read); //将ClientSock加入队列
+
+		//we only care reads
+		int sel = select(0, &Read, NULL, NULL, NULL);
+	
+
+		if (FD_ISSET(GameSocket->ClientSock, &Read))  
+		{
+			//接受客户端的数据
+			int result = recv(GameSocket->ClientSock, recvBuf, sizeof(recvBuf), 0);
+			cout << "recv 返回值: " << result << "\n";
+			fflush(stdout);
+			if (result > 0 && result < 28000)
+>>>>>>> WebGameLogic
 			{
 				recvBuf[result] = '\0';
 				cout <<	"玩家" << GameSocket->ID << "发送了消息:"
 					<< recvBuf << "\n";
 				fflush(stdout);
 			}
+<<<<<<< HEAD
+=======
+				
+>>>>>>> WebGameLogic
 			if (result == SOCKET_ERROR)
 			{
 				CleanSocket(GameSocket->ID);
@@ -290,7 +415,10 @@ int GameServer::SendMessageToOneClient(int ID, const string  str)
 	{
 		cout << "向玩家" << ID << "发送消息失败\n";
 		fflush(stdout);
+<<<<<<< HEAD
 		//cout << "#5  ，AcceptSocket[index].ClientSock: " << AcceptSocket[ID].ClientSock << "\n";
+=======
+>>>>>>> WebGameLogic
 		return 0;
 	}
 
@@ -323,6 +451,128 @@ void GameServer::SendMessageToAllClient(const string  str, int ID)
 	fflush(stdout);
 }
 
+<<<<<<< HEAD
+=======
+
+DWORD WINAPI GameServer::sendRoomInfo(void *data)
+{
+	BnbClientInformation *GameSocket = static_cast<BnbClientInformation*>(data);
+
+	
+	//进入RoomChooseScene
+	while (true)
+	{
+		int flag = 0;
+		int whichRoom = -1;
+		char buf[16];
+		ZeroMemory(buf, sizeof(buf));
+		int result = recv(GameSocket->ClientSock, buf, sizeof(buf), 0);
+		cout << "#buf:" << buf << "\n";
+		sscanf(buf, "%d %d", &flag,&whichRoom);
+		if (whichRoom != -1)
+		{
+			Rooms[whichRoom].curNum++;
+			
+			Rooms[whichRoom].playerList.push_back(allPlayerInfo.at(GameSocket->ID));
+			if (Rooms[whichRoom].playerList.size() == 1)
+				Rooms[whichRoom].playerList.back().order = -1;
+			Rooms[whichRoom].playerList.back().order++;
+		}
+			
+
+		std::string myRoom = std::to_string(playerNum);
+		for (int i = 0; i < 4; i++)
+			myRoom += " " + std::to_string(Rooms[i].curNum);
+		
+		cout << "myRoom :" << myRoom << "\n";
+		cout << "myRoom size:" << myRoom.size() << "\n";
+		if (SendMessageToOneClient(GameSocket->ID, myRoom) && !flag)
+			continue;
+		else
+			break;
+	}
+	
+	
+	/*
+	//进入CharacterSelect
+	while (true)
+	{
+		//接受   只需要接受which就行了
+		int which;
+		char recvBuf[8];
+		recv(GameSocket->ClientSock, recvBuf, sizeof(recvBuf), 0);
+		sscanf(recvBuf, "%d", &which);
+		
+		//发送  根据which，发送对应的内容
+		std::string send = std::to_string(Rooms[which].playerList.size()) + " ";
+		for (auto i : Rooms[which].playerList)
+			send += i.nickname + '|';
+		cout << send << "\n";
+		SendMessageToOneClient(GameSocket->ID, send);
+
+	}*/
+	
+	
+	char sendBuf[1024];
+	char recvBuf[1024];
+	char Msg[1024];
+	int ret, left, idx = 0;
+	while (true)
+	{
+		ZeroMemory(sendBuf, sizeof(sendBuf));
+		ZeroMemory(recvBuf, sizeof(recvBuf));
+		ZeroMemory(Msg, sizeof(Msg));
+		cout << "等待接收：\n";
+		ret = recv(GameSocket->ClientSock, recvBuf, sizeof(recvBuf), 0);
+		cout << "ret:" << ret << "\n";
+		if (ret == 0)
+			return 1;
+		if (ret == SOCKET_ERROR)
+		{
+			cout << "接收失败\n";
+			break;
+		}
+		if (ret < 1024)
+			recvBuf[ret] = '\0';
+		else
+			cout << "buf is full\n";
+		cout << "收到消息:" << recvBuf << "\n";
+		int whichRoom;
+		sscanf(recvBuf, "%d %s", &whichRoom, Msg);
+		string msg = Msg;
+
+		if (msg == "#GO_TO_GAME_SCENE!")
+		{
+			sprintf(sendBuf,"@ %d %d", Rooms[whichRoom].playerList.size(), GameSocket->ID);
+			cout << "####房间中有" << Rooms[whichRoom].playerList.size() << "人\n";
+			SendMessageToOneClient(Rooms[whichRoom].playerList.at(GameSocket->ID).clientInfo.ID, sendBuf);
+			break;
+		}
+		else
+			sprintf(sendBuf, "[%s said]:%s", inet_ntoa(GameSocket->Client.sin_addr), Msg);
+		
+		for (int i = 0; i < Rooms[whichRoom].playerList.size(); i++)
+		{
+			if (i == GameSocket->ID)
+				continue;
+			SendMessageToOneClient(Rooms[whichRoom].playerList.at(i).clientInfo.ID, msg);
+		}
+		
+	}
+	cout << "已离开CharacterSelect,count++\n";
+	count++;
+
+	CreateThread(NULL, 0,
+		static_cast<LPTHREAD_START_ROUTINE>(GameServer::GameThread), //线程点函数
+		(LPVOID)data, 0,              //参数
+		&GameSocket->RecvThreadID         //系统分配的ID
+	);
+
+	return 0;
+}
+
+
+>>>>>>> WebGameLogic
 /*
 名称：清理Socket
 描述：清理退出游戏的线程
@@ -343,7 +593,10 @@ void GameServer::CleanSocket(int ID)
 	AcceptSocket[ID].Active = false;
 	closesocket(AcceptSocket[ID].ClientSock);
 	AcceptSocket[ID].ClientSock = INVALID_SOCKET;
+<<<<<<< HEAD
 	//cout << "即将销毁,你怎么会进到这里？？？！.....AcceptSocket[i].ClientSock :" << AcceptSocket[ID].ClientSock << "\n";
+=======
+>>>>>>> WebGameLogic
 
 	cout << "正在关闭其接受线程:" << AcceptSocket[ID].RecvThreadID << "\n";
 	fflush(stdout);
@@ -356,7 +609,11 @@ void GameServer::CleanSocket(int ID)
 }
 
 
+<<<<<<< HEAD
 void GameServer::GenerateProps()
+=======
+ void GameServer::GenerateProps()
+>>>>>>> WebGameLogic
 {
 	static std::random_device rd;
 	static std::uniform_int_distribution<int> dist(1,6);
@@ -391,4 +648,8 @@ void GameServer::sendProps(int ID)
 
 	fflush(stdout);
 	SendMessageToOneClient(ID, str);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> WebGameLogic

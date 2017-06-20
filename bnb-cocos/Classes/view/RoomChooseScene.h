@@ -4,6 +4,16 @@
 // 与web交互 选择房间的scene
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
+<<<<<<< .merge_file_a94396
+=======
+#include <string>
+#include <vector>
+#include "../web client/BnbGameClient.h"
+
+
+extern "C" GameClient client;
+
+>>>>>>> .merge_file_a94284
 
 using namespace cocos2d;
 class RoomChoose : public cocos2d::Layer
@@ -32,5 +42,9 @@ public:
 	void ToRoomFour(cocos2d::Ref* sender);
 private:
 	Menu* UImenus = nullptr;
+<<<<<<< .merge_file_a94396
+=======
+	int isOut;
+>>>>>>> .merge_file_a94284
 };
 #endif /* RoomChooseScene_hpp */

@@ -23,6 +23,7 @@ static inline GameScene* getGameScene() {
 
 
 void CharNormal::excute(cocos2d::Sprite* spr) {
+<<<<<<< .merge_file_a91520
     auto scene = Director::getInstance()->getRunningScene();
     auto gameScene =  dynamic_cast<GameScene*>(scene->getChildByTag(10));
     if (gameScene == nullptr) {
@@ -31,17 +32,37 @@ void CharNormal::excute(cocos2d::Sprite* spr) {
     auto chara = dynamic_cast<character*>(spr);
     gameScene->CharacterMove(chara);
     gameScene->checkGetItem(chara);
+=======
+	auto scene = Director::getInstance()->getRunningScene();
+	auto gameScene = dynamic_cast<GameScene*>(scene->getChildByTag(10));
+	if (gameScene == nullptr) {
+		return;
+	}
+	auto chara = dynamic_cast<character*>(spr);
+	if (chara == getMyplayer()) {
+		gameScene->CharacterMove(chara);
+	}
+	gameScene->checkGetItem(chara);
+>>>>>>> .merge_file_a87532
 }
 
 void CharStuck::excute(cocos2d::Sprite* spr) {
     auto chara = dynamic_cast<character*>(spr);
     auto scene = getGameScene();
     if (scene->checkCollisionWithOther(chara)) {
+<<<<<<< .merge_file_a91520
+=======
+		chara->_chara_die = true;
+>>>>>>> .merge_file_a87532
         chara->changeState(std::make_shared<CharDead>());
     }
 }
 
 void CharDead::PreProcess(cocos2d::Sprite* spr) {
+<<<<<<< .merge_file_a91520
+=======
+	
+>>>>>>> .merge_file_a87532
     auto game_scene = getGameScene();
     game_scene->removeChildByName("PropLayer");
     spr->stopAllActions();

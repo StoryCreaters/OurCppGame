@@ -34,7 +34,11 @@ bool WebGameScene::init()
 
 void WebGameScene::update(float dt) {
 
+<<<<<<< .merge_file_a93584
 	client.ClientProcess();
+=======
+	//client.gameThreadProcess();
+>>>>>>> .merge_file_a86172
 
 }
 

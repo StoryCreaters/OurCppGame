@@ -1,14 +1,22 @@
 # OurCppGame
-cocos2d cpp game(bnb)
+cocos2d cpp game(bnb)</br>
 
-## Settings
+BnbGameServer 是服务端（已提交）</br>
+独立，小黑框运行，负责接收并发送数据（已实现）</br>
+多个客户端连接服务端，超过额定数目会拒绝连接（已实现）</br>
+地图需要放进去（未实现）</br></br>
 
-#### 配置类, class的信息应该全部写在settings里面
+BnbGameClient 是客户端（已提交）</br>
+在游戏本体中，作为WebGameScene一个数据成员</br>
 
-# sprite
+WebGameScene场景</br>
+继承GameScene</br>
+需要重构几个继承的函数</br>
 
-#### 创建的对象
+目前仍有一个最最最魔性的BUG。</br>
+明天要考高数了，不写了复习去</br>
 
+<<<<<<< HEAD
 - character: 显示玩家的类，需要有不同的基本三维和max的三维，还有对应的图片和动画
 - bubble : 水泡类，需要管理自身的火力，由于不知道爆炸的运行机制，这里暂时不讨论
 - Monsters : 目前没有写但是可以补充的class , 对应怪物和AI(笑)？
@@ -90,4 +98,6 @@ public小写 以_分割，例如**my_public**
 3. 资源信息等尽量放在settings目录下
 4. 注意windows系统的编码问题
 5. 有问题请发送电子邮件至maplewish117@gmail.com处
+=======
+>>>>>>> WebGameLogic
 

@@ -5,7 +5,13 @@
 #include "../view/GameScene.h"
 #include "../controller/BubbleController.h"
 #include "../controller/PlayerController.h"
+<<<<<<< .merge_file_a68820
 
+=======
+#include <mutex>
+
+static std::mutex g_lock;
+>>>>>>> .merge_file_a65360
 
 using namespace settings::Character;
 character* character::getMychara() {
@@ -47,6 +53,10 @@ bool character::initWithPlayerType(characterType type)
     mCurState = std::make_shared<CharNormal>();
     _animation_frames = animation_frames[type];
     curSetBubbles = 0;
+<<<<<<< .merge_file_a68820
+=======
+	_chara_die = false;
+>>>>>>> .merge_file_a65360
     // 记住加入png
     this->initWithSpriteFrameName("player" + std::to_string(type + 1) + "_down_01.png");
     this->initWithFile(sprite_paths[type]);
@@ -110,7 +120,13 @@ void character::excute() {
 }
 
 void character::changeState(std::shared_ptr<State> next_state) {
+<<<<<<< .merge_file_a68820
     this->mCurState = next_state;
+=======
+	g_lock.lock();
+    this->mCurState =  next_state;
+	g_lock.unlock();
+>>>>>>> .merge_file_a65360
     this->mCurState->PreProcess(this);
 }
 
@@ -205,6 +221,7 @@ int character::getRidingBubbles() {
 }
 
 void character::charaFired() {
+<<<<<<< .merge_file_a68820
     auto cur_code = typeid(*mCurState).hash_code();
     if (!isGuard()) {
         if(isRiding()) {
@@ -221,4 +238,21 @@ void character::charaFired() {
             changeState(std::make_shared<CharStuck>());
         }
     }
+=======
+	if (!isGuard()) {
+		if (isRiding()) {
+			offRiding();
+			setGuard();
+		}
+		else if (checkStateFireAble(this)) {
+			auto controllers = GameScene::getCurrentMap()->controllers;
+			for (int i = 0; i < 2; ++i) {
+				GameScene::getCurrentMap()->removeChild(controllers[i]);
+			}
+			this->removeChildByName("PlayerController");
+			this->removeChildByName("BubbleController");
+			changeState(std::make_shared<CharStuck>());
+		}
+	}
+>>>>>>> .merge_file_a65360
 }

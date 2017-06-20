@@ -21,6 +21,20 @@ using namespace ui;
 using namespace settings::GameScene;
 
 
+
+//预先打好错排的表
+static int permutation[4][4]   //  permutation[Rooms[whichRoom].playerList.size()][whichPlayer]
+{
+	{1,2,3,4},
+	{2,1,4,3},
+	{3,4,1,2},
+	{4,3,2,1}
+};
+int win = -1;
+
+extern int RoomPlayers;
+extern int whichPlayer;
+extern struct PlayerInfo myPlayerInfo;
 Scene* GameScene::createScene()
 {
     // 'scene' is an autorelease object
@@ -55,14 +69,21 @@ bool GameScene::init()
 		return false;
 	}
 
+<<<<<<< .merge_file_a91868
 
+=======
+	win = -1;
+>>>>>>> .merge_file_a67296
 	visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	addCloseMenu();
+<<<<<<< .merge_file_a91868
 	//
 	//    auto web_layer = WebClient::create();
 	//    this->addChild(web_layer);
+=======
+>>>>>>> .merge_file_a67296
 	
 	// a temporary background
 	auto backG = Sprite::create("BackGround/Cool_background.jpg");
@@ -80,11 +101,35 @@ bool GameScene::init()
 	addChild(_tileMap, -1);
 
 	// 注意坐标位置差
+<<<<<<< .merge_file_a91868
 
 	/*** add character***/
 	addPlayer(static_cast<character::characterType>(UserDefault::getInstance()->getIntegerForKey("PLAYER")), 1, true);
 
 	addPlayer(character::SHADOWFOX, 4, false);
+=======
+	std::fstream outfile("e:\\b.txt", std::ios::app);
+	outfile << "whichPlayer:" << whichPlayer << "\n";
+	outfile.close();
+
+
+	/*** add character***/
+	if (myPlayerInfo.clientInfo.ID == 0)
+	{
+		addPlayer(character::MAPLE_WISH,
+			permutation[0][1], true);
+
+		addPlayer(character::SHADOWFOX, permutation[0][0], false);
+	}
+	else
+	{
+		addPlayer(character::SHADOWFOX,
+			permutation[0][0], true);
+
+		addPlayer(character::MAPLE_WISH, permutation[0][1], false);
+	}
+	
+>>>>>>> .merge_file_a67296
 	
 
 	// add controller
@@ -102,6 +147,7 @@ bool GameScene::init()
     auto propController = PropController::create();
     propController->setName("PropController");
     addChild(propController);
+<<<<<<< .merge_file_a91868
     
 
 	auto webPlayer = WebGameScene::create();
@@ -156,6 +202,92 @@ void GameScene::addPlayer(character::characterType T, int index, bool isMyPlayer
 
 	addChild(newchara, 1);
 
+=======
+	
+		
+	this->schedule(schedule_selector(GameScene::callWeb));
+	this->schedule(schedule_selector(GameScene::end));
+	this->scheduleUpdate();
+
+	return true;
+}
+
+void GameScene::callWeb(float dt)
+{
+	auto * gs = getCurrentMap();
+	if (gs == nullptr)
+		return;
+	else
+	{
+		client.gameThreadProcess(gs);
+		this->unschedule(schedule_selector(GameScene::callWeb));
+	}
+}
+
+void GameScene::end(float dt)
+{
+	int pos = 0;
+	for (auto chara : _game_players) {
+		if (chara->_chara_die && pos == 0)
+		{
+			this->stopAllActions();
+			this->unscheduleUpdate();
+			Lose(_myplayer);
+		}
+		else if (chara->_chara_die && pos == 1)
+		{
+			this->stopAllActions();
+			this->unscheduleUpdate();
+			Win(_myplayer);
+		}
+		pos++;
+	}
+}
+
+void GameScene::addPlayer(character::characterType T, int index, bool isMyPlayer)
+{
+	/*** add character***/
+	std::string spawn_point_index = "SpawnPoint" + std::to_string(index);
+	log("index: %d, str: %s", index, spawn_point_index.c_str());
+
+	offx = (visibleSize.width - _tileMap->getContentSize().width * _tile_delta_rate) / 2;
+	offy = (visibleSize.height - _tileMap->getContentSize().height * _tile_delta_rate) / 2;
+	objects = _tileMap->getObjectGroup("player");
+
+
+	auto spawnPoint = objects->getObject(spawn_point_index);
+
+	CCASSERT(!spawnPoint.empty(), "SpawnPoint object not found");
+
+	float x = spawnPoint["x"].asFloat() * _tile_delta_rate;
+	float y = spawnPoint["y"].asFloat() * _tile_delta_rate;
+	
+	auto newchara = character::create(T);
+	if (isMyPlayer) {
+		_myplayer = newchara;
+		_myplayer->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+		_myplayer->setPosition(offx + x, offy + y);
+		_myplayer->setTag(20);
+		_myplayer->setName("myplayer");
+		_game_players.pushBack(_myplayer);
+		_my_bubbles = 0;
+		_myplayer->_chara_bubble = false;
+	}
+	else
+	{
+		newchara->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+		newchara->setPosition(offx + x, offy + y);
+		newchara->setTag(21);
+		std::string playerName = "player4";
+		newchara->setName(playerName);
+		_game_players.pushBack(newchara);
+
+		newchara->_chara_bubble = false;
+	}
+
+	addChild(newchara, 1);
+
+>>>>>>> .merge_file_a67296
 }
 void GameScene::menuCloseCallback(Ref* pSender)
 {
@@ -271,11 +403,19 @@ void GameScene::setBubble(character* chara,Vec2 Pos) {
     
     auto mySpritePos = PositionForTileCoord(tileCoordForPosition(chara->getPosition()));
 
+<<<<<<< .merge_file_a91868
     // DEBUG : not mySpritePos
     auto mypos = _myplayer->getPosition();
     if (!hasBubble(tileCoordForPosition(mypos)) && accessAble(mypos)) {
         // 调整精灵位置
         auto newBubble = Bubbles::create(_myplayer->_currentPower, chara);
+=======
+   
+    auto mypos = chara->getPosition();
+    if (!hasBubble(tileCoordForPosition(mypos)) && accessAble(mypos)) {
+        // 调整精灵位置
+        auto newBubble = Bubbles::create(chara->_currentPower, chara);
+>>>>>>> .merge_file_a67296
         newBubble->setAnchorPoint(Vec2::ZERO);
         newBubble->setScale(_tile_delta_rate);
         
@@ -310,7 +450,7 @@ void GameScene::BubbleBoom(Ref* sender) {
     this->removeChild(sprite);
     for (auto iter = _map_screen_bubbles.begin(); iter != _map_screen_bubbles.end(); ++iter) {
         if (iter->second == sprite) {
-            _map_screen_bubbles.erase(iter);
+			iter = _map_screen_bubbles.erase(iter);
             break;
         }
     }
@@ -335,9 +475,11 @@ void GameScene::BubbleBoom(Ref* sender) {
 }
 
 void GameScene::update(float dt) {
+	
     for (auto chara : _game_players) {
         chara->excute();
     }
+
 }
 
 /**** coord convert ****/
@@ -538,7 +680,7 @@ void GameScene::addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools item_kind) 
     
 }
 
-
+/*
 void GameScene::tileLoadProps() {
     static std::random_device rd;
     static std::uniform_int_distribution<int> dist(0, GameItem::toolNumbers * 5 / 3);
@@ -549,7 +691,7 @@ void GameScene::tileLoadProps() {
                 prop_on_map[x][y] = dist(rd);
             }
     
-}
+}*/
 
 
 void GameScene::checkGetItem(character* chara) {

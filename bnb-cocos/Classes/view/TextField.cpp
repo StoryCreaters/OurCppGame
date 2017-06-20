@@ -15,7 +15,11 @@ bool TextFieldTest::init()
 
 	// 添加一个Text，用于显示文本框事件类型
 	_displayValueLabel = Text::create("Please Touch the textfield", "微软雅黑", 32);
+<<<<<<< HEAD
 	_displayValueLabel->setPosition(Vec2(visibleSize.width *0.4, visibleSize.height*0.6));
+=======
+	_displayValueLabel->setPosition(Vec2(visibleSize.width *0.4,  visibleSize.height*0.6));
+>>>>>>> WebGameLogic
 	this->addChild(_displayValueLabel);
 	// 添加一个Text，当数据输入结束时，显示输入的数据
     _messageValue = UserDefault::getInstance()->getStringForKey("MyName");

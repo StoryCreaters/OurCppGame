@@ -5,4 +5,8 @@ GameServer gc;
 int main()
 {
 	gc.ProcessGameServer();
+<<<<<<< HEAD
+=======
+	return 0;
+>>>>>>> WebGameLogic
 }
