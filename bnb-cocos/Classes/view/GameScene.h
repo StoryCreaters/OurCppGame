@@ -12,6 +12,9 @@ class character;
 class Bubbles;
 class GameItem;
 
+extern int RoomPlayers;
+extern int whichPlayer;
+
 class GameScene : public cocos2d::Layer
 {
 public:
@@ -46,7 +49,8 @@ public:
     void mySpriteMove();
     
     
-    void update(float dt) override;
+
+	void update(float dt) override;
     /*********碰撞检测*************/
     // 检测人物移动是否可以进行，碰撞检测
     bool accessAble(cocos2d::Vec2);
@@ -61,7 +65,7 @@ public:
     
     /********泡泡释放*************/
     void setBubble(character* chara,Vec2 Pos);
-    void BubbleBoom(Ref* sender);
+	void BubbleBoom(Ref* sender);
     Bubbles* hasCollideableBubble(cocos2d::Vec2 tilePos);
     Bubbles* hasBubble(cocos2d::Vec2 tilePos);
     
@@ -70,6 +74,7 @@ public:
     bool checkCollisionWithOther(character* chara);
     void CharacterMove(character* chara);
     
+	void callWeb(float dt);
 private:
     // SIZE OF SCREEN
     cocos2d::Size visibleSize;

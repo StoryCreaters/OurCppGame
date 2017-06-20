@@ -5,7 +5,9 @@
 #include "../view/GameScene.h"
 #include "../controller/BubbleController.h"
 #include "../controller/PlayerController.h"
+#include <mutex>
 
+static std::mutex g_lock;
 
 using namespace settings::Character;
 character* character::getMychara() {
@@ -110,7 +112,9 @@ void character::excute() {
 }
 
 void character::changeState(std::shared_ptr<State> next_state) {
-    this->mCurState = next_state;
+	g_lock.lock();
+    this->mCurState =  next_state;
+	g_lock.unlock();
     this->mCurState->PreProcess(this);
 }
 

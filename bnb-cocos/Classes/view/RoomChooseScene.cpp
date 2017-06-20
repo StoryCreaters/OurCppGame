@@ -115,7 +115,7 @@ bool RoomChoose::init() {
 
 void RoomChoose::ToRoomOne(Ref *sender) {
 	isOut = true;
-	client.ClientProcessBefore(isOut,0);
+	client.clientProcessBefore(isOut,0);
 	//Rooms[0].playerList.push_back(myPlayerInfo);
 	Rooms[0].curNum++;
 	whichRoom = 0;
@@ -124,7 +124,7 @@ void RoomChoose::ToRoomOne(Ref *sender) {
 
 void RoomChoose::ToRoomTwo(Ref *sender) {
 	isOut = true;
-	client.ClientProcessBefore(isOut,1);
+	client.clientProcessBefore(isOut,1);
 	//Rooms[1].playerList.push_back(myPlayerInfo);
 	Rooms[1].curNum++;
 	whichRoom = 1;
@@ -133,7 +133,7 @@ void RoomChoose::ToRoomTwo(Ref *sender) {
 
 void RoomChoose::ToRoomThree(Ref *sender) {
 	isOut = true;
-	client.ClientProcessBefore(isOut,2);
+	client.clientProcessBefore(isOut,2);
 	//Rooms[2].playerList.push_back(myPlayerInfo);
 	Rooms[2].curNum++;
 	whichRoom = 2;
@@ -142,7 +142,7 @@ void RoomChoose::ToRoomThree(Ref *sender) {
 
 void RoomChoose::ToRoomFour(Ref *sender) {
 	isOut = true;
-	client.ClientProcessBefore(isOut,3);
+	client.clientProcessBefore(isOut,3);
 	//Rooms[3].playerList.push_back(myPlayerInfo);
 	Rooms[3].curNum++;
 	whichRoom = 3;
@@ -169,7 +169,7 @@ void RoomChoose::update(float dt)
 	removeChild(label3);
 	removeChild(label4);
 
-	int val = client.ClientProcessBefore(isOut,-1);
+	int val = client.clientProcessBefore(isOut,-1);
 
 	std::string msg = std::to_string(val);
 	std::string msg1 = std::to_string(Rooms[0].curNum);

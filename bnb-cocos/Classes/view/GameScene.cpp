@@ -21,6 +21,16 @@ using namespace ui;
 using namespace settings::GameScene;
 
 
+
+//预先打好错排的表
+static int permutation[4][4]   //  permutation[Rooms[whichRoom].playerList.size()][whichPlayer]
+{
+	{1,2,3,4},
+	{2,1,4,3},
+	{3,4,1,2},
+	{4,3,2,1}
+};
+
 Scene* GameScene::createScene()
 {
     // 'scene' is an autorelease object
@@ -60,9 +70,6 @@ bool GameScene::init()
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	addCloseMenu();
-	//
-	//    auto web_layer = WebClient::create();
-	//    this->addChild(web_layer);
 	
 	// a temporary background
 	auto backG = Sprite::create("BackGround/Cool_background.jpg");
@@ -81,10 +88,25 @@ bool GameScene::init()
 
 	// 注意坐标位置差
 
-	/*** add character***/
-	addPlayer(static_cast<character::characterType>(UserDefault::getInstance()->getIntegerForKey("PLAYER")), 1, true);
+	
 
-	addPlayer(character::SHADOWFOX, 4, false);
+	/*** add character***/
+	if (whichPlayer == 0)
+	{
+
+		addPlayer(character::MAPLE_WISH,
+			permutation[0][whichPlayer], true);
+
+		addPlayer(character::SHADOWFOX, permutation[0][!whichPlayer], false);
+	}
+	else
+	{
+		addPlayer(character::SHADOWFOX,
+			permutation[0][whichPlayer], true);
+
+		addPlayer(character::MAPLE_WISH, permutation[0][!whichPlayer], false);
+	}
+	
 	
 
 	// add controller
@@ -102,16 +124,26 @@ bool GameScene::init()
     auto propController = PropController::create();
     propController->setName("PropController");
     addChild(propController);
-    
-
-	auto webPlayer = WebGameScene::create();
-	webPlayer->setName("WebPlayer");
-	this->addChild(webPlayer);
-
+	
+		
+	this->schedule(schedule_selector(GameScene::callWeb));
 	this->scheduleUpdate();
 
 	return true;
 }
+
+void GameScene::callWeb(float dt)
+{
+	auto * gs = getCurrentMap();
+	if (gs == nullptr)
+		return;
+	else
+	{
+		client.gameThreadProcess(gs);
+		this->unschedule(schedule_selector(GameScene::callWeb));
+	}
+}
+
 
 void GameScene::addPlayer(character::characterType T, int index, bool isMyPlayer)
 {
@@ -147,7 +179,7 @@ void GameScene::addPlayer(character::characterType T, int index, bool isMyPlayer
 		newchara->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 		newchara->setPosition(offx + x, offy + y);
 		newchara->setTag(21);
-		std::string playerName = "player" + std::to_string(index);
+		std::string playerName = "player4";
 		newchara->setName(playerName);
 		_game_players.pushBack(newchara);
 
@@ -271,11 +303,11 @@ void GameScene::setBubble(character* chara,Vec2 Pos) {
     
     auto mySpritePos = PositionForTileCoord(tileCoordForPosition(chara->getPosition()));
 
-    // DEBUG : not mySpritePos
-    auto mypos = _myplayer->getPosition();
+   
+    auto mypos = chara->getPosition();
     if (!hasBubble(tileCoordForPosition(mypos)) && accessAble(mypos)) {
         // 调整精灵位置
-        auto newBubble = Bubbles::create(_myplayer->_currentPower, chara);
+        auto newBubble = Bubbles::create(chara->_currentPower, chara);
         newBubble->setAnchorPoint(Vec2::ZERO);
         newBubble->setScale(_tile_delta_rate);
         
@@ -538,7 +570,7 @@ void GameScene::addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools item_kind) 
     
 }
 
-
+/*
 void GameScene::tileLoadProps() {
     static std::random_device rd;
     static std::uniform_int_distribution<int> dist(0, GameItem::toolNumbers * 5 / 3);
@@ -549,7 +581,7 @@ void GameScene::tileLoadProps() {
                 prop_on_map[x][y] = dist(rd);
             }
     
-}
+}*/
 
 
 void GameScene::checkGetItem(character* chara) {

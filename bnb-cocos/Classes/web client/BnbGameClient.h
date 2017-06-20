@@ -55,12 +55,13 @@ public:
 	bool virtual init();
 	void acceptProps();
 	~GameClient();
-	void ClientProcess();    //启动客户处理
-	int ClientProcessBefore(int flag, int which);
+	int clientProcessBefore(int flag, int which);
+	int clientProcessRoomData(int which);
 
-	int ClientProcessRoomData(int which);
-
-	static DWORD WINAPI sendAndRecv(LPVOID lpParam);   //收发消息
+	bool gameThreadProcess(GameScene * gs);    //启动客户处理
+	static DWORD WINAPI gameSendThread(LPVOID lpParam);   //收发消息
+	static DWORD WINAPI gameRecvThread(LPVOID lpParam);   //收发消息
+	
 	static DWORD WINAPI comsumer(LPVOID lpParam);   //消费者
 
 	

@@ -269,13 +269,14 @@ DWORD WINAPI GameServer::GameThread(void *data) //传进来具体哪个AcceptSoc
 			int result = recv(GameSocket->ClientSock, recvBuf, sizeof(recvBuf), 0);
 			cout << "recv 返回值: " << result << "\n";
 			fflush(stdout);
-			if (result > 0)
+			if (result > 0 && result < 28000)
 			{
 				recvBuf[result] = '\0';
 				cout <<	"玩家" << GameSocket->ID << "发送了消息:"
 					<< recvBuf << "\n";
 				fflush(stdout);
 			}
+				
 			if (result == SOCKET_ERROR)
 			{
 				CleanSocket(GameSocket->ID);
@@ -439,11 +440,18 @@ DWORD WINAPI GameServer::sendRoomInfo(void *data)
 		cout << "收到消息:" << recvBuf << "\n";
 		int whichRoom;
 		sscanf(recvBuf, "%d %s", &whichRoom, Msg);
-		
-		sprintf(sendBuf, "[%s said]:%s", inet_ntoa(GameSocket->Client.sin_addr), Msg);
 		string msg = Msg;
+
 		if (msg == "#GO_TO_GAME_SCENE!")
+		{
+			sprintf(sendBuf,"@ %d %d", Rooms[whichRoom].playerList.size(), GameSocket->ID);
+			cout << "####房间中有" << Rooms[whichRoom].playerList.size() << "人\n";
+			SendMessageToOneClient(Rooms[whichRoom].playerList.at(GameSocket->ID).clientInfo.ID, sendBuf);
 			break;
+		}
+		else
+			sprintf(sendBuf, "[%s said]:%s", inet_ntoa(GameSocket->Client.sin_addr), Msg);
+		
 		for (int i = 0; i < Rooms[whichRoom].playerList.size(); i++)
 		{
 			if (i == GameSocket->ID)

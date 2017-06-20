@@ -34,7 +34,7 @@ bool WebGameScene::init()
 
 void WebGameScene::update(float dt) {
 
-	client.ClientProcess();
+	//client.gameThreadProcess();
 
 }
 

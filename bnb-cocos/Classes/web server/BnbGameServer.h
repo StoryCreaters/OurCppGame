@@ -53,7 +53,7 @@ public:
 	
 	//线程
 public:
-	static DWORD WINAPI ListenThread(void *data); //接受线程
+	static DWORD WINAPI GameThread(void *data); //接受线程
 	static DWORD WINAPI sendRoomInfo(void *data); 
 	
 private:

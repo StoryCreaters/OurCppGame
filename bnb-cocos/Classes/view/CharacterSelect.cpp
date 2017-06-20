@@ -148,6 +148,8 @@ bool Players::init() {
 	this->addChild(ok_button);
 	ok_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
 			// 切换到GameScene场景
+	
+			
 			auto transition = TransitionFadeBL::create(4.0, GameScene::createScene());
 			chatting->cur_msg = "#GO_TO_GAME_SCENE!";
 			//removeChild(chatting);

@@ -9,6 +9,7 @@
 #include "../controller/CharacterFSM.h"
 #include <random>
 #include <cstring>
+#include <mutex>
 #include "ui/CocosGUI.h"
 
 using namespace ui;
@@ -16,6 +17,7 @@ using namespace ui;
 #define CHATPACKAGE 1024
 USING_NS_CC;
 using namespace settings::GameScene;
+
 
 using std::queue;
 using std::fstream;
@@ -31,7 +33,10 @@ bool getMsg = false;
 std::string Msg;
 extern ChatBox *chatting;
 static int whichRoom;
+int RoomPlayers;
+int whichPlayer;
 
+std::mutex g_lock;
 
 static inline GameScene* getGameScene() {
 	auto scene = Director::getInstance()->getRunningScene();
@@ -60,7 +65,7 @@ bool GameClient::init()
 
 	if (ClientSocket == INVALID_SOCKET)
 	{
-		WSACleanup(); //释放套接字资源  
+		WSACleanup(); //释放套接字资源
 		return false;
 	}
 	unsigned long ul = 1;
@@ -68,8 +73,8 @@ bool GameClient::init()
 	if (ret == SOCKET_ERROR)  //设置失败
 	{
 		outfile << "设置非阻塞失败\n";
-		closesocket(ClientSocket); //关闭套接字  
-		WSACleanup(); //释放套接字资源  
+		closesocket(ClientSocket); //关闭套接字
+		WSACleanup(); //释放套接字资源
 		return false;
 	}
 	outfile << "设置非阻塞成功\n";
@@ -88,8 +93,8 @@ bool GameClient::init()
 		if (sel <= 0)
 		{
 			outfile << "连接失败\n";
-			closesocket(ClientSocket); //关闭套接字  
-			WSACleanup(); //释放套接字资源  
+			closesocket(ClientSocket); //关闭套接字
+			WSACleanup(); //释放套接字资源
 			return false;
 		}
 	}
@@ -108,10 +113,10 @@ bool GameClient::init()
 	int id;
 	sscanf(tempBuf, "%d", &id);
 	myPlayerInfo.clientInfo = { NULL,ServerAddr,id,0,0,0 };
-	myPlayerInfo.nickname = std::to_string(ServerAddr.sin_addr.S_un.S_addr) + "_" + 
+	myPlayerInfo.nickname = std::to_string(ServerAddr.sin_addr.S_un.S_addr) + "_" +
 		std::to_string(ServerAddr.sin_port) + "_" + std::to_string(id);
 
-	
+
 	return true;
 }
 
@@ -121,114 +126,135 @@ bool GameClient::init()
 描述：主要负责两大线程的处理，一个是收发数据的线程，一个是消费者线程
 本函数受到WebGameScene的schedule制约，每一帧执行一次
 */
-void  GameClient::ClientProcess()
+bool  GameClient::gameThreadProcess(GameScene * gs)
 {
-
 	static bool flag = false;
 
-	if (!runningGameScene) {
-		runningGameScene = getGameScene();
-		if (runningGameScene == nullptr) {
-			return;
-		}
-	}
+	runningGameScene = gs;
 
 	if (flag == false)
 	{
 		acceptProps();
 		flag = true;
 	}
-	HANDLE hThread1;
-	HANDLE hThread2;
-	hThread1 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)GameSendAndRecv, this, 0, NULL);
 
-	hThread2 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)comsumer, this, 0, NULL);
-	CloseHandle(hThread1);
-	CloseHandle(hThread2);
+	HANDLE sendThead, recvThread, comsumerThread;
+	sendThead = CreateThread(NULL, 0,
+		(LPTHREAD_START_ROUTINE)(GameClient::gameSendThread),
+		(LPVOID)this, 0,
+		NULL
+	);
+	recvThread = CreateThread(NULL, 0,
+		(LPTHREAD_START_ROUTINE)(GameClient::gameRecvThread),
+		(LPVOID)this, 0,
+		NULL
+	);
+	comsumerThread = CreateThread(NULL, 0,
+		(LPTHREAD_START_ROUTINE)(GameClient::comsumer),
+		(LPVOID)this, 0,
+		NULL
+	);
+	CloseHandle(sendThead);
+	CloseHandle(recvThread);
+	CloseHandle(comsumerThread);
 
-
-	hMutex = CreateMutex(nullptr, TRUE, TEXT("Control"));
-	if (hMutex)
-	{
-		if (ERROR_ALREADY_EXISTS == GetLastError())
-		{
-			return;
-		}
-	}
-	WaitForSingleObject(hMutex, INFINITE);
-	ReleaseMutex(hMutex);
-	ReleaseMutex(hMutex);
+	return true;
 }
 
 
 /*
-名称：游戏数据收发函数
-描述：专门处理游戏收发数据的线程函数，采用异步、非阻塞模式。
+名称：游戏发送数据
+描述：发送游戏数据的线程
 */
-DWORD WINAPI GameClient::GameSendAndRecv(LPVOID lpParam)
+DWORD WINAPI GameClient::gameSendThread(LPVOID lpParam)
 {
 	GameClient *Client = static_cast<GameClient *>(lpParam);
 
 	const int PACKAGE = 28;          //每次发送包的长度
+	char sendData[1024];
 
+	while (true)
 	{
-		WaitForSingleObject(Client->hMutex, INFINITE);
-
-		fd_set wfd, rfd;
+		fd_set wfd;
 		FD_ZERO(&wfd);
-		FD_ZERO(&rfd);
-
 		FD_SET(Client->ClientSocket, &wfd);
-		FD_SET(Client->ClientSocket, &rfd);
-
-		int sel = select(0, &rfd, &wfd, NULL, NULL);
+		int sel = select(0, NULL, &wfd, NULL, NULL);
 		if (sel > 0)
 		{
 			if (FD_ISSET(Client->ClientSocket, &wfd))
 			{
-				/*
-				发送数据
-				*/
 				character * myplayer = dynamic_cast<character*>(Client->runningGameScene->getChildByName("myplayer"));
-				if (myplayer == nullptr)
-					return 0;
-
-				int direct;
-				for (direct = 0; direct < 4; ++direct) {
-					if (myplayer->_chara_move[direct])
-						break;
-				}
-
-				int still_1 = myplayer->_chara_still;
 
 				int put_bubble_1 = 0;
 
-				if (myplayer->_chara_bubble== true)
+				if (myplayer->_chara_bubble == true)
 					put_bubble_1 = 1;
 
-
-				Vec2 pos = myplayer->getPosition();
-				//Vec2 broken_tile = runningGameScene->next_ps;
-
-				char sendData[1024];
-				ZeroMemory(sendData, sizeof(sendData));
-
-				//传递格式 位置（.x .y) 静止 方向 是否放泡泡了 泡泡炸坏了哪个tile(.x .y)
-				sprintf(sendData, "%f %f %d %d %d", pos.x, pos.y, still_1,
-					direct, put_bubble_1);
-
-				//发送
-
-				int sendByte = 0;
-				while (sendByte < PACKAGE)
+				if (typeid(*(myplayer->mCurState)).hash_code() == typeid(CharMove).hash_code() || 
+					put_bubble_1)
 				{
-					int ret = send(Client->ClientSocket, sendData, strlen(sendData) + sizeof(char), 0);
-					sendByte += ret;
+					if (myplayer == nullptr)
+						return 0;
+
+					int direct;
+					for (direct = 0; direct < 4; ++direct) {
+						if (myplayer->_chara_move[direct])
+							break;
+					}
+
+					int still_1 = myplayer->_chara_still;
+
+
+
+					Vec2 pos = myplayer->getPosition();
+					//Vec2 broken_tile = runningGameScene->next_ps;
+
+
+					ZeroMemory(sendData, sizeof(sendData));
+
+					//传递格式 位置（.x .y) 静止 方向 是否放泡泡了   //泡泡炸坏了哪个tile(.x .y)
+					sprintf(sendData, "%f %f %d %d %d", pos.x, pos.y, still_1,
+						direct, put_bubble_1);
+
+					//发送
+
+					int sendByte = 0;
+					while (sendByte < PACKAGE)
+					{
+						int ret = send(Client->ClientSocket, sendData, strlen(sendData) + sizeof(char), 0);
+						sendByte += ret;
+					}
 				}
+				
 
 			}
+		}
+
+	}
 
 
+
+	return 1;
+}
+
+/*
+名称：游戏接收数据
+描述：接收游戏数的线程
+*/
+DWORD WINAPI GameClient::gameRecvThread(LPVOID lpParam)
+{
+	GameClient *Client = static_cast<GameClient *>(lpParam);
+	const int PACKAGE = 28;          //每次发送包的长度
+	char recvData[PACKAGE * 100];
+
+	while (true)
+	{
+		fd_set rfd;
+		FD_ZERO(&rfd);
+		FD_SET(Client->ClientSocket, &rfd);
+		int sel = select(0, &rfd, NULL, NULL, NULL);
+		if (sel > 0)
+		{
 			if (FD_ISSET(Client->ClientSocket, &rfd))
 			{
 				/*
@@ -237,7 +263,7 @@ DWORD WINAPI GameClient::GameSendAndRecv(LPVOID lpParam)
 				int direct_2;
 				int still_2;
 				int put_bubble_2 = 0;
-				char recvData[PACKAGE * 100];
+
 				ZeroMemory(recvData, sizeof(recvData));
 
 				int temp = 0;
@@ -248,6 +274,8 @@ DWORD WINAPI GameClient::GameSendAndRecv(LPVOID lpParam)
 				while (recvByte < PACKAGE)
 				{
 					ret = recv(Client->ClientSocket, recvData, PACKAGE * 100, 0);
+					if (ret == SOCKET_ERROR)
+						continue;
 					recvByte += ret;
 				}
 
@@ -255,27 +283,31 @@ DWORD WINAPI GameClient::GameSendAndRecv(LPVOID lpParam)
 				int len = recvByte / PACKAGE;
 				recvData[PACKAGE] = '\0';
 
+
 				/*
 				producer
 				*/
+				std::fstream outfile("e:\\a.txt", std::ios::app);
+
 				for (int i = 0; i < len; i++)
 				{
 					recvInfo temp;
 					sscanf(recvData + i*PACKAGE, "%f %f %d %d %d", &temp.Posx, &temp.Posy,
 						&temp.still, &temp.direct, &temp.putBubble);
+					outfile << temp.Posx << " " << temp.Posy << " "
+						<< temp.still << " " << temp.direct << " " << temp.putBubble << "\n";
 
+					g_lock.lock();
 					recvQueue.push(temp);
+					g_lock.unlock();
 				}
+				outfile.close();
 
 			}
 		}
-
-		ReleaseMutex(Client->hMutex);
 	}
 
-	WaitForSingleObject(Client->hMutex, INFINITE);
 
-	return 1;
 }
 
 
@@ -288,25 +320,23 @@ DWORD WINAPI GameClient::comsumer(LPVOID lpParam)
 {
 	GameClient *Client = static_cast<GameClient *>(lpParam);
 
-	if (recvQueue.empty() == true)
-	{
-		return 0;
-	}
-
 	character * player2 = dynamic_cast<character*>(Client->runningGameScene->getChildByName("player4"));
-
-	//fstream outfile("e:\\text.txt");
-	WaitForSingleObject(Client->hMutex, INFINITE);
 	while (true)
 	{
 		recvInfo temp;
-		if (!recvQueue.empty())
+		g_lock.lock();
+		if (!recvQueue.empty()) {
 			temp = recvQueue.front();
-		else
-		{
-			ReleaseMutex(Client->hMutex);
-			break;
+			recvQueue.pop();
+			g_lock.unlock();
 		}
+		else {
+			g_lock.unlock();
+			continue;
+		}
+
+
+		
 
 
 		Vec2 Pos(temp.Posx, temp.Posy);
@@ -316,72 +346,57 @@ DWORD WINAPI GameClient::comsumer(LPVOID lpParam)
 			player2->_maxBubbles)
 			Client->runningGameScene->setBubble(player2, Pos);
 
-		/*
-		outfile << "queue size: " << recvQueue.size() << " |";
-		outfile << "消费者: " << temp.Posx << " " << temp.Posy << " "
-		<< temp.still << " " << temp.direct << " " << temp.putBubble << endl;
-		*/
 
-		if (temp.Posx > 0 && temp.Posy > 0)  //判断一下，万一传输错了
+
+		if (temp.Posx > 0 && temp.Posy > 0 && temp.Posx < 1000 && temp.Posy < 1000)  //判断一下，万一传输错了
 		{
 
 			player2->setPosition(temp.Posx, temp.Posy);
+
 			/*
 			if (temp.still == true)
 			{
-			player2->changeState(std::make_shared<CharStand>());
+				player2->changeState(std::make_shared<CharStand>());
 			}
 			else
 			{
-			if (temp.direct < 4)
-			{
-			GameScene::_optionCode code = GameScene::_optionCode::DEFAULT;
-			switch (temp.direct)
-			{
-			case 0:
-			code = GameScene::_optionCode::GO_UP;
-			break;
-			case 1:
-			code = GameScene::_optionCode::GO_DOWN;
-			break;
-			case 2:
-			code = GameScene::_optionCode::GO_LEFT;
-			break;
-			case 3:
-			code = GameScene::_optionCode::GO_RIGHT;
-			break;
-			default:
-			break;
-			}
-			//DEBUG
+				if (temp.direct < 4)
+				{
+					GameScene::_optionCode code = GameScene::_optionCode::DEFAULT;
+					switch (temp.direct)
+					{
+					case 0:
+						code = GameScene::_optionCode::GO_UP;
+						break;
+					case 1:
+						code = GameScene::_optionCode::GO_DOWN;
+						break;
+					case 2:
+						code = GameScene::_optionCode::GO_LEFT;
+						break;
+					case 3:
+						code = GameScene::_optionCode::GO_RIGHT;
+						break;
+					default:
+						break;
+					}
+					//DEBUG
 
-			if (code != GameScene::_optionCode::DEFAULT)
-			player2->changeState(std::make_shared<CharMove>(static_cast<int>(code)));
-			}
+					if (code != GameScene::_optionCode::DEFAULT)
+						player2->changeState(std::make_shared<CharMove>(static_cast<int>(code)));
+				}
 			}*/
 		}
 		else
 		{
-			ReleaseMutex(Client->hMutex);
-			break;
+			continue;
 		}
 
-		
-
-		if (!recvQueue.empty())
-			recvQueue.pop();
-		else
-		{
-			ReleaseMutex(Client->hMutex);
-			break;
-		}
 
 
 	}
-	ReleaseMutex(Client->hMutex);
-	//outfile.close();
 
-	WaitForSingleObject(Client->hMutex, INFINITE);
+
 	return 1;
 
 }
@@ -427,7 +442,7 @@ void GameClient::acceptProps()
 名称: 处理线程在游戏开始之前
 描述: 顾名思义
 */
-int GameClient::ClientProcessBefore(int flag,int which)
+int GameClient::clientProcessBefore(int flag, int which)
 {
 	static int curNum;
 
@@ -437,15 +452,15 @@ int GameClient::ClientProcessBefore(int flag,int which)
 
 	char sendBuf[16];
 	ZeroMemory(sendBuf, sizeof(sendBuf));
-	sprintf(sendBuf, "%d %d", flag , whichRoom);
-	int sec = send(ClientSocket, sendBuf, strlen(sendBuf)+sizeof(char), 0);
-	
+	sprintf(sendBuf, "%d %d", flag, whichRoom);
+	int sec = send(ClientSocket, sendBuf, strlen(sendBuf) + sizeof(char), 0);
+
 
 	char recvBuf[10000];
 	int ret = recv(ClientSocket, recvBuf, sizeof(recvBuf), 0);
 	if (ret > 0)
-		sscanf(recvBuf, "%d %d %d %d",&curNum, &Rooms[0].curNum, &Rooms[1].curNum, &Rooms[2].curNum, &Rooms[3].curNum);
-		
+		sscanf(recvBuf, "%d %d %d %d", &curNum, &Rooms[0].curNum, &Rooms[1].curNum, &Rooms[2].curNum, &Rooms[3].curNum);
+
 	return curNum;
 }
 
@@ -453,7 +468,7 @@ int GameClient::ClientProcessBefore(int flag,int which)
 名称：线程处理房间相关
 描述：在CharacterSelect中负责收发数据
 */
-int GameClient::ClientProcessRoomData(int which)
+int GameClient::clientProcessRoomData(int which)
 {
 	//发送  内容比较简单，只发送所在房间的号码
 	char sendBuf[8];
@@ -463,7 +478,7 @@ int GameClient::ClientProcessRoomData(int which)
 	//接受   内容稍微复杂
 	/*
 	接受格式 ：int    #size    Rooms[which].playerlist 有几个玩家
-			  string #name    Rooms[which].playerlist.nickname  每个中间以|分隔
+	string #name    Rooms[which].playerlist.nickname  每个中间以|分隔
 	*/
 
 	char recvBuf[1024];
@@ -476,7 +491,7 @@ int GameClient::ClientProcessRoomData(int which)
 
 	if (ret > 0)
 		sscanf(recvBuf, "%d %s", &size, temp);
-	
+
 
 	str = temp;
 
@@ -489,9 +504,9 @@ int GameClient::ClientProcessRoomData(int which)
 
 	for (int i = 0; i < size; i++)
 	{
-		static int pos = 0; 
+		static int pos = 0;
 		std::string str1;
-		while ( pos < str.size() && str[pos] != '|')
+		while (pos < str.size() && str[pos] != '|')
 		{
 			str1 += str[pos];
 			pos++;
@@ -530,9 +545,9 @@ void GameClient::chat(int Room)
 DWORD WINAPI GameClient::chatSendThread(LPVOID lpParam)  //聊天室发送消息
 {
 	GameClient *Client = static_cast<GameClient *>(lpParam);
-	
+
 	char sendBuf[CHATPACKAGE];
-	
+
 	while (true)
 	{
 		fd_set write;
@@ -543,10 +558,11 @@ DWORD WINAPI GameClient::chatSendThread(LPVOID lpParam)  //聊天室发送消息
 		{
 			if (FD_ISSET(Client->ClientSocket, &write))
 			{
-	
+
 				ZeroMemory(sendBuf, sizeof(sendBuf));
 				char tempMsg[1024];
 				ZeroMemory(tempMsg, sizeof(tempMsg));
+
 
 				if (!chatting->cur_msg.empty())
 				{
@@ -554,19 +570,22 @@ DWORD WINAPI GameClient::chatSendThread(LPVOID lpParam)  //聊天室发送消息
 					tempMsg[chatting->cur_msg.size()] = '\0';
 					sprintf(sendBuf, "%d %s", whichRoom, tempMsg);
 				}
-
 				else
 					continue;
-				
+
 				send(Client->ClientSocket, sendBuf, strlen(sendBuf) + sizeof(char), 0);
+
 				if (chatting->cur_msg == "#GO_TO_GAME_SCENE!")
+				{
 					break;
+				}
+
 			}
-		
+
 		}
 
 	}
-	
+
 	return 0;
 }
 
@@ -580,8 +599,7 @@ DWORD WINAPI GameClient::chatRecvThread(LPVOID lpParam)  //聊天室接受消息
 	char recvBuf[CHATPACKAGE];
 	while (true)
 	{
-		if (chatting->cur_msg == "#GO_TO_GAME_SCENE!")
-			break;
+
 		fd_set read;
 		FD_ZERO(&read);
 		FD_SET(Client->ClientSocket, &read);
@@ -592,14 +610,20 @@ DWORD WINAPI GameClient::chatRecvThread(LPVOID lpParam)  //聊天室接受消息
 			{
 				Msg.clear();
 				ZeroMemory(recvBuf, sizeof(recvBuf));
-				
+
 				int ret = recv(Client->ClientSocket, recvBuf, CHATPACKAGE, 0);
 				if (ret == SOCKET_ERROR)
 					continue;
-				
+
+				if (recvBuf[0] == '@')
+				{
+					sscanf(recvBuf, "@ %d %d", &RoomPlayers, &whichPlayer);
+					break;
+				}
+
 				Msg = recvBuf;
 
-				
+
 			}
 		}
 	}
@@ -617,5 +641,3 @@ GameClient::~GameClient()
 
 	WSACleanup();
 }
-
-
