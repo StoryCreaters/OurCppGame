@@ -30,7 +30,11 @@ static int permutation[4][4]   //  permutation[Rooms[whichRoom].playerList.size(
 	{3,4,1,2},
 	{4,3,2,1}
 };
+int win = -1;
 
+extern int RoomPlayers;
+extern int whichPlayer;
+extern struct PlayerInfo myPlayerInfo;
 Scene* GameScene::createScene()
 {
     // 'scene' is an autorelease object
@@ -65,7 +69,7 @@ bool GameScene::init()
 		return false;
 	}
 
-
+	win = -1;
 	visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
@@ -87,24 +91,25 @@ bool GameScene::init()
 	addChild(_tileMap, -1);
 
 	// 注意坐标位置差
+	std::fstream outfile("e:\\b.txt", std::ios::app);
+	outfile << "whichPlayer:" << whichPlayer << "\n";
+	outfile.close();
 
-	
 
 	/*** add character***/
-	if (whichPlayer == 0)
+	if (myPlayerInfo.clientInfo.ID == 0)
 	{
-
 		addPlayer(character::MAPLE_WISH,
-			permutation[0][whichPlayer], true);
+			permutation[0][1], true);
 
-		addPlayer(character::SHADOWFOX, permutation[0][!whichPlayer], false);
+		addPlayer(character::SHADOWFOX, permutation[0][0], false);
 	}
 	else
 	{
 		addPlayer(character::SHADOWFOX,
-			permutation[0][whichPlayer], true);
+			permutation[0][0], true);
 
-		addPlayer(character::MAPLE_WISH, permutation[0][!whichPlayer], false);
+		addPlayer(character::MAPLE_WISH, permutation[0][1], false);
 	}
 	
 	
@@ -127,6 +132,7 @@ bool GameScene::init()
 	
 		
 	this->schedule(schedule_selector(GameScene::callWeb));
+	this->schedule(schedule_selector(GameScene::end));
 	this->scheduleUpdate();
 
 	return true;
@@ -144,6 +150,25 @@ void GameScene::callWeb(float dt)
 	}
 }
 
+void GameScene::end(float dt)
+{
+	int pos = 0;
+	for (auto chara : _game_players) {
+		if (chara->_chara_die && pos == 0)
+		{
+			this->stopAllActions();
+			this->unscheduleUpdate();
+			Lose(_myplayer);
+		}
+		else if (chara->_chara_die && pos == 1)
+		{
+			this->stopAllActions();
+			this->unscheduleUpdate();
+			Win(_myplayer);
+		}
+		pos++;
+	}
+}
 
 void GameScene::addPlayer(character::characterType T, int index, bool isMyPlayer)
 {
@@ -342,7 +367,7 @@ void GameScene::BubbleBoom(Ref* sender) {
     this->removeChild(sprite);
     for (auto iter = _map_screen_bubbles.begin(); iter != _map_screen_bubbles.end(); ++iter) {
         if (iter->second == sprite) {
-            _map_screen_bubbles.erase(iter);
+			iter = _map_screen_bubbles.erase(iter);
             break;
         }
     }
@@ -367,9 +392,11 @@ void GameScene::BubbleBoom(Ref* sender) {
 }
 
 void GameScene::update(float dt) {
+	
     for (auto chara : _game_players) {
         chara->excute();
     }
+
 }
 
 /**** coord convert ****/

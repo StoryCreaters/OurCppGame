@@ -27,7 +27,7 @@ using std::endl;
 #define PORTS 1236      //设置端口号，与Server一致
 
 extern std::vector <RoomInfo> Rooms;
-std::queue <recvInfo> GameClient::recvQueue;
+std::queue <packageInfo> GameClient::recvQueue;
 struct PlayerInfo myPlayerInfo;
 bool getMsg = false;
 std::string Msg;
@@ -35,8 +35,9 @@ extern ChatBox *chatting;
 static int whichRoom;
 int RoomPlayers;
 int whichPlayer;
+extern int win;
 
-std::mutex g_lock;
+std::mutex g_lock;  
 
 static inline GameScene* getGameScene() {
 	auto scene = Director::getInstance()->getRunningScene();
@@ -140,18 +141,18 @@ bool  GameClient::gameThreadProcess(GameScene * gs)
 
 	HANDLE sendThead, recvThread, comsumerThread;
 	sendThead = CreateThread(NULL, 0,
-		(LPTHREAD_START_ROUTINE)(GameClient::gameSendThread),
-		(LPVOID)this, 0,
+		static_cast<LPTHREAD_START_ROUTINE>(GameClient::gameSendThread),
+		static_cast<LPVOID>(this), 0,
 		NULL
 	);
 	recvThread = CreateThread(NULL, 0,
-		(LPTHREAD_START_ROUTINE)(GameClient::gameRecvThread),
-		(LPVOID)this, 0,
+		static_cast<LPTHREAD_START_ROUTINE>(GameClient::gameRecvThread),
+		static_cast<LPVOID>(this), 0,
 		NULL
 	);
 	comsumerThread = CreateThread(NULL, 0,
-		(LPTHREAD_START_ROUTINE)(GameClient::comsumer),
-		(LPVOID)this, 0,
+		static_cast<LPTHREAD_START_ROUTINE>(GameClient::gameSendThread),
+		static_cast<LPVOID>(this), 0,
 		NULL
 	);
 	CloseHandle(sendThead);
@@ -172,7 +173,9 @@ DWORD WINAPI GameClient::gameSendThread(LPVOID lpParam)
 
 	const int PACKAGE = 28;          //每次发送包的长度
 	char sendData[1024];
-
+	packageInfo * theReserved = nullptr;
+	packageInfo * theSend;
+	static int times = 0;
 	while (true)
 	{
 		fd_set wfd;
@@ -183,56 +186,80 @@ DWORD WINAPI GameClient::gameSendThread(LPVOID lpParam)
 		{
 			if (FD_ISSET(Client->ClientSocket, &wfd))
 			{
+				theSend = new packageInfo[1];
+
 				character * myplayer = dynamic_cast<character*>(Client->runningGameScene->getChildByName("myplayer"));
+				if (myplayer == nullptr)
+					break;
 
-				int put_bubble_1 = 0;
-
-				if (myplayer->_chara_bubble == true)
-					put_bubble_1 = 1;
-
-				if (typeid(*(myplayer->mCurState)).hash_code() == typeid(CharMove).hash_code() || 
-					put_bubble_1)
+				if (myplayer->_chara_die == true)
 				{
-					if (myplayer == nullptr)
-						return 0;
+					send(Client->ClientSocket, "#GAMEOVER_YOUWIN#", strlen("#GAMEOVER_YOUWIN#") + sizeof(char), 0);
+					win = 0;
+					break;
+				}
+				if (myplayer->_chara_bubble == true)
+					theSend->putBubble = 1;
+				else
+					theSend->putBubble = 0;
 
+				if (typeid(*(myplayer->mCurState)).hash_code() == typeid(CharMove).hash_code() || theSend->putBubble)
+				{
 					int direct;
 					for (direct = 0; direct < 4; ++direct) {
 						if (myplayer->_chara_move[direct])
 							break;
 					}
+					theSend->direct = direct;
 
-					int still_1 = myplayer->_chara_still;
-
-
+					theSend->still = myplayer->_chara_still;
 
 					Vec2 pos = myplayer->getPosition();
-					//Vec2 broken_tile = runningGameScene->next_ps;
-
+					
+					theSend->Posx = pos.x;
+					theSend->Posy = pos.y;
+					
+					if (theReserved != nullptr)
+					{
+						if (!memcmp(theReserved, theSend, sizeof(theReserved)) && !theSend->putBubble)
+						{
+							times++;
+							if (times < 200)  
+								continue;
+							else
+								times = 0;
+						}
+						else
+							memcpy(theReserved, theSend, sizeof(theReserved));
+					}
+					else
+					{
+						theReserved = new packageInfo[1];
+						memcpy(theReserved, theSend, sizeof(theSend));
+					}
 
 					ZeroMemory(sendData, sizeof(sendData));
-
-					//传递格式 位置（.x .y) 静止 方向 是否放泡泡了   //泡泡炸坏了哪个tile(.x .y)
-					sprintf(sendData, "%f %f %d %d %d", pos.x, pos.y, still_1,
-						direct, put_bubble_1);
+					//传递格式 位置（.x .y) 静止 方向 是否放泡泡了   
+					sprintf(sendData, "%f %f %d %d %d", theSend->Posx, theSend->Posy, theSend->still,
+						theSend->direct, theSend->putBubble);
 
 					//发送
-
 					int sendByte = 0;
 					while (sendByte < PACKAGE)
 					{
 						int ret = send(Client->ClientSocket, sendData, strlen(sendData) + sizeof(char), 0);
 						sendByte += ret;
 					}
+					
 				}
-				
-
+				delete[]theSend;
 			}
 		}
 
 	}
-
-
+	if (theReserved != nullptr)
+		delete[]theReserved;
+	
 
 	return 1;
 }
@@ -279,7 +306,11 @@ DWORD WINAPI GameClient::gameRecvThread(LPVOID lpParam)
 					recvByte += ret;
 				}
 
-
+				if (recvData[0] == '#')
+				{
+					win = 1;
+					break;
+				}
 				int len = recvByte / PACKAGE;
 				recvData[PACKAGE] = '\0';
 
@@ -287,21 +318,17 @@ DWORD WINAPI GameClient::gameRecvThread(LPVOID lpParam)
 				/*
 				producer
 				*/
-				std::fstream outfile("e:\\a.txt", std::ios::app);
 
 				for (int i = 0; i < len; i++)
 				{
-					recvInfo temp;
+					packageInfo temp;
 					sscanf(recvData + i*PACKAGE, "%f %f %d %d %d", &temp.Posx, &temp.Posy,
 						&temp.still, &temp.direct, &temp.putBubble);
-					outfile << temp.Posx << " " << temp.Posy << " "
-						<< temp.still << " " << temp.direct << " " << temp.putBubble << "\n";
-
+	
 					g_lock.lock();
 					recvQueue.push(temp);
 					g_lock.unlock();
 				}
-				outfile.close();
 
 			}
 		}
@@ -323,7 +350,7 @@ DWORD WINAPI GameClient::comsumer(LPVOID lpParam)
 	character * player2 = dynamic_cast<character*>(Client->runningGameScene->getChildByName("player4"));
 	while (true)
 	{
-		recvInfo temp;
+		packageInfo temp;
 		g_lock.lock();
 		if (!recvQueue.empty()) {
 			temp = recvQueue.front();
@@ -334,10 +361,6 @@ DWORD WINAPI GameClient::comsumer(LPVOID lpParam)
 			g_lock.unlock();
 			continue;
 		}
-
-
-		
-
 
 		Vec2 Pos(temp.Posx, temp.Posy);
 

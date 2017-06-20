@@ -13,8 +13,7 @@
 class GameScene;
 
 
-
-struct recvInfo {
+struct packageInfo {
 	float Posx;
 	float Posy;
 	int still;
@@ -77,7 +76,7 @@ public:
 	//网络数据处理
 
 private:
-	static std::queue <recvInfo> recvQueue;
+	static std::queue <packageInfo> recvQueue;
 	HANDLE hMutex;
 	GameScene * runningGameScene;
 	char *prop;

@@ -23,25 +23,29 @@ static inline GameScene* getGameScene() {
 
 
 void CharNormal::excute(cocos2d::Sprite* spr) {
-    auto scene = Director::getInstance()->getRunningScene();
-    auto gameScene =  dynamic_cast<GameScene*>(scene->getChildByTag(10));
-    if (gameScene == nullptr) {
-        return;
-    }
-    auto chara = dynamic_cast<character*>(spr);
-    gameScene->CharacterMove(chara);
-    gameScene->checkGetItem(chara);
+	auto scene = Director::getInstance()->getRunningScene();
+	auto gameScene = dynamic_cast<GameScene*>(scene->getChildByTag(10));
+	if (gameScene == nullptr) {
+		return;
+	}
+	auto chara = dynamic_cast<character*>(spr);
+	if (chara == getMyplayer()) {
+		gameScene->CharacterMove(chara);
+	}
+	gameScene->checkGetItem(chara);
 }
 
 void CharStuck::excute(cocos2d::Sprite* spr) {
     auto chara = dynamic_cast<character*>(spr);
     auto scene = getGameScene();
     if (scene->checkCollisionWithOther(chara)) {
+		chara->_chara_die = true;
         chara->changeState(std::make_shared<CharDead>());
     }
 }
 
 void CharDead::PreProcess(cocos2d::Sprite* spr) {
+	
     auto game_scene = getGameScene();
     game_scene->removeChildByName("PropLayer");
     spr->stopAllActions();

@@ -75,7 +75,9 @@ public:
     void CharacterMove(character* chara);
     
 	void callWeb(float dt);
-private:
+	void end(float dt);
+private:      
+
     // SIZE OF SCREEN
     cocos2d::Size visibleSize;
     float offx;

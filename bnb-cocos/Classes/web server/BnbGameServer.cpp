@@ -168,7 +168,7 @@ int GameServer::ProcessGameServer()
 
 
 			CreateThread(NULL, 0,
-				(LPTHREAD_START_ROUTINE)(GameServer::sendRoomInfo), //线程点函数
+				static_cast<LPTHREAD_START_ROUTINE>(GameServer::sendRoomInfo), //线程点函数
 				(LPVOID)&AcceptSocket[index], 0,              //参数
 				nullptr
 			);
@@ -464,7 +464,7 @@ DWORD WINAPI GameServer::sendRoomInfo(void *data)
 	count++;
 
 	CreateThread(NULL, 0,
-		(LPTHREAD_START_ROUTINE)(GameServer::GameThread), //线程点函数
+		static_cast<LPTHREAD_START_ROUTINE>(GameServer::GameThread), //线程点函数
 		(LPVOID)data, 0,              //参数
 		&GameSocket->RecvThreadID         //系统分配的ID
 	);
