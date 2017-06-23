@@ -41,7 +41,7 @@ bool LoginScene::init()
     WebClient::getInstance();
     
     
-    auto field = TextFieldTest::create();
+    field = TextFieldTest::create();
     field->setPosition(visibleSize.height * 0.15, visibleSize.height* 0.25);
     addChild(field);
     
@@ -72,5 +72,7 @@ void LoginScene::changeScene() {
     Director::getInstance()->replaceScene(transition);
 }
 
-
+void LoginScene::nameRepetition() {
+    field->setTextName("name already exist! Please change it");
+}
 

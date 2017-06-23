@@ -2,6 +2,7 @@
 #define LoginScene_hpp
 
 #include "cocos2d.h"
+#include "TextField.h"
 
 USING_NS_CC;
 
@@ -14,6 +15,9 @@ public:
     
     void addLogin();
     void changeScene();
+    // 名称重复
+    void nameRepetition();
+    
     
     static LoginScene* getLoginScene() {
         auto layer = dynamic_cast<LoginScene*>(Director::getInstance()->getRunningScene()->getChildByName("LoginScene"));
@@ -23,6 +27,9 @@ public:
     
     // implemxent the "static create()" method manually
     CREATE_FUNC(LoginScene);
+    
+private:
+    TextFieldTest* field;
 };
 
 

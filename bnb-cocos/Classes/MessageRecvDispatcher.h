@@ -3,14 +3,16 @@
 
 #include "WebClient.h"
 #include "RoomChooseScene.h"
+#include "SceneManager.h"
+#include "LoginScene.h"
 
 class MessageRecvDispatcher {
 public:
     static std::string Login(const std::string &recv) {
         if (recv == "login") {
-            Director::getInstance()->replaceScene(RoomChoose::createScene());
+            SceneManager::toRoomSelect();
         } else {
-            
+            LoginScene::getLoginScene()->nameRepetition();
         }
     }
     static std::string RoomSelect(const std::string& digit) {
