@@ -2,6 +2,7 @@
 #include "TextField.h"
 #include "ui/CocosGUI.h"
 #include "RoomChooseScene.h"
+#include "WebClient.h"
 
 USING_NS_CC;
 
@@ -12,6 +13,7 @@ Scene* LoginScene::createScene()
     
     // 'layer' is an autorelease object
     auto layer = LoginScene::create();
+    layer->setName("LoginScene");
     
     // add layer as a child to scene
     scene->addChild(layer);
@@ -35,6 +37,8 @@ bool LoginScene::init()
     backGround->setPosition(cocos2d::Vec2(visibleSize.width / 2, visibleSize.height / 2));
     this->addChild(backGround, 0);
     
+    // 实例化 webclient
+    WebClient::getInstance();
     
     
     auto field = TextFieldTest::create();
@@ -53,13 +57,20 @@ bool LoginScene::init()
             // 设置玩家自己的名称
             log("%s", field->showInputData().c_str());
             UserDefault::getInstance()->setStringForKey("MyName", field->showInputData());
-            // 切换到Room Choose场景
-            auto transition = TransitionShrinkGrow::create(2.0, RoomChoose::createScene());
-            Director::getInstance()->replaceScene(transition);
+            // send message to webclient
+            WebClient::getInstance()->send_data(field->showInputData());
         }
     });
     addChild(return_button);
     
     return true;
 }
+
+void LoginScene::changeScene() {
+    // 切换到Room Choose场景
+    auto transition = TransitionShrinkGrow::create(2.0, RoomChoose::createScene());
+    Director::getInstance()->replaceScene(transition);
+}
+
+
 

@@ -29,7 +29,9 @@ void CharNormal::excute(cocos2d::Sprite* spr) {
         return;
     }
     auto chara = dynamic_cast<character*>(spr);
-    gameScene->CharacterMove(chara);
+    if (chara == getMyplayer()) {
+        gameScene->CharacterMove(chara);
+    }
     gameScene->checkGetItem(chara);
 }
 
@@ -101,6 +103,7 @@ void CharMove::PreProcess(cocos2d::Sprite* spr) {
     }
     player->_chara_move[direction] = true;
     std::string next_direction(player->_spriteName + "_"+ std::string(settings::GameScene::direc_string[direction]) +"_");
+    
     auto tmp_f = SpriteFrameCache::getInstance()->getSpriteFrameByName(next_direction + "01.png");
     player->setSpriteFrame(tmp_f);
     runAnimationByName(player, next_direction, 0.1f, player->_animation_frames);

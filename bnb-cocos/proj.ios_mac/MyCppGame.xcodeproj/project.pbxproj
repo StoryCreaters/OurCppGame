@@ -75,16 +75,22 @@
 		825260841EE332910062167A /* riding in Resources */ = {isa = PBXBuildFile; fileRef = 825260831EE332910062167A /* riding */; };
 		825260851EE332910062167A /* riding in Resources */ = {isa = PBXBuildFile; fileRef = 825260831EE332910062167A /* riding */; };
 		8262943E1AAF051F00CB7CF7 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8262943D1AAF051F00CB7CF7 /* Security.framework */; };
-		82666F4F1EDC1D800025F456 /* WebClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82666F4D1EDC1D800025F456 /* WebClient.cpp */; };
-		82666F501EDC1D800025F456 /* WebClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82666F4D1EDC1D800025F456 /* WebClient.cpp */; };
 		827A69BE1EA8FE750073F534 /* gameStart in Resources */ = {isa = PBXBuildFile; fileRef = 827A69BD1EA8FE750073F534 /* gameStart */; };
 		827A69BF1EA8FE750073F534 /* gameStart in Resources */ = {isa = PBXBuildFile; fileRef = 827A69BD1EA8FE750073F534 /* gameStart */; };
+		82982A5E1EFD56F300DC8380 /* SceneManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82982A5C1EFD56F300DC8380 /* SceneManager.cpp */; };
+		82982A5F1EFD56F300DC8380 /* SceneManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82982A5C1EFD56F300DC8380 /* SceneManager.cpp */; };
 		82A8788D1EC1BD76006385CC /* PropResource in Resources */ = {isa = PBXBuildFile; fileRef = 82A8788C1EC1BD75006385CC /* PropResource */; };
 		82A8788E1EC1BD76006385CC /* PropResource in Resources */ = {isa = PBXBuildFile; fileRef = 82A8788C1EC1BD75006385CC /* PropResource */; };
 		82A878911EC1BD7F006385CC /* GameProp in Resources */ = {isa = PBXBuildFile; fileRef = 82A878901EC1BD7F006385CC /* GameProp */; };
 		82A878921EC1BD7F006385CC /* GameProp in Resources */ = {isa = PBXBuildFile; fileRef = 82A878901EC1BD7F006385CC /* GameProp */; };
 		82A878941EC1C1D2006385CC /* BubbleImages in Resources */ = {isa = PBXBuildFile; fileRef = 82A878931EC1C1D2006385CC /* BubbleImages */; };
 		82A878951EC1C1D2006385CC /* BubbleImages in Resources */ = {isa = PBXBuildFile; fileRef = 82A878931EC1C1D2006385CC /* BubbleImages */; };
+		82C3EC961EFD318800FED0A1 /* WebClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82C3EC941EFD318800FED0A1 /* WebClient.cpp */; };
+		82C3EC971EFD318800FED0A1 /* WebClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82C3EC941EFD318800FED0A1 /* WebClient.cpp */; };
+		82C3EC9E1EFD3C2F00FED0A1 /* MessageDispatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82C3EC9C1EFD3C2F00FED0A1 /* MessageDispatcher.cpp */; };
+		82C3EC9F1EFD3C2F00FED0A1 /* MessageDispatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82C3EC9C1EFD3C2F00FED0A1 /* MessageDispatcher.cpp */; };
+		82C3ECA21EFD40C700FED0A1 /* MessageRecvDispatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82C3ECA01EFD40C700FED0A1 /* MessageRecvDispatcher.cpp */; };
+		82C3ECA31EFD40C700FED0A1 /* MessageRecvDispatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82C3ECA01EFD40C700FED0A1 /* MessageRecvDispatcher.cpp */; };
 		82CEB9121EF27085002A38D4 /* LoginScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEB9101EF27085002A38D4 /* LoginScene.cpp */; };
 		82CEB9131EF27085002A38D4 /* LoginScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEB9101EF27085002A38D4 /* LoginScene.cpp */; };
 		82E9FEF71ED80A9C007C3AC0 /* GameMapLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82E9FEE31ED80A9C007C3AC0 /* GameMapLayer.cpp */; };
@@ -254,12 +260,18 @@
 		8222CA451EA6426D00092E33 /* GameUI */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GameUI; sourceTree = "<group>"; };
 		825260831EE332910062167A /* riding */ = {isa = PBXFileReference; lastKnownFileType = folder; path = riding; sourceTree = "<group>"; };
 		8262943D1AAF051F00CB7CF7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		82666F4D1EDC1D800025F456 /* WebClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WebClient.cpp; path = controller/WebClient.cpp; sourceTree = "<group>"; };
-		82666F4E1EDC1D800025F456 /* WebClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebClient.h; path = controller/WebClient.h; sourceTree = "<group>"; };
 		827A69BD1EA8FE750073F534 /* gameStart */ = {isa = PBXFileReference; lastKnownFileType = folder; path = gameStart; sourceTree = "<group>"; };
+		82982A5C1EFD56F300DC8380 /* SceneManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneManager.cpp; sourceTree = "<group>"; };
+		82982A5D1EFD56F300DC8380 /* SceneManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneManager.h; sourceTree = "<group>"; };
 		82A8788C1EC1BD75006385CC /* PropResource */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PropResource; sourceTree = "<group>"; };
 		82A878901EC1BD7F006385CC /* GameProp */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GameProp; sourceTree = "<group>"; };
 		82A878931EC1C1D2006385CC /* BubbleImages */ = {isa = PBXFileReference; lastKnownFileType = folder; path = BubbleImages; sourceTree = "<group>"; };
+		82C3EC941EFD318800FED0A1 /* WebClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WebClient.cpp; path = Network/WebClient.cpp; sourceTree = "<group>"; };
+		82C3EC951EFD318800FED0A1 /* WebClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebClient.h; path = Network/WebClient.h; sourceTree = "<group>"; };
+		82C3EC9C1EFD3C2F00FED0A1 /* MessageDispatcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MessageDispatcher.cpp; path = Network/MessageDispatcher.cpp; sourceTree = "<group>"; };
+		82C3EC9D1EFD3C2F00FED0A1 /* MessageDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageDispatcher.h; path = Network/MessageDispatcher.h; sourceTree = "<group>"; };
+		82C3ECA01EFD40C700FED0A1 /* MessageRecvDispatcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MessageRecvDispatcher.cpp; sourceTree = "<group>"; };
+		82C3ECA11EFD40C700FED0A1 /* MessageRecvDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageRecvDispatcher.h; sourceTree = "<group>"; };
 		82C45F691EC09B6C001BD822 /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
 		82CEB9101EF27085002A38D4 /* LoginScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LoginScene.cpp; path = view/LoginScene.cpp; sourceTree = "<group>"; };
 		82CEB9111EF27085002A38D4 /* LoginScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginScene.h; path = view/LoginScene.h; sourceTree = "<group>"; };
@@ -466,8 +478,9 @@
 		46880B8319C43A87006E1F66 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				46880B8419C43A87006E1F66 /* AppDelegate.cpp */,
+				82C3EC901EFD315300FED0A1 /* Network */,
 				46880B8519C43A87006E1F66 /* AppDelegate.h */,
+				46880B8419C43A87006E1F66 /* AppDelegate.cpp */,
 				46880B8619C43A87006E1F66 /* HelloWorldScene.cpp */,
 				46880B8719C43A87006E1F66 /* HelloWorldScene.h */,
 				82E9FEE21ED80A3E007C3AC0 /* view */,
@@ -528,11 +541,34 @@
 			path = ios;
 			sourceTree = SOURCE_ROOT;
 		};
+		82C3EC901EFD315300FED0A1 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				82C3EC941EFD318800FED0A1 /* WebClient.cpp */,
+				82C3EC951EFD318800FED0A1 /* WebClient.h */,
+				82C3EC9C1EFD3C2F00FED0A1 /* MessageDispatcher.cpp */,
+				82C3EC9D1EFD3C2F00FED0A1 /* MessageDispatcher.h */,
+				82C3ECA01EFD40C700FED0A1 /* MessageRecvDispatcher.cpp */,
+				82C3ECA11EFD40C700FED0A1 /* MessageRecvDispatcher.h */,
+			);
+			name = Network;
+			sourceTree = "<group>";
+		};
+		82C3ECA41EFD553C00FED0A1 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
 		82E9FEE21ED80A3E007C3AC0 /* view */ = {
 			isa = PBXGroup;
 			children = (
-				82CEB9101EF27085002A38D4 /* LoginScene.cpp */,
+				82982A5C1EFD56F300DC8380 /* SceneManager.cpp */,
+				82982A5D1EFD56F300DC8380 /* SceneManager.h */,
+				82C3ECA41EFD553C00FED0A1 /* UI */,
 				82CEB9111EF27085002A38D4 /* LoginScene.h */,
+				82CEB9101EF27085002A38D4 /* LoginScene.cpp */,
 				82174F8A1EE2CCAE00A6B4E6 /* CharacterSelect.cpp */,
 				82174F8B1EE2CCAE00A6B4E6 /* CharacterSelect.h */,
 				82174F851EE2CBFB00A6B4E6 /* MusicSetting.cpp */,
@@ -582,8 +618,6 @@
 				82E9FF1A1ED80C65007C3AC0 /* BaseFSM.h */,
 				82E9FF1B1ED80C65007C3AC0 /* CharacterFSM.cpp */,
 				82E9FF1C1ED80C65007C3AC0 /* CharacterFSM.h */,
-				82666F4D1EDC1D800025F456 /* WebClient.cpp */,
-				82666F4E1EDC1D800025F456 /* WebClient.h */,
 			);
 			name = controller;
 			sourceTree = "<group>";
@@ -773,7 +807,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				82666F4F1EDC1D800025F456 /* WebClient.cpp in Sources */,
 				46880B8819C43A87006E1F66 /* AppDelegate.cpp in Sources */,
 				82E9FF1F1ED80C65007C3AC0 /* CharacterFSM.cpp in Sources */,
 				46880B8A19C43A87006E1F66 /* HelloWorldScene.cpp in Sources */,
@@ -782,10 +815,13 @@
 				82FE4D961EF29D0F00ED1C01 /* ChatBox.cpp in Sources */,
 				82E9FF051ED80A9C007C3AC0 /* SettingScene.cpp in Sources */,
 				82E9FEF91ED80A9C007C3AC0 /* GameScene.cpp in Sources */,
+				82C3ECA21EFD40C700FED0A1 /* MessageRecvDispatcher.cpp in Sources */,
 				82F387771EEEF14800E44B8E /* Vehicle.cpp in Sources */,
 				82E9FEF71ED80A9C007C3AC0 /* GameMapLayer.cpp in Sources */,
+				82C3EC9E1EFD3C2F00FED0A1 /* MessageDispatcher.cpp in Sources */,
 				8220AF4B1EE28D2200161461 /* PropController.cpp in Sources */,
 				82E9FF071ED80A9C007C3AC0 /* SwallowTouch.cpp in Sources */,
+				82982A5E1EFD56F300DC8380 /* SceneManager.cpp in Sources */,
 				82E9FF011ED80A9C007C3AC0 /* PreLoadScene.cpp in Sources */,
 				82E9FF131ED80C47007C3AC0 /* Bubbles.cpp in Sources */,
 				82F387731EEEBDFB00E44B8E /* PropLayer.cpp in Sources */,
@@ -803,6 +839,7 @@
 				82E9FF171ED80C47007C3AC0 /* GameItem.cpp in Sources */,
 				82E9FF091ED80A9C007C3AC0 /* ToStart.cpp in Sources */,
 				8220AF491EE28D2200161461 /* PlayerController.cpp in Sources */,
+				82C3EC961EFD318800FED0A1 /* WebClient.cpp in Sources */,
 				82F3876E1EEEBDEC00E44B8E /* TextField.cpp in Sources */,
 				82E9FF031ED80A9C007C3AC0 /* RoomChooseScene.cpp in Sources */,
 				82E9FEFF1ED80A9C007C3AC0 /* PauseWithLabelLayer.cpp in Sources */,
@@ -825,12 +862,15 @@
 				82E9FF161ED80C47007C3AC0 /* Character.cpp in Sources */,
 				46880B8919C43A87006E1F66 /* AppDelegate.cpp in Sources */,
 				503AE10517EB98FF00D1A890 /* main.cpp in Sources */,
+				82982A5F1EFD56F300DC8380 /* SceneManager.cpp in Sources */,
 				82F387781EEEF14800E44B8E /* Vehicle.cpp in Sources */,
 				82CEB9131EF27085002A38D4 /* LoginScene.cpp in Sources */,
 				82E9FEF81ED80A9C007C3AC0 /* GameMapLayer.cpp in Sources */,
-				82666F501EDC1D800025F456 /* WebClient.cpp in Sources */,
+				82C3ECA31EFD40C700FED0A1 /* MessageRecvDispatcher.cpp in Sources */,
 				8220AF4C1EE28D2200161461 /* PropController.cpp in Sources */,
+				82C3EC971EFD318800FED0A1 /* WebClient.cpp in Sources */,
 				82E9FF061ED80A9C007C3AC0 /* SettingScene.cpp in Sources */,
+				82C3EC9F1EFD3C2F00FED0A1 /* MessageDispatcher.cpp in Sources */,
 				82E9FF001ED80A9C007C3AC0 /* PauseWithLabelLayer.cpp in Sources */,
 				8220AF581EE29EF100161461 /* BubbleController.cpp in Sources */,
 				82E9FF021ED80A9C007C3AC0 /* PreLoadScene.cpp in Sources */,

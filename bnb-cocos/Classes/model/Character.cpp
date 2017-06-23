@@ -205,13 +205,12 @@ int character::getRidingBubbles() {
 }
 
 void character::charaFired() {
-    auto cur_code = typeid(*mCurState).hash_code();
     if (!isGuard()) {
         if(isRiding()) {
             offRiding();
             setGuard();
         }
-        else if (cur_code == typeid(CharStand).hash_code() || cur_code == typeid(CharMove).hash_code()) {
+        else if (checkStateFireAble(this)) {
             auto controllers = GameScene::getCurrentMap()->controllers;
             for (int i = 0; i < 2; ++i) {
                 GameScene::getCurrentMap()->removeChild(controllers[i]);

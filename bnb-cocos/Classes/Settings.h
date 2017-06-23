@@ -152,6 +152,10 @@ namespace settings {
     namespace FSM {
         
     }
+    
+    namespace WebClient {
+        constexpr char* ws_url = "ws://127.0.0.1:8080/ws";
+    }
 }
 
 #endif /* Settings_h */

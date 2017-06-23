@@ -51,7 +51,6 @@ bool RoomChoose::init() {
 	UImenus->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
 	UImenus->alignItemsVertically();
 	addChild(UImenus);
-
 	return true;
 }
 
