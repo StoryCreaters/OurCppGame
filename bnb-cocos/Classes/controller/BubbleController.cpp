@@ -2,6 +2,7 @@
 #include "Character.h"
 #include "GameScene.h"
 #include "CharacterFSM.h"
+#include "WebClient.h"
 
 USING_NS_CC;
 
@@ -15,6 +16,11 @@ void BubbleController::myKeyboardOff(cocos2d::EventKeyboard::KeyCode keyCode, co
         return;
     auto gameLayer = GameScene::getCurrentMap();
     auto mychara = dynamic_cast<character*>(gameLayer->getChildByName("myplayer"));
-    if (checkStateWalkAble(mychara))
+    if (checkStateWalkAble(mychara)) {
+        // 精灵放置炸弹
         gameLayer->setBubble(mychara);
+        std::string name = UserDefault::getInstance()->getStringForKey("MyName");
+        WebClient::getInstance()->send_data("set " + name);
+    }
+    
 }

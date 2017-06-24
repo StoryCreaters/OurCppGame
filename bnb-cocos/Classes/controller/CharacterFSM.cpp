@@ -30,7 +30,8 @@ void CharNormal::excute(cocos2d::Sprite* spr) {
         return;
     }
     auto chara = dynamic_cast<character*>(spr);
-    if (chara == getMyplayer()) {
+    // 必须是有值才可以
+    if (getMyplayer() && chara == getMyplayer()) {
         gameScene->CharacterMove(chara);
     }
     gameScene->checkGetItem(chara);
@@ -55,6 +56,7 @@ void CharDead::PreProcess(cocos2d::Sprite* spr) {
                         game_scene->RemoveCharacter(chara);
                         if (chara == getMyplayer()) {
                             // 死亡
+                            game_scene->_myplayer = nullptr;
                             WebClient::getInstance()->send_data("DIE");
                         }
                     }), NULL));

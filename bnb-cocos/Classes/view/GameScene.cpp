@@ -13,6 +13,7 @@
 #include "PropController.h"
 #include <chrono>
 #include "OpenScene.h"
+#include "WebClient.h"
 
 USING_NS_CC;
 using namespace ui;
@@ -171,7 +172,8 @@ bool GameScene::init()
     addChild(propController);
     
 	this->scheduleUpdate();
-
+    
+    this->schedule(schedule_selector(GameScene::myupdate), 1.0/30);
 	return true;
 }
 
@@ -325,6 +327,23 @@ void GameScene::BubbleBoom(Ref* sender) {
 void GameScene::update(float dt) {
     for (auto chara : _game_players) {
         chara->excute();
+    }
+}
+
+void GameScene::myupdate(float dt) {
+    static std::string myname = UserDefault::getInstance()->getStringForKey("MyName ");
+    if (_myplayer) {
+        int i;
+        for (i = 0; i <= 4; ++i) {
+            if (i == _myplayer->_chara_move[i])
+                break;
+        }
+        
+        // i == 4: 不变向
+        // send: "state name pos x y"
+        std::string s = std::to_string(i) + " " + std::to_string(_myplayer->getPosition().x) + " " + std::to_string(_myplayer->getPosition().y);
+        log("send s: %s", s.c_str());
+        WebClient::getInstance()->send_data("state " + myname + s);
     }
 }
 
@@ -528,13 +547,14 @@ void GameScene::addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools item_kind) 
 
 
 void GameScene::tileLoadProps() {
-    static std::random_device rd;
-    static std::uniform_int_distribution<int> dist(0, GameItem::toolNumbers * 5 / 3);
+//    static std::random_device rd;
+//    static std::uniform_int_distribution<int> dist(0, GameItem::toolNumbers * 5 / 3);
+    srand(UserDefault::getInstance()->getIntegerForKey("PropSeed"));
     // 加载地图的对应的道具
     for (int x = 0; x < 15; ++x)
         for (int y = 0; y < 15; ++y)
             if (!hasCollisionInGridPos(Vec2(x, y))) {
-                prop_on_map[x][y] = dist(rd);
+                prop_on_map[x][y] = rand() % (GameItem::toolNumbers * 5 / 3);
             }
     
 }

@@ -17,6 +17,7 @@ public:
     friend class PlayerController;
     friend class CharStuck;
     friend class character;
+    friend class CharDead;
     using tilePosition = cocos2d::Vec2;
     
     /***
@@ -55,6 +56,8 @@ public:
     
     
     void update(float dt) override;
+    // 传送数据, 1/30
+    void myupdate(float dt);
     /*********碰撞检测*************/
     // 检测人物移动是否可以进行，碰撞检测
     bool accessAble(cocos2d::Vec2);

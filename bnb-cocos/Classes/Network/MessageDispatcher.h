@@ -22,7 +22,7 @@ public:
     }
     
     static std::string OnGame(const std::string &recv) {
-        
+        return "ongame " + recv;
     }
 };
 

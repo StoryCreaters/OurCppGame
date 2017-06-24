@@ -9,7 +9,12 @@
 
 using namespace settings::Character;
 character* character::getMychara() {
-    return dynamic_cast<character*>(GameScene::getCurrentMap()->getChildByName("myplayer"));
+    auto spr = GameScene::getCurrentMap()->getChildByName("myplayer");
+    if (spr == nullptr) {
+        log("myplayer not exist");
+        return nullptr;
+    }
+    return dynamic_cast<character*>(spr);
 }
 
 character* character::create(characterType type)
@@ -211,13 +216,16 @@ void character::charaFired() {
             setGuard();
         }
         else if (checkStateFireAble(this)) {
-            auto controllers = GameScene::getCurrentMap()->controllers;
-            for (int i = 0; i < 2; ++i) {
-                GameScene::getCurrentMap()->removeChild(controllers[i]);
+            if (getMychara() && this == getMychara()) {
+                auto controllers = GameScene::getCurrentMap()->controllers;
+                for (int i = 0; i < 2; ++i) {
+                    GameScene::getCurrentMap()->removeChild(controllers[i]);
+                }
+                this->removeChildByName("PlayerController");
+                this->removeChildByName("BubbleController");
+                changeState(std::make_shared<CharStuck>());
             }
-            this->removeChildByName("PlayerController");
-            this->removeChildByName("BubbleController");
-            changeState(std::make_shared<CharStuck>());
+            
         }
     }
 }

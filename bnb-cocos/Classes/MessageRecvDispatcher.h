@@ -7,6 +7,7 @@
 #include "LoginScene.h"
 #include "ChatBox.h"
 #include "GameScene.h"
+#include "CharacterFSM.h"
 
 class MessageRecvDispatcher {
 public:
@@ -42,6 +43,10 @@ public:
             ChatBox::getChatBox()->addChatLine(name, msg);
         } else if (parse == "start") {
             int digits;     //人数
+            int seed;
+            sin >> seed;
+            // 一局游戏中 道具的种子
+            UserDefault::getInstance()->setIntegerForKey("PropSeed", seed);
             sin >> digits;
             std::string chara;
             int pos, type;
@@ -60,7 +65,33 @@ public:
     }
     
     static std::string OnGame(const std::string &recv) {
-        
+        log("game recv:%s", recv.c_str());
+        std::stringstream sin(recv);
+        std::string code;
+        sin >> code;
+        if(code == "set") {
+            // 传入瓦片坐标，在该点释放炸弹
+            std::string charaname;
+            sin>> charaname;
+            auto chara = GameScene::getCurrentMap()->name2chara.at(charaname);
+            GameScene::getCurrentMap()->setBubble(chara);
+        } else if (code == "state") {
+            // 人物状态: 人物 方向 posx posy
+            std::string charname;
+            int dir;
+            float posx, posy;
+            sin >> charname >> dir >> posx >> posy;
+            auto chara = GameScene::getCurrentMap()->name2chara.at(charname);
+            
+            chara->setPosition(Vec2(posx, posy));
+            log("dir %d", dir);
+            if (dir == 5) {
+                chara->changeState(std::make_shared<CharStand>());
+            } else if (dir < 4) {
+                // 状态变小于4
+                chara->changeState(std::make_shared<CharMove>(dir));
+            }
+        }
     }
 };
 #endif /* MessageRecvDispatcher_hpp */
