@@ -2,6 +2,8 @@
 #define MessageDispatcher_hpp
 
 #include "WebClient.h"
+
+
 class MessageDispatcher {
 public:
 //    template <typename T>
@@ -22,6 +24,9 @@ public:
     }
     
     static std::string OnGame(const std::string &recv) {
+        if (recv[0] == 'u') {
+            cocos2d::log("%s", recv.c_str());
+        }
         return "ongame " + recv;
     }
 };

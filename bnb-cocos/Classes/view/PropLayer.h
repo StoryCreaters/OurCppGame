@@ -23,13 +23,20 @@ public:
         ALLPOWER, NEEDLE, RSPEED, GUARD
     };
     static constexpr int prop_nums = 4;
-    std::function<void(void)> getPropfuncs(int index);
-    std::function<bool(void)> getAblefuncs(int index);
+    static std::function<void(void)> getPropfuncs(int index);
+    static std::function<bool(void)> getAblefuncs(int index);
+    static std::function<void(character*)> getOtherPropfuncs(int index);
+
     static Layer* getPropLayer();
     
     virtual bool init();
     // implement the "static create()" method manually
     CREATE_FUNC(PropLayer);
+    /* 外部使用道具
+      param index:道具的种类
+      param chara:接受的精灵
+     */
+    static void useRecv(int index, character* chara);
     // 得到道具
     void addProp(PropType T);
     // 使用道具 需要re align
@@ -39,7 +46,8 @@ public:
     void propMinus(int, Ref *sender);
     // 判断道具是否可用
     bool isUseable(int index) {
-        return currentProps[index];}
+        return currentProps[index];
+    }
 private:
     // 根据myProps重写道具数目，改变string
     void AlignProps();

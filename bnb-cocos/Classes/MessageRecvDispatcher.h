@@ -9,6 +9,7 @@
 #include "GameScene.h"
 #include "CharacterFSM.h"
 #include "DataManager.h"
+#include "PropLayer.h"
 
 class MessageRecvDispatcher {
 public:
@@ -108,6 +109,17 @@ public:
             } else {
                 scene->Lose();
             }
+        } else if (code == "use") {
+            /*
+             param1: 玩家
+             param2: 道具(编号)
+             */
+            std::string charname;
+            int prop_index;
+            sin >> charname;
+            sin >> prop_index;
+            auto chara = GameScene::getCurrentMap()->name2chara.at(charname);
+            PropLayer::useRecv(prop_index, chara);
         }
     }
 };

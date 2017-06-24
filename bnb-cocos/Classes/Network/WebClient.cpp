@@ -85,7 +85,6 @@ WebClient* WebClient::getInstance() {
 
 void WebClient::send_data(const std::string& s) {
     auto str_func = send_func_map.at(cur_state);
-    log("state %d", cur_state);
     m_pWebSocket->send(str_func(s));
 }
 

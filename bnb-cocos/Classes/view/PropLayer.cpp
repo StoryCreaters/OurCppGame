@@ -2,6 +2,8 @@
 #include "GameItem.h"
 #include "Settings.h"
 #include "GameScene.h"
+#include "WebClient.h"
+
 using namespace ui;
 using namespace std;
 // find out the rule of lambda
@@ -16,6 +18,7 @@ constexpr char* res[] = {
 };
 
 std::function<void()> PropLayer::getPropfuncs(int index) {
+    // TODO: 用std::bind优化
     switch (index) {
         case 0:
             return [](){return character::getMychara()->rideSpeedUp();};
@@ -49,7 +52,22 @@ std::function<bool()> PropLayer::getAblefuncs(int index) {
     }
 }
 
-
+std::function<void(character* chara)> PropLayer::getOtherPropfuncs(int index) {
+    switch (index) {
+        case 0:
+            return [](character* charac){return charac->rideSpeedUp();};
+            break;
+        case 1:
+            return [](character* charac){return charac->UseNeedle();};
+            break;
+        case 2:
+            return [](character* charac){return charac->setGuard();};
+            break;
+        case 3:
+            return [](character* charac){return charac->powerup();};
+            break;
+    }
+}
 
 bool PropLayer::init()
 {
@@ -161,5 +179,11 @@ void PropLayer::useProp(int index) {
         label->setName("label");
         button->addChild(label);
         getPropfuncs(index)();
+        // 本玩家使用index号道具
+        WebClient::getInstance()->send_data("use " + std::to_string(index));
     }
+}
+
+void PropLayer::useRecv(int index, character* chara) {
+    getOtherPropfuncs(index)(chara);
 }
