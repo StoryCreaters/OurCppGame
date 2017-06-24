@@ -1,5 +1,7 @@
 #include "ChatBox.h"
 #include "WebClient.h"
+#include "DataManager.h"
+
 using namespace ui;
 bool ChatBox::init() {
     if ( !Layer::init() )

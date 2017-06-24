@@ -65,7 +65,7 @@ private:
 // the standing and normal character
 class CharStand: public State {
 public:
-    void excute(cocos2d::Sprite* spr) override {}
+    void excute(cocos2d::Sprite* spr) override;
     void PreProcess(cocos2d::Sprite* spr) override;
 };
 

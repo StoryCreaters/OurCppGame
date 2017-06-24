@@ -1,6 +1,7 @@
 ﻿#include "MusicSetting.h"
 #include "ui/CocosGUI.h"
 #include "SimpleAudioEngine.h"
+#include "../DataManager.h"
 USING_NS_CC;
 using namespace CocosDenshion;
 using namespace ui;
@@ -50,7 +51,7 @@ bool Settings::init() {
             int percent = music_slider->getPercent();
             SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(float(percent) / 100);
             // 存储设置的背景音乐值
-            UserDefault::getInstance()->setFloatForKey("musicPercent", float(percent) / 100);
+            DataManager::getInstance()->setFloatForKey("musicPercent", float(percent) / 100);
         }
     });
     this->addChild(music_slider);
@@ -65,7 +66,7 @@ bool Settings::init() {
     effects_slider->loadBarTexture("GameUI/sliderTrack.png");
     effects_slider->loadSlidBallTextures("GameUI/sliderThumb.png", "GameUI/sliderThumb.png", "");
     effects_slider->loadProgressBarTexture("GameUI/sliderProgress.png");
-    float effectPercent = UserDefault::getInstance()->getFloatForKey("effectPercent") * 100;
+    float effectPercent = DataManager::getInstance()->getFloatForKey("effectPercent") * 100;
     // 如果是第一次进入设置场景，设置音效滑动条默认初始值为100
     if (effectPercent == 0.0f) {
         effectPercent = 100.0f;
@@ -77,7 +78,7 @@ bool Settings::init() {
         {
             int percent = effects_slider->getPercent();
             SimpleAudioEngine::getInstance()->setEffectsVolume(float(percent) / 100);
-            UserDefault::getInstance()->setFloatForKey("effectPercent", float(percent) / 100);
+            DataManager::getInstance()->setFloatForKey("effectPercent", float(percent) / 100);
         }
     });
     this->addChild(effects_slider);

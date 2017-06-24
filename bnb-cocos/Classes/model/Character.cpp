@@ -41,6 +41,8 @@ bool character::initWithPlayerType(characterType type)
     using namespace settings::Character;
     
     // 属性设置
+    // MAGIC CODE
+    type = (type == -1)? character::characterType::CHRIS :type;
     _spriteName = sprite_names[type];
     
     _maxBubbles = max_bubbles[type];

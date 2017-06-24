@@ -62,6 +62,8 @@
 		82174F881EE2CBFB00A6B4E6 /* MusicSetting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82174F851EE2CBFB00A6B4E6 /* MusicSetting.cpp */; };
 		82174F8C1EE2CCAE00A6B4E6 /* CharacterSelect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82174F8A1EE2CCAE00A6B4E6 /* CharacterSelect.cpp */; };
 		82174F8D1EE2CCAE00A6B4E6 /* CharacterSelect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82174F8A1EE2CCAE00A6B4E6 /* CharacterSelect.cpp */; };
+		821916BB1EFEA59C00E777F7 /* DataManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 821916B91EFEA59C00E777F7 /* DataManager.cpp */; };
+		821916BC1EFEA59C00E777F7 /* DataManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 821916B91EFEA59C00E777F7 /* DataManager.cpp */; };
 		8220AF491EE28D2200161461 /* PlayerController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8220AF451EE28D2200161461 /* PlayerController.cpp */; };
 		8220AF4A1EE28D2200161461 /* PlayerController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8220AF451EE28D2200161461 /* PlayerController.cpp */; };
 		8220AF4B1EE28D2200161461 /* PropController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8220AF471EE28D2200161461 /* PropController.cpp */; };
@@ -93,8 +95,6 @@
 		82C3ECA31EFD40C700FED0A1 /* MessageRecvDispatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82C3ECA01EFD40C700FED0A1 /* MessageRecvDispatcher.cpp */; };
 		82CEB9121EF27085002A38D4 /* LoginScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEB9101EF27085002A38D4 /* LoginScene.cpp */; };
 		82CEB9131EF27085002A38D4 /* LoginScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82CEB9101EF27085002A38D4 /* LoginScene.cpp */; };
-		82E9FEF71ED80A9C007C3AC0 /* GameMapLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82E9FEE31ED80A9C007C3AC0 /* GameMapLayer.cpp */; };
-		82E9FEF81ED80A9C007C3AC0 /* GameMapLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82E9FEE31ED80A9C007C3AC0 /* GameMapLayer.cpp */; };
 		82E9FEF91ED80A9C007C3AC0 /* GameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82E9FEE51ED80A9C007C3AC0 /* GameScene.cpp */; };
 		82E9FEFA1ED80A9C007C3AC0 /* GameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82E9FEE51ED80A9C007C3AC0 /* GameScene.cpp */; };
 		82E9FEFB1ED80A9C007C3AC0 /* MapScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82E9FEE71ED80A9C007C3AC0 /* MapScene.cpp */; };
@@ -249,6 +249,8 @@
 		82174F861EE2CBFB00A6B4E6 /* MusicSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MusicSetting.h; path = view/MusicSetting.h; sourceTree = "<group>"; };
 		82174F8A1EE2CCAE00A6B4E6 /* CharacterSelect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CharacterSelect.cpp; path = view/CharacterSelect.cpp; sourceTree = "<group>"; };
 		82174F8B1EE2CCAE00A6B4E6 /* CharacterSelect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CharacterSelect.h; path = view/CharacterSelect.h; sourceTree = "<group>"; };
+		821916B91EFEA59C00E777F7 /* DataManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DataManager.cpp; sourceTree = "<group>"; };
+		821916BA1EFEA59C00E777F7 /* DataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataManager.h; sourceTree = "<group>"; };
 		8220AF451EE28D2200161461 /* PlayerController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PlayerController.cpp; path = controller/PlayerController.cpp; sourceTree = "<group>"; };
 		8220AF461EE28D2200161461 /* PlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerController.h; path = controller/PlayerController.h; sourceTree = "<group>"; };
 		8220AF471EE28D2200161461 /* PropController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PropController.cpp; path = controller/PropController.cpp; sourceTree = "<group>"; };
@@ -275,8 +277,6 @@
 		82C45F691EC09B6C001BD822 /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
 		82CEB9101EF27085002A38D4 /* LoginScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LoginScene.cpp; path = view/LoginScene.cpp; sourceTree = "<group>"; };
 		82CEB9111EF27085002A38D4 /* LoginScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginScene.h; path = view/LoginScene.h; sourceTree = "<group>"; };
-		82E9FEE31ED80A9C007C3AC0 /* GameMapLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameMapLayer.cpp; path = view/GameMapLayer.cpp; sourceTree = "<group>"; };
-		82E9FEE41ED80A9C007C3AC0 /* GameMapLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameMapLayer.h; path = view/GameMapLayer.h; sourceTree = "<group>"; };
 		82E9FEE51ED80A9C007C3AC0 /* GameScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameScene.cpp; path = view/GameScene.cpp; sourceTree = "<group>"; };
 		82E9FEE61ED80A9C007C3AC0 /* GameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameScene.h; path = view/GameScene.h; sourceTree = "<group>"; };
 		82E9FEE71ED80A9C007C3AC0 /* MapScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MapScene.cpp; path = view/MapScene.cpp; sourceTree = "<group>"; };
@@ -544,6 +544,8 @@
 		82C3EC901EFD315300FED0A1 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				821916B91EFEA59C00E777F7 /* DataManager.cpp */,
+				821916BA1EFEA59C00E777F7 /* DataManager.h */,
 				82C3EC941EFD318800FED0A1 /* WebClient.cpp */,
 				82C3EC951EFD318800FED0A1 /* WebClient.h */,
 				82C3EC9C1EFD3C2F00FED0A1 /* MessageDispatcher.cpp */,
@@ -573,8 +575,6 @@
 				82174F8B1EE2CCAE00A6B4E6 /* CharacterSelect.h */,
 				82174F851EE2CBFB00A6B4E6 /* MusicSetting.cpp */,
 				82174F861EE2CBFB00A6B4E6 /* MusicSetting.h */,
-				82E9FEE31ED80A9C007C3AC0 /* GameMapLayer.cpp */,
-				82E9FEE41ED80A9C007C3AC0 /* GameMapLayer.h */,
 				82E9FEE51ED80A9C007C3AC0 /* GameScene.cpp */,
 				82E9FEE61ED80A9C007C3AC0 /* GameScene.h */,
 				82E9FEE71ED80A9C007C3AC0 /* MapScene.cpp */,
@@ -817,7 +817,7 @@
 				82E9FEF91ED80A9C007C3AC0 /* GameScene.cpp in Sources */,
 				82C3ECA21EFD40C700FED0A1 /* MessageRecvDispatcher.cpp in Sources */,
 				82F387771EEEF14800E44B8E /* Vehicle.cpp in Sources */,
-				82E9FEF71ED80A9C007C3AC0 /* GameMapLayer.cpp in Sources */,
+				821916BB1EFEA59C00E777F7 /* DataManager.cpp in Sources */,
 				82C3EC9E1EFD3C2F00FED0A1 /* MessageDispatcher.cpp in Sources */,
 				8220AF4B1EE28D2200161461 /* PropController.cpp in Sources */,
 				82E9FF071ED80A9C007C3AC0 /* SwallowTouch.cpp in Sources */,
@@ -865,7 +865,7 @@
 				82982A5F1EFD56F300DC8380 /* SceneManager.cpp in Sources */,
 				82F387781EEEF14800E44B8E /* Vehicle.cpp in Sources */,
 				82CEB9131EF27085002A38D4 /* LoginScene.cpp in Sources */,
-				82E9FEF81ED80A9C007C3AC0 /* GameMapLayer.cpp in Sources */,
+				821916BC1EFEA59C00E777F7 /* DataManager.cpp in Sources */,
 				82C3ECA31EFD40C700FED0A1 /* MessageRecvDispatcher.cpp in Sources */,
 				8220AF4C1EE28D2200161461 /* PropController.cpp in Sources */,
 				82C3EC971EFD318800FED0A1 /* WebClient.cpp in Sources */,
@@ -928,6 +928,7 @@
 					"$(_COCOS_LIB_IOS_BEGIN)",
 					"$(_COCOS_LIB_IOS_END)",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.cocos2dx.MyCppGame;
 				SDKROOT = iphoneos;
 				STRIP_PNG_TEXT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -960,6 +961,7 @@
 					"$(_COCOS_LIB_IOS_BEGIN)",
 					"$(_COCOS_LIB_IOS_END)",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.cocos2dx.MyCppGame;
 				SDKROOT = iphoneos;
 				STRIP_PNG_TEXT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";

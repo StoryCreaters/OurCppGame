@@ -14,6 +14,8 @@
 #include <chrono>
 #include "OpenScene.h"
 #include "WebClient.h"
+#include "SceneManager.h"
+#include "../DataManager.h"
 
 USING_NS_CC;
 using namespace ui;
@@ -73,14 +75,12 @@ void GameScene::addCharacter(int index, int type, const std::string &name) {
     player->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     player->setPosition(offx + x, offy + y);
     // if it is my chara
-    if (name == UserDefault::getInstance()->getStringForKey("MyName")) {
+    if (name == DataManager::getInstance()->getStringForKey("MyName")) {
         _myplayer = player;
         _myplayer->setTag(20);
         _myplayer->setName("myplayer");
-        _myplayer->changeState(std::make_shared<CharStand>());
-        
-        _my_bubbles = 0;
     }
+    player->changeState(std::make_shared<CharStand>());
     _game_players.pushBack(player);
     name2chara.insert(name, player);
     addChild(player, 1);
@@ -172,8 +172,6 @@ bool GameScene::init()
     addChild(propController);
     
 	this->scheduleUpdate();
-    
-    this->schedule(schedule_selector(GameScene::myupdate), 1.0/30);
 	return true;
 }
 
@@ -249,6 +247,7 @@ void GameScene::CharacterMove(character* chara) {
 // bubble应该设置在tilemap的grid上
 // bubble渲染问题
 void GameScene::setBubble(character* chara) {
+    
     if (chara->curSetBubbles >= chara->_currentBubbles) {
         return;
     }
@@ -263,10 +262,10 @@ void GameScene::setBubble(character* chara) {
     auto mySpritePos = PositionForTileCoord(tileCoordForPosition(chara->getPosition()));
 
     // DEBUG : not mySpritePos
-    auto mypos = _myplayer->getPosition();
+    auto mypos = chara->getPosition();
     if (!hasBubble(tileCoordForPosition(mypos)) && accessAble(mypos)) {
         // 调整精灵位置
-        auto newBubble = Bubbles::create(_myplayer->_currentPower, chara);
+        auto newBubble = Bubbles::create(chara->_currentPower, chara);
         newBubble->setAnchorPoint(Vec2::ZERO);
         newBubble->setScale(_tile_delta_rate);
         
@@ -277,7 +276,6 @@ void GameScene::setBubble(character* chara) {
         _map_screen_bubbles[pos0] = newBubble;
         addChild(newBubble);
         ++chara->curSetBubbles;
-        
     }
 }
 
@@ -286,7 +284,7 @@ void GameScene::setBubble(character* chara) {
 // 泡泡爆炸, 可以添加逻辑
 void GameScene::BubbleBoom(Ref* sender) {
     auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
-    float volume = UserDefault::getInstance()->getFloatForKey("effectPercent");
+    float volume = DataManager::getInstance()->getFloatForKey("effectPercent");
     audio->setEffectsVolume(volume);
     audio->playEffect("effect/explode.wav", false);
     auto *sprite = dynamic_cast<Bubbles*>(sender);
@@ -325,26 +323,24 @@ void GameScene::BubbleBoom(Ref* sender) {
 }
 
 void GameScene::update(float dt) {
-    for (auto chara : _game_players) {
-        chara->excute();
-    }
-}
-
-void GameScene::myupdate(float dt) {
-    static std::string myname = UserDefault::getInstance()->getStringForKey("MyName ");
+    static std::string myname = DataManager::getInstance()->getStringForKey("MyName ");
     if (_myplayer) {
         int i;
-        for (i = 0; i <= 4; ++i) {
-            if (i == _myplayer->_chara_move[i])
+        for (i = 0; i < 4; ++i) {
+            if (_myplayer->_chara_move[i])
                 break;
         }
         
         // i == 4: 不变向
         // send: "state name pos x y"
         std::string s = std::to_string(i) + " " + std::to_string(_myplayer->getPosition().x) + " " + std::to_string(_myplayer->getPosition().y);
-        log("send s: %s", s.c_str());
+        log("dir : %d", i);
         WebClient::getInstance()->send_data("state " + myname + s);
     }
+    for (auto chara : _game_players) {
+        chara->excute();
+    }
+    
 }
 
 /**** coord convert ****/
@@ -549,7 +545,7 @@ void GameScene::addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools item_kind) 
 void GameScene::tileLoadProps() {
 //    static std::random_device rd;
 //    static std::uniform_int_distribution<int> dist(0, GameItem::toolNumbers * 5 / 3);
-    srand(UserDefault::getInstance()->getIntegerForKey("PropSeed"));
+    srand(DataManager::getInstance()->getIntegerForKey("PropSeed"));
     // 加载地图的对应的道具
     for (int x = 0; x < 15; ++x)
         for (int y = 0; y < 15; ++y)
@@ -604,19 +600,19 @@ bool GameScene::checkCollisionWithOther(character* chara) {
     return false;
 }
 
-void GameScene::Win(character* chara) {
+void GameScene::Win() {
     //增加音效
     auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
-    float volume = UserDefault::getInstance()->getFloatForKey("effectPercent");
+    float volume = DataManager::getInstance()->getFloatForKey("effectPercent");
     audio->setEffectsVolume(volume);
     audio->playEffect("effect/win.wav", false);
     gameOver("Play Again");
 }
 
-void GameScene::Lose(character* chara) {
+void GameScene::Lose() {
     //增加音效
     auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
-    float volume = UserDefault::getInstance()->getFloatForKey("effectPercent");
+    float volume = DataManager::getInstance()->getFloatForKey("effectPercent");
     audio->setEffectsVolume(volume);
     audio->playEffect("effect/lose.wav", false);
     gameOver("Game Win");
@@ -637,8 +633,9 @@ void GameScene::gameOver(const std::string &message) {
     restart_button->setPosition(Vec2(visibleSize.width / 2, visibleSize.height *0.7));
     restart_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
         if (type == Widget::TouchEventType::ENDED) {
-            auto transition = TransitionFadeBL::create(2.0, GameScene::createScene());
-            Director::getInstance()->replaceScene(transition);
+            SceneManager::toCharaSelect();
+//            auto transition = TransitionFadeBL::create(2.0, GameScene::createScene());
+//            Director::getInstance()->replaceScene(transition);
         }
     });
     this->addChild(restart_button, 1);
@@ -652,8 +649,9 @@ void GameScene::gameOver(const std::string &message) {
     back_button->setPosition(Vec2(visibleSize.width / 2, visibleSize.height *0.4));
     back_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
         if (type == Widget::TouchEventType::ENDED) {
-            auto transition = TransitionShrinkGrow::create(2.0, OpenScene::createScene());
-            Director::getInstance()->replaceScene(transition);
+            SceneManager::toCharaSelect();
+            //            auto transition = TransitionShrinkGrow::create(2.0, OpenScene::createScene());
+//            Director::getInstance()->replaceScene(transition);
         }
     });
     this->addChild(back_button, 1);

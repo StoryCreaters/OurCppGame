@@ -63,6 +63,8 @@ void GameItem::getItem(character* chara) {
     } else if (type == GameItem::MAXPOWER) {
         chara->_currentPower = chara->_maxPower;
     } else if (type != GameItem::OWL && type != GameItem::TUTLE){
+        if (chara != character::getMychara())
+            return;
         auto prop_layer = dynamic_cast<PropLayer*>(GameScene::getCurrentMap()->getChildByName("PropLayer"));
         if (prop_layer == nullptr) {
             log("呜呜呜");

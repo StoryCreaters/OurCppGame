@@ -6,6 +6,7 @@
 #include "RoomChooseScene.h"
 #include "CharacterSelect.h"
 #include "LoginScene.h"
+#include "../DataManager.h"
 
 USING_NS_CC;
 using namespace ui;
@@ -55,7 +56,7 @@ bool OpenScene::init()
 	auto menu_list = setLayOutL1();
 	addChild(menu_list);
 	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
-	float volume = UserDefault::getInstance()->getFloatForKey("musicPercent");
+	float volume = DataManager::getInstance()->getFloatForKey("musicPercent");
 	audio->setBackgroundMusicVolume(volume);
 	audio->playBackgroundMusic("music/When The Morning Comes.mp3", true);
 	return true;

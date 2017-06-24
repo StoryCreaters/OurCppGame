@@ -18,6 +18,7 @@ public:
     friend class CharStuck;
     friend class character;
     friend class CharDead;
+    friend class MessageRecvDispatcher;
     using tilePosition = cocos2d::Vec2;
     
     /***
@@ -143,8 +144,8 @@ private:
     /*** add item to the game ***/
     void addItems(cocos2d::Vec2 tiledPos, GameItem::ItemTools tool);
     
-    void Win(character* chara);
-    void Lose(character* chara);
+    void Win();
+    void Lose();
     void gameOver(const std::string &message);
     
 };

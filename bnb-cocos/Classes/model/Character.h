@@ -47,7 +47,7 @@ public:
     std::string _spriteName;
     
     
-    std::array<bool, 4> _chara_move;
+    std::array<bool, 5> _chara_move;
     /*****碰撞点******/
     // 根据方向给出一对碰撞点
     std::pair<cocos2d::Vec2, cocos2d::Vec2> get_collection_point(int direction);

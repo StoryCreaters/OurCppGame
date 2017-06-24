@@ -8,6 +8,7 @@
 #include "ChatBox.h"
 #include "GameScene.h"
 #include "CharacterFSM.h"
+#include "DataManager.h"
 
 class MessageRecvDispatcher {
 public:
@@ -46,7 +47,9 @@ public:
             int seed;
             sin >> seed;
             // 一局游戏中 道具的种子
-            UserDefault::getInstance()->setIntegerForKey("PropSeed", seed);
+            
+//            UserDefault::getInstance()->setIntegerForKey("PropSeed", seed);
+            DataManager::getInstance()->setIntegerForKey("PropSeed", seed);
             sin >> digits;
             std::string chara;
             int pos, type;
@@ -77,6 +80,11 @@ public:
             GameScene::getCurrentMap()->setBubble(chara);
         } else if (code == "state") {
             // 人物状态: 人物 方向 posx posy
+            /*
+            /// 发送: 小于4 发送1.2.3.4类的坐标
+            /// 否则发送 4 表示stand
+            /// 接收：状态和上一秒相同就发送6
+             */
             std::string charname;
             int dir;
             float posx, posy;
@@ -85,11 +93,20 @@ public:
             
             chara->setPosition(Vec2(posx, posy));
             log("dir %d", dir);
-            if (dir == 5) {
+            if (dir == 4) {
+                log("mother fxck, now i am standing over there");
                 chara->changeState(std::make_shared<CharStand>());
             } else if (dir < 4) {
                 // 状态变小于4
                 chara->changeState(std::make_shared<CharMove>(dir));
+            }
+        } else if (code == "win" || code == "lose") {
+            auto scene = GameScene::getCurrentMap();
+            GameScene::getCurrentMap()->stopAllActions();
+            if (code[0] == 'w') {
+                scene->Win();
+            } else {
+                scene->Lose();
             }
         }
     }

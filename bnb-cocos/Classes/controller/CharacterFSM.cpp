@@ -31,7 +31,7 @@ void CharNormal::excute(cocos2d::Sprite* spr) {
     }
     auto chara = dynamic_cast<character*>(spr);
     // 必须是有值才可以
-    if (getMyplayer() && chara == getMyplayer()) {
+    if (chara == getMyplayer()) {
         gameScene->CharacterMove(chara);
     }
     gameScene->checkGetItem(chara);
@@ -92,7 +92,9 @@ void CharOnRiding::excute(cocos2d::Sprite *spr) {
         return;
     }
     auto chara = dynamic_cast<character*>(spr);
-    gameScene->CharacterMove(chara);
+    if (chara == getMyplayer()) {
+        gameScene->CharacterMove(chara);
+    }
     gameScene->checkGetItem(chara);
 }
 
@@ -123,6 +125,9 @@ void CharMove::PreProcess(cocos2d::Sprite* spr) {
 
 
 void CharStand::PreProcess(cocos2d::Sprite* spr) {
+    auto chara = dynamic_cast<character*>(spr);
+    for (auto &b: chara->_chara_move) b = false;
+//    chara->_chara_move[4] = true;
     spr->stopAllActions();
 }
 
@@ -165,4 +170,9 @@ bool checkStateWalkAble(character* chara) {
     if (checkStateFireAble(chara) || state_chara == typeid(CharGuard).hash_code())
         return true;
     return false;
+}
+
+void CharStand::excute(cocos2d::Sprite* spr) {
+    auto chara = dynamic_cast<character*>(spr);
+    GameScene::getCurrentMap()->checkGetItem(chara);
 }

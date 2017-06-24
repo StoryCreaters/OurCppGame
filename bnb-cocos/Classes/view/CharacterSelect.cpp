@@ -6,6 +6,7 @@
 #include "ChatBox.h"
 #include "WebClient.h"
 #include "SceneManager.h"
+#include "../DataManager.h"
 
 USING_NS_CC;
 using namespace ui;
@@ -48,8 +49,8 @@ bool Players::init() {
 	first_button->addTouchEventListener([](Ref* pSender, Widget::TouchEventType type) {
 		if (type == Widget::TouchEventType::ENDED) {
 			// 存值
-			UserDefault::getInstance()->setIntegerForKey("PLAYER", 1);
-			int i = UserDefault::getInstance()->getIntegerForKey("PLAYER");
+			DataManager::getInstance()->setIntegerForKey("PLAYER", 1);
+			int i = DataManager::getInstance()->getIntegerForKey("PLAYER");
 		}
 	});
 	this->addChild(first_button);
@@ -63,8 +64,8 @@ bool Players::init() {
 	second_button->addTouchEventListener([](Ref* pSender, Widget::TouchEventType type) {
 		if (type == Widget::TouchEventType::ENDED) {
 			// 存值
-			UserDefault::getInstance()->setIntegerForKey("PLAYER", 2);
-			int i = UserDefault::getInstance()->getIntegerForKey("PLAYER");
+			DataManager::getInstance()->setIntegerForKey("PLAYER", 2);
+			int i = DataManager::getInstance()->getIntegerForKey("PLAYER");
 		}
 	});
 	this->addChild(second_button);
@@ -78,8 +79,8 @@ bool Players::init() {
 	third_button->addTouchEventListener([](Ref* pSender, Widget::TouchEventType type) {
 		if (type == Widget::TouchEventType::ENDED) {
 			// 存值
-			UserDefault::getInstance()->setIntegerForKey("PLAYER", 3);
-			int i = UserDefault::getInstance()->getIntegerForKey("PLAYER");
+			DataManager::getInstance()->setIntegerForKey("PLAYER", 3);
+			int i = DataManager::getInstance()->getIntegerForKey("PLAYER");
 		}
 	});
 	this->addChild(third_button);
@@ -107,7 +108,7 @@ bool Players::init() {
 	this->addChild(ok_button);
 	ok_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
 		if (type == Widget::TouchEventType::ENDED) {
-            auto s = "Start " + std::to_string(UserDefault::getInstance()->getIntegerForKey("PLAYER"));
+            auto s = "Start " + std::to_string(DataManager::getInstance()->getIntegerForKey("PLAYER"));
             WebClient::getInstance()->send_data(s);
             removeChild(ok_button);
 			auto cancel_button = Button::create("GameUI/button2.png");

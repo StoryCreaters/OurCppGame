@@ -17,6 +17,7 @@ bool Bubbles::initWithPower(int power, character* chara) {
         }), DelayTime::create(2.7f),
         CallFuncN::create([=](Ref* sender) {
             GameScene::getCurrentMap()->BubbleBoom(this);
+            chara->curSetBubbles--;
         }),NULL));
     return true;
 }
