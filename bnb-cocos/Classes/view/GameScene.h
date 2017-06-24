@@ -19,7 +19,19 @@ public:
     friend class character;
     using tilePosition = cocos2d::Vec2;
     
+    /***
+     由是否是自己的, 名称, 序列号添加精灵
+     在换场之前进行
+     ***/
+    
     // 返回gameScene对象
+    /** map : name -> pair(index, charatype) **/
+    static cocos2d::Scene* createSceneWithMap(const std::map<std::string, std::pair<int, int>>& name2pos);
+    bool initWithMap(const std::map<std::string, std::pair<int, int>>& name2pos);
+    void addCharacter(int index, int type, const std::string &name);
+    // 名称到精灵的映射
+    Map<std::string, character*> name2chara;
+    
     static cocos2d::Scene* createScene();
     static GameScene* getCurrentMap();
     virtual bool init();
@@ -131,6 +143,7 @@ private:
     void Win(character* chara);
     void Lose(character* chara);
     void gameOver(const std::string &message);
+    
 };
 
 #endif /* GameTheme_hpp */

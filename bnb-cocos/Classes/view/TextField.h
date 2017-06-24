@@ -32,6 +32,9 @@ public:
     void setTextName(const std::string&s) {
         textField->setString(s);
     }
+    void setHint(const std::string&s) {
+        _messageValueLabel->setString(s);
+    }
 	/**
 	* 使用CREATE_FUNC宏创建当前类的对象，返回的对象将会由自动释放池管理内存的释放
 	*/

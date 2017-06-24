@@ -45,7 +45,7 @@ bool LoginScene::init()
     field->setPosition(visibleSize.height * 0.15, visibleSize.height* 0.25);
     addChild(field);
     
-    auto return_button = Button::create("GameUI/GetStart.png");
+    auto return_button = Button::create("GameUI/button1.png");
     return_button->setPosition(Vec2(visibleSize.width / 2, 100));
     return_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
         if (type == Widget::TouchEventType::ENDED) {
@@ -73,6 +73,6 @@ void LoginScene::changeScene() {
 }
 
 void LoginScene::nameRepetition() {
-    field->setTextName("name already exist! Please change it");
+    field->setHint("name already exist! Please change it");
 }
 

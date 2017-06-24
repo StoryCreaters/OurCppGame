@@ -28,7 +28,9 @@ public:
         LOGIN_SCENE = 0,
         ROOM_SELECT,
         CHARACTER_SELECT,
-        ONGAME
+        ONGAME,
+        CHAT,
+        CHANGE_SCENE
     } cur_state;
     
     // 根据传入的字符串发送信息

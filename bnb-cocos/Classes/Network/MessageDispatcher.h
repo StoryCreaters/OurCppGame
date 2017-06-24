@@ -12,7 +12,17 @@ public:
         return "login " + name;
     }
     static std::string RoomSelect(const std::string& digit) {
-        return "selectroom " + digit;
+        return "roomselect " + digit;
+    }
+    
+    // character select 中，有chat / start
+    static std::string CharSelect(const std::string & s) {
+        // 场景中负责聊天
+        return "playerselect " + s;
+    }
+    
+    static std::string OnGame(const std::string &recv) {
+        
     }
 };
 

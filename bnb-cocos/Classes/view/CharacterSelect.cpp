@@ -4,6 +4,8 @@
 #include "RoomChooseScene.h"
 #include "TextField.h"
 #include "ChatBox.h"
+#include "WebClient.h"
+#include "SceneManager.h"
 
 USING_NS_CC;
 using namespace ui;
@@ -14,7 +16,9 @@ Scene* Players::createScene() {
 	// 创建层对象，该对象将会由自动释放池管理内存的释放
 	auto layer = Players::create();
 	// 将GameSet层作为子节点添加到场景
-	scene->addChild(layer);
+	
+    layer->setName("CharacterSelect");
+    scene->addChild(layer);
 	// 返回场景对象
 	return scene;
 }
@@ -25,6 +29,7 @@ Players* Players::getCurrent() {
 }
 bool Players::init() {
 	// 调用父类的init方法
+    WebClient::getInstance()->cur_state = WebClient::CHARACTER_SELECT;
 	if (!Layer::init()) {
 		return false;
 	}
@@ -37,7 +42,7 @@ bool Players::init() {
 	auto first_button = Button::create("GameUI/button.png");
 	first_button->setScale(2);
 	first_button->setTitleText("Player 1");
-	first_button->setTitleFontName("微软雅黑");
+	first_button->setTitleFontName("Arial");
 	first_button->setTitleFontSize(16);
 	first_button->setPosition(Vec2(visibleSize.width *0.7, visibleSize.height*0.7));
 	first_button->addTouchEventListener([](Ref* pSender, Widget::TouchEventType type) {
@@ -52,7 +57,7 @@ bool Players::init() {
 	auto second_button = Button::create("GameUI/button.png");
 	second_button->setScale(2);
 	second_button->setTitleText("Player 2");
-	second_button->setTitleFontName("微软雅黑");
+	second_button->setTitleFontName("Arial");
 	second_button->setTitleFontSize(16);
 	second_button->setPosition(Vec2(visibleSize.width *0.7, visibleSize.height*0.50));
 	second_button->addTouchEventListener([](Ref* pSender, Widget::TouchEventType type) {
@@ -67,7 +72,7 @@ bool Players::init() {
 	auto third_button = Button::create("GameUI/button.png");
 	third_button->setScale(2);
 	third_button->setTitleText("Player 3");
-	third_button->setTitleFontName("微软雅黑");
+	third_button->setTitleFontName("Arial");
 	third_button->setTitleFontSize(16);
 	third_button->setPosition(Vec2(visibleSize.width *0.7, visibleSize.height*0.30));
 	third_button->addTouchEventListener([](Ref* pSender, Widget::TouchEventType type) {
@@ -84,32 +89,33 @@ bool Players::init() {
 	return_button->addTouchEventListener([](Ref* pSender, Widget::TouchEventType type) {
 		if (type == Widget::TouchEventType::ENDED) {
 			// 切换到Room Choose场景
-			auto transition = TransitionShrinkGrow::create(2.0, RoomChoose::createScene());
-			Director::getInstance()->replaceScene(transition);
+            SceneManager::toRoomSelect();
+            WebClient::getInstance()->send_data("roomselect");
 		}
 	});
 	this->addChild(return_button);
 	//留白
-    addChild(ChatBox::create());
-//	auto layerColor = LayerColor::create(Color4B(41, 36, 33, 200), 400, 400);
-//	layerColor->setPosition(208, 150);
-//	this->addChild(layerColor);
-//	auto textfield = TextFieldTest::create();
-//	textfield->setName("TextField");
-//	addChild(textfield);
+    
+    auto chatbox = ChatBox::create();
+    chatbox->setName("ChatBox");
+    addChild(chatbox);
+
+    
 	//设OK键
 	auto ok_button = Button::create("GameUI/button1.png");
 	ok_button->setPosition(Vec2(visibleSize.width *0.20, visibleSize.height*0.18));
 	this->addChild(ok_button);
 	ok_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
 		if (type == Widget::TouchEventType::ENDED) {
-			removeChild(ok_button);
+            auto s = "Start " + std::to_string(UserDefault::getInstance()->getIntegerForKey("PLAYER"));
+            WebClient::getInstance()->send_data(s);
+            removeChild(ok_button);
 			auto cancel_button = Button::create("GameUI/button2.png");
 			cancel_button->setPosition(Vec2(visibleSize.width *0.20, visibleSize.height*0.18));
 			this->addChild(cancel_button);
 			// 切换到GameScene场景
-			auto transition = TransitionFadeBL::create(2.0, GameScene::createScene());
-			Director::getInstance()->replaceScene(transition);
+//			auto transition = TransitionFadeBL::create(2.0, GameScene::createScene());
+//			Director::getInstance()->replaceScene(transition);
 		}
 	});
 	

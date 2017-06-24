@@ -18,6 +18,26 @@ USING_NS_CC;
 using namespace ui;
 using namespace settings::GameScene;
 
+bool GameScene::initWithMap(const std::map<std::string, std::pair<int, int>>& name2pos) {
+    auto b = init();
+    if (!b) return b;
+    for (auto &pair: name2pos) {
+        this->addCharacter(pair.second.first, pair.second.second, pair.first);
+    }
+    return true;
+}
+
+cocos2d::Layer* createLayerWithMap(const std::map<std::string, std::pair<int, int>>& name2pos) {
+    auto layer = new GameScene();
+    if (layer && layer->initWithMap(name2pos)) {
+        layer->autorelease();
+        return layer;
+    } else {
+        delete layer;
+        layer = nullptr;
+        return layer;
+    }
+}
 
 Scene* GameScene::createScene()
 {
@@ -40,6 +60,51 @@ Scene* GameScene::createScene()
     return scene;
 }
 
+
+void GameScene::addCharacter(int index, int type, const std::string &name) {
+    
+    CCASSERT(nullptr != objects, "'Objects' object group not found");
+    auto spawnPoint = objects->getObject("SpawnPoint" + std::to_string(index));
+    CCASSERT(!spawnPoint.empty(), "SpawnPoint object not found");
+    float x = spawnPoint["x"].asFloat() * _tile_delta_rate;
+    float y = spawnPoint["y"].asFloat() * _tile_delta_rate;
+    auto player = character::create(static_cast<character::characterType>(type));
+    player->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+    player->setPosition(offx + x, offy + y);
+    // if it is my chara
+    if (name == UserDefault::getInstance()->getStringForKey("MyName")) {
+        _myplayer = player;
+        _myplayer->setTag(20);
+        _myplayer->setName("myplayer");
+        _myplayer->changeState(std::make_shared<CharStand>());
+        
+        _my_bubbles = 0;
+    }
+    _game_players.pushBack(player);
+    name2chara.insert(name, player);
+    addChild(player, 1);
+    
+    
+}
+
+cocos2d::Scene* GameScene::createSceneWithMap(const std::map<std::string, std::pair<int, int>>& name2pos)
+{
+    auto scene = Scene::create();
+    // 'layer' is an autorelease object
+    auto game_layer = createLayerWithMap(name2pos);
+    
+    
+    // temporary set it ten
+    game_layer->setName("GameScene");
+    game_layer->setTag(10);
+    
+    // add layer as a child to scene
+    scene->addChild(game_layer);
+    
+    // return the scene
+    return scene;
+}
+
 // static function, GET CURRENT GAME SCENE
 GameScene* GameScene::getCurrentMap() {
     auto currentScene = Director::getInstance()->getRunningScene();
@@ -57,10 +122,6 @@ bool GameScene::init()
 	visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	addCloseMenu();
-	//
-	//    auto web_layer = WebClient::create();
-	//    this->addChild(web_layer);
 	
 	// a temporary background
 	auto backG = Sprite::create("BackGround/Cool_background.jpg");
@@ -80,8 +141,9 @@ bool GameScene::init()
 	// 注意坐标位置差
 	offx = (visibleSize.width - _tileMap->getContentSize().width * _tile_delta_rate) / 2;
 	offy = (visibleSize.height - _tileMap->getContentSize().height * _tile_delta_rate) / 2;
-	TMXObjectGroup *objects = _tileMap->getObjectGroup("player");
-	CCASSERT(nullptr != objects, "'Objects' object group not found");
+    objects = _tileMap->getObjectGroup("player");
+	
+    CCASSERT(nullptr != objects, "'Objects' object group not found");
 	auto spawnPoint = objects->getObject("SpawnPoint1");
 	CCASSERT(!spawnPoint.empty(), "SpawnPoint object not found");
 	float x = spawnPoint["x"].asFloat() * _tile_delta_rate;
@@ -89,29 +151,7 @@ bool GameScene::init()
 
 	tileLoadProps();
 
-	/*** add character***/
-	character::characterType TYPE;
-	int i = UserDefault::getInstance()->getIntegerForKey("PLAYER");
-	log("integer is %d", i);
-	switch (i) {
-	case 1:
-		TYPE = character::MAPLE_WISH;
-		break;
-	case 2:
-		TYPE = character::CHRIS;
-		break;
-	case 3:
-		TYPE = character::SHADOWFOX;
-		break;
-	}
-	_myplayer = character::create(TYPE);
-	_myplayer->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	_myplayer->setPosition(offx + x, offy + y);
-	_myplayer->setTag(20);
-	_myplayer->setName("myplayer");
-	addChild(_myplayer, 1);
-	_game_players.pushBack(_myplayer);
-	_my_bubbles = 0;
+	
     // bubbles start from 0
 
 	// add controller
@@ -136,23 +176,6 @@ bool GameScene::init()
 }
 
 
-void GameScene::menuCloseCallback(Ref* pSender)
-{
-    //Close the cocos2d-x game scene and quit the application
-    Director::getInstance()->end();
-    
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    exit(0);
-#endif
-    
-    /*To navigate back to native iOS screen(if present) without quitting the application  ,do not use Director::getInstance()->end() and exit(0) as given above,instead trigger a custom event created in RootViewController.mm as below*/
-    
-    //EventCustom customEndEvent("game_scene_close_event");
-    //_eventDispatcher->dispatchEvent(&customEndEvent);
-    
-    
-}
-
 void GameScene::setViewPointCenter(Point position) {
     auto winSize = Director::getInstance()->getWinSize();
     
@@ -167,20 +190,7 @@ void GameScene::setViewPointCenter(Point position) {
     this->setPosition(viewPoint);
 }
 
-void GameScene::addCloseMenu() {
-    // close menu
-    auto visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    auto closeItem = MenuItemImage::create(
-                                           "CloseNormal.png",
-                                           "CloseSelected.png",
-                                           CC_CALLBACK_1(GameScene::menuCloseCallback, this));
-    closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
-                                origin.y + closeItem->getContentSize().height/2));
-    auto closeMenu = Menu::create(closeItem, NULL);
-    closeMenu->setPosition(Vec2::ZERO);
-    this->addChild(closeMenu, 1);
-}
+
 
 /****人物移动****/
 void GameScene::CharacterMove(character* chara) {
@@ -602,7 +612,7 @@ void GameScene::gameOver(const std::string &message) {
     auto restart_button = Button::create("GameUI/button.png");
     restart_button->setScale(2);
     restart_button->setTitleText(message);
-    restart_button->setTitleFontName("微软雅黑");
+    restart_button->setTitleFontName("Arial");
     restart_button->setTitleFontSize(16);
     restart_button->setPosition(Vec2(visibleSize.width / 2, visibleSize.height *0.7));
     restart_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
@@ -617,7 +627,7 @@ void GameScene::gameOver(const std::string &message) {
     auto back_button = Button::create("GameUI/button.png");
     back_button->setScale(2);
     back_button->setTitleText("Return Menu");
-    back_button->setTitleFontName("微软雅黑");
+    back_button->setTitleFontName("Arial");
     back_button->setTitleFontSize(16);
     back_button->setPosition(Vec2(visibleSize.width / 2, visibleSize.height *0.4));
     back_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {

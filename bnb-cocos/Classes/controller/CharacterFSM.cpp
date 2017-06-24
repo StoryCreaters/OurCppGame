@@ -5,6 +5,7 @@
 #include "CommonUse.h"
 #include "BaseController.h"
 #include "Vehicle.h"
+#include "WebClient.h"
 
 class GameScene;
 USING_NS_CC;
@@ -52,19 +53,22 @@ void CharDead::PreProcess(cocos2d::Sprite* spr) {
     chara->runAction(Sequence::create(DelayTime::create(3),CallFuncN::create(
                     [=](Ref* sender) {
                         game_scene->RemoveCharacter(chara);
+                        if (chara == getMyplayer()) {
+                            // 死亡
+                            WebClient::getInstance()->send_data("DIE");
+                        }
                     }), NULL));
 }
 
 void CharStuck::PreProcess(cocos2d::Sprite *spr) {
+    
     auto game_scene = getGameScene();
     auto chara = dynamic_cast<character*>(spr);
     if (chara == dynamic_cast<character*>(game_scene->getChildByTag(20))) {
-        // TODO: change a better way
-        // TODO : set it removed earlier
-//        game_scene->removeChildByName("PlayerController");
-//        game_scene->removeChildByName("BubbleController");
+        
         
     }
+    
     for (auto &dir: chara->_chara_move) {
         dir = false;
     }

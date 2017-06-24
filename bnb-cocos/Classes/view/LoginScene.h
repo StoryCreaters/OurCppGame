@@ -21,7 +21,7 @@ public:
     
     static LoginScene* getLoginScene() {
         auto layer = dynamic_cast<LoginScene*>(Director::getInstance()->getRunningScene()->getChildByName("LoginScene"));
-        assert(layer == nullptr);
+//        assert(layer == nullptr);
         return layer;
     }
     

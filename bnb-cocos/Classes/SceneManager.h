@@ -13,6 +13,7 @@ public:
     static void toLoginScene();
     static void toCharaSelect();
     static void toRoomSelect();
+    static void toStartScene();
 };
 
 #endif /* SceneManager_hpp */

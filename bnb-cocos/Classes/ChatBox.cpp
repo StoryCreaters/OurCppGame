@@ -1,4 +1,5 @@
 #include "ChatBox.h"
+#include "WebClient.h"
 using namespace ui;
 bool ChatBox::init() {
     if ( !Layer::init() )
@@ -15,6 +16,13 @@ bool ChatBox::init() {
     return true;
     
     
+}
+
+ChatBox* ChatBox::getChatBox() {
+    auto layer = Director::getInstance()->getRunningScene()->getChildByName("CharacterSelect");
+    auto item = layer->getChildByName("ChatBox");
+    assert(item);
+    return dynamic_cast<ChatBox*>(item);
 }
 
 void ChatBox::addTextField() {
@@ -34,7 +42,7 @@ void ChatBox::onKeyReleased(EventKeyboard::KeyCode keycode, cocos2d::Event*event
         auto cur_msg = writeText->getString();
         if (!cur_msg.empty()) {
             writeText->setString("");
-            addChatLine(cur_msg);
+            WebClient::getInstance()->send_data("Chat " + cur_msg);
         }
     }
 }
@@ -62,4 +70,15 @@ void ChatBox::alignChat() {
     // can we do it elegantly?
     show_menus->setName("lines");
     addChild(show_menus);
+}
+
+void ChatBox::addChatLine(const std::string& name, const std::string &s) {
+    auto content = name + " : " + s;
+    auto label = MenuItemLabel::create(Label::create(content, "fonts/IndieFlower.ttf", 20));
+    label->setColor(Color3B::BLACK);
+    chatlines.pushBack(label);
+    if (chatlines.size() > 10) {
+        chatlines.erase(chatlines.begin());
+    }
+    alignChat();
 }

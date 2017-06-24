@@ -7,12 +7,17 @@
 const std::map<WebClient::GameStates, std::function<std::string(const std::string)>>
 WebClient::send_func_map = {
     {WebClient::LOGIN_SCENE, MessageDispatcher::Login},
+    {WebClient::ROOM_SELECT, MessageDispatcher::RoomSelect},
+    {WebClient::CHARACTER_SELECT, MessageDispatcher::CharSelect},
+    {WebClient::ONGAME, MessageDispatcher::OnGame}
 };
 
 const std::map<WebClient::GameStates, std::function<std::string(const std::string)>>
 WebClient::recv_func_map = {
     {WebClient::LOGIN_SCENE, MessageRecvDispatcher::Login},
-    
+    {WebClient::ROOM_SELECT, MessageRecvDispatcher::RoomSelect},
+    {WebClient::CHARACTER_SELECT, MessageRecvDispatcher::CharSelect},
+    {WebClient::ONGAME, MessageRecvDispatcher::OnGame}
 };
 
 WebClient::WebClient() {
@@ -42,7 +47,10 @@ void WebClient::onOpen(WebSocket * ws)
 void WebClient::onMessage(WebSocket * ws, const WebSocket::Data & data)
 {
     
+    
+    auto length = data.len;
     std::string textStr = data.bytes;
+    textStr = textStr.substr(0, length);
     log("recv %s", textStr.c_str());
     auto func = recv_func_map.at(cur_state);
     func(textStr);
@@ -50,8 +58,10 @@ void WebClient::onMessage(WebSocket * ws, const WebSocket::Data & data)
 
 void WebClient::onClose(WebSocket * ws)
 {
+    
     if (ws == m_pWebSocket)
     {
+        ws->send("close");
         m_pWebSocket = NULL;
     }
     CC_SAFE_DELETE(ws);
@@ -75,6 +85,7 @@ WebClient* WebClient::getInstance() {
 
 void WebClient::send_data(const std::string& s) {
     auto str_func = send_func_map.at(cur_state);
+    log("state %d", cur_state);
     m_pWebSocket->send(str_func(s));
 }
 
