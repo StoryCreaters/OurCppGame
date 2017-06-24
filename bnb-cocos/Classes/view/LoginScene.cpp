@@ -57,7 +57,7 @@ bool LoginScene::init()
             }
             // 设置玩家自己的名称
             log("%s", field->showInputData().c_str());
-//            DataManager::getInstance()->setStringForKey("MyName", field->showInputData());
+            DataManager::getInstance()->setStringForKey("MyName", field->showInputData());
             UserDefault::getInstance()->setStringForKey("MyName", field->showInputData());
             // send message to webclient
             WebClient::getInstance()->send_data(field->showInputData());
