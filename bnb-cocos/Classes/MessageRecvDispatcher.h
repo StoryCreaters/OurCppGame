@@ -104,10 +104,11 @@ public:
         } else if (code == "win" || code == "lose") {
             auto scene = GameScene::getCurrentMap();
             GameScene::getCurrentMap()->stopAllActions();
+            GameScene::getCurrentMap()->removeAllChildren();
             if (code[0] == 'w') {
-                scene->Win();
-            } else {
                 scene->Lose();
+            } else {
+                scene->Win();
             }
         } else if (code == "use") {
             /*

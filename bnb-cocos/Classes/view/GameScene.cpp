@@ -130,7 +130,11 @@ bool GameScene::init()
 	backG->setPosition(visibleSize / 2);
 
 	/***** tilemap ******/
-	_tileMap = TMXTiledMap::create("gameStart/map02.tmx");
+    std::string tilename =
+    "gameStart/map" +
+    DataManager::getInstance()->getStringForKey("map") +
+    ".tmx";
+	_tileMap = TMXTiledMap::create(tilename);
 	_tileMap->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	_tileMap->setPosition(Point(visibleSize.width / 2, visibleSize.height / 2));
 	_tileMap->setScale(settings::GameScene::_tile_delta_rate);
@@ -650,8 +654,6 @@ void GameScene::gameOver(const std::string &message) {
     back_button->addTouchEventListener([=](Ref* pSender, Widget::TouchEventType type) {
         if (type == Widget::TouchEventType::ENDED) {
             SceneManager::toCharaSelect();
-            //            auto transition = TransitionShrinkGrow::create(2.0, OpenScene::createScene());
-//            Director::getInstance()->replaceScene(transition);
         }
     });
     this->addChild(back_button, 1);

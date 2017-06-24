@@ -1,5 +1,4 @@
 ﻿#include "TextField.h"
-#include "../DataManager.h"
 using namespace ui;
 
 Layer* TextFieldTest::getTextField() {
@@ -19,7 +18,7 @@ bool TextFieldTest::init()
 	_displayValueLabel->setPosition(Vec2(visibleSize.width *0.4, visibleSize.height*0.6));
 	this->addChild(_displayValueLabel);
 	// 添加一个Text，当数据输入结束时，显示输入的数据
-    _messageValue = DataManager::getInstance()->getStringForKey("MyName");
+    _messageValue = UserDefault::getInstance()->getStringForKey("MyName");
     std::string first_msg = _messageValue.empty() ?
     "you Don't input any data" :
     "Are you " + _messageValue;

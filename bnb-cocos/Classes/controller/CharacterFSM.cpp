@@ -50,6 +50,7 @@ void CharDead::PreProcess(cocos2d::Sprite* spr) {
     auto chara = dynamic_cast<character*>(spr);
     if (chara == getMyplayer()) {
         game_scene->removeChildByName("PropLayer");
+        WebClient::getInstance()->send_data("DIE");
     }
     spr->stopAllActions();
     chara->playDieAnimation();
@@ -60,7 +61,6 @@ void CharDead::PreProcess(cocos2d::Sprite* spr) {
                             // 死亡
                             
                             game_scene->_myplayer = nullptr;
-                            WebClient::getInstance()->send_data("DIE");
                         }
                     }), NULL));
 }

@@ -5,6 +5,8 @@
 #include "OpenScene.h"
 #include "WebClient.h"
 #include "SceneManager.h"
+#include "DataManager.h"
+
 #define NUM 4;
 USING_NS_CC;
 using namespace ui;
@@ -123,18 +125,22 @@ bool RoomChoose::init() {
 void RoomChoose::ToRoomOne(Ref *sender) {
     
     WebClient::getInstance()->send_data("0");
+    DataManager::getInstance()->setStringForKey("map", "01");
 //    Director::getInstance()->replaceScene(Players::createScene());
 }
 void RoomChoose::ToRoomTwo(Ref *sender) {
 	WebClient::getInstance()->send_data("1");
+    DataManager::getInstance()->setStringForKey("map", "02");
 //    Director::getInstance()->replaceScene(Players::createScene());
 }
 void RoomChoose::ToRoomThree(Ref *sender) {
 	WebClient::getInstance()->send_data("2");
+    DataManager::getInstance()->setStringForKey("map", "03");
 //    Director::getInstance()->replaceScene(Players::createScene());
 }
 void RoomChoose::ToRoomFour(Ref *sender) {
 	WebClient::getInstance()->send_data("3");
+    DataManager::getInstance()->setStringForKey("map", "01");
 //    Director::getInstance()->replaceScene(Players::createScene());
 }
 
