@@ -47,15 +47,18 @@ void CharStuck::excute(cocos2d::Sprite* spr) {
 
 void CharDead::PreProcess(cocos2d::Sprite* spr) {
     auto game_scene = getGameScene();
-    game_scene->removeChildByName("PropLayer");
-    spr->stopAllActions();
     auto chara = dynamic_cast<character*>(spr);
+    if (chara == getMyplayer()) {
+        game_scene->removeChildByName("PropLayer");
+    }
+    spr->stopAllActions();
     chara->playDieAnimation();
     chara->runAction(Sequence::create(DelayTime::create(3),CallFuncN::create(
                     [=](Ref* sender) {
                         game_scene->RemoveCharacter(chara);
                         if (chara == getMyplayer()) {
                             // 死亡
+                            
                             game_scene->_myplayer = nullptr;
                             WebClient::getInstance()->send_data("DIE");
                         }

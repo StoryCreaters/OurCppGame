@@ -225,9 +225,8 @@ void character::charaFired() {
                 }
                 this->removeChildByName("PlayerController");
                 this->removeChildByName("BubbleController");
-                changeState(std::make_shared<CharStuck>());
             }
-            
+            changeState(std::make_shared<CharStuck>());
         }
     }
 }
